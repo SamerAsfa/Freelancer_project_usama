@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">My Application</string>
+    <string name="filter_result">Filter Result</string>
+    <string name="with_image">with Image</string>
+    <string name="without_image">without Image</string>
+    <string name="confirm">Confirm</string>
+    <string name="add_new_name">Add new name</string>
+    <string name="type_the_name">Type the Name</string>
+    <string name="upload_image">Upload Image</string>
+    <string name="done">Done</string>
+</resources>
