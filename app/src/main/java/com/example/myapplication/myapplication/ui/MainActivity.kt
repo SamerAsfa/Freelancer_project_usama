@@ -11,8 +11,6 @@ import com.example.myapplication.myapplication.base.BaseActivity
 import com.example.myapplication.myapplication.databinding.ActivityMainBinding
 import com.example.myapplication.myapplication.presentation.UserListViewModel
 import com.example.myapplication.myapplication.utils.getDeviceId
-import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.bottom_sheet_dialog.*

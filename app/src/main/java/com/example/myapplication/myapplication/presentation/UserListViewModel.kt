@@ -82,7 +82,7 @@ class UserListViewModel @Inject constructor(
                         id = it.data?.getValue("id").toString(),
                         profilePicUrl = it.data?.getValue("profile_pic_url").toString()
                     );
-                    if (user.name.isEmpty()) {
+                    if (query.isEmpty()) {
                         userList.add(user)
                     } else if (user.name.contains(query)) {
                         userList.add(user)
