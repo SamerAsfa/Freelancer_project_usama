@@ -14,8 +14,8 @@ private fun getOrCreateAdapter(recyclerView: RecyclerView): BaseRecyclerViewAdap
     return if (recyclerView.adapter != null && recyclerView.adapter is BaseRecyclerViewAdapter) {
         recyclerView.adapter as BaseRecyclerViewAdapter
     } else {
-        val bindableRecyclerAdapter = BaseRecyclerViewAdapter()
-        recyclerView.adapter = bindableRecyclerAdapter
-        bindableRecyclerAdapter
+        val baseRecyclerAdapter = BaseRecyclerViewAdapter()
+        recyclerView.adapter = baseRecyclerAdapter
+        baseRecyclerAdapter
     }
 }
