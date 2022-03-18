@@ -5,6 +5,7 @@ plugins {
     id 'kotlin-kapt'
     id 'kotlin-android-extensions'
     id 'dagger.hilt.android.plugin'
+    id 'com.huawei.agconnect'
 
 }
 
@@ -13,7 +14,7 @@ android {
     buildToolsVersion '30.0.3'
 
     defaultConfig {
-        applicationId "com.example.myapplication.wajeez"
+        applicationId "com.test.face.usama"
         minSdkVersion 19
         targetSdkVersion 30
         versionCode 1
@@ -50,11 +51,12 @@ android {
 
 }
 def lifecycleExtensionVersion = '1.1.1'
-def glideVersion = '4.9.0'
+def glideVersion = '3.7.0'
 
 
 
 dependencies {
+
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation "androidx.core:core-ktx:1.1.0"
     implementation 'androidx.appcompat:appcompat:1.3.1'
@@ -71,6 +73,8 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9"
     implementation 'com.google.android.material:material:1.4.0'
     implementation 'com.squareup.moshi:moshi:1.8.0'
+    implementation 'com.google.mlkit:face-detection:16.1.4'
+    implementation 'com.google.android.gms:play-services-mlkit-face-detection:17.0.0'
     implementation "com.github.bumptech.glide:glide:$glideVersion"
     implementation 'com.google.firebase:firebase-storage:19.1.0'
     kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.8.0'
@@ -81,4 +85,6 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore-ktx'
     implementation 'androidx.multidex:multidex:2.0.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    implementation 'com.huawei.agconnect:agconnect-core:1.5.0.300'
+    implementation 'com.huawei.hms:ml-computer-vision-livenessdetection:2.2.0.300'
 }

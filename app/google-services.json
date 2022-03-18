@@ -9,10 +9,18 @@
       "client_info": {
         "mobilesdk_app_id": "1:306976592345:android:899222a7291d8b897ec9c8",
         "android_client_info": {
-          "package_name": "com.example.myapplication.wajeez"
+          "package_name": "com.test.face.usama"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "306976592345-4mi9fv43oe1f4uenvudstuvh724si837.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.test.face.usama",
+            "certificate_hash": "375cb12220270bfed6ecbd708505f58fa4eb04de"
+          }
+        },
         {
           "client_id": "306976592345-p6us2u2m603vah3pgncnst08s9s84fk4.apps.googleusercontent.com",
           "client_type": 3
