@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
-    android:background="#FFFFFF"
+    android:background="#000000"
     android:fitsSystemWindows="true"
     android:minHeight="480dp"
     tools:context=".ui.CustomDetectionActivity">
@@ -20,7 +20,7 @@
         <RelativeLayout
             android:id="@+id/preview_container"
             android:layout_width="match_parent"
-            android:layout_height="480dp"
+            android:layout_height="match_parent"
             android:layout_below="@id/tool_bar"
             android:background="#FFFFFF"
             android:minHeight="480dp">
@@ -43,6 +43,7 @@
 
         <RelativeLayout
             android:id="@+id/tool_bar"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_alignParentTop="true"
@@ -73,6 +74,7 @@
 
         <LinearLayout
             android:id="@+id/bg"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/preview_container"
