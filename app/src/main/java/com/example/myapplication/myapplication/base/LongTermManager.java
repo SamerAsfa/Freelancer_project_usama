@@ -49,5 +49,6 @@ public class LongTermManager {
 
     public void clearAll() {
         mSharedPreference.clearPreference();
+        userModel = null;
     }
 }

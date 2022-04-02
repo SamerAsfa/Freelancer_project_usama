@@ -26,8 +26,6 @@ class CreateAccountActivity : AppCompatActivity(), ResponseApi {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_account)
-
-
         custom_btn.setOnClickListener {
             var maps: MutableMap<String, String> = HashMap()
             maps.put("name", nameEditText.text.toString())
@@ -85,10 +83,7 @@ class CreateAccountActivity : AppCompatActivity(), ResponseApi {
     }
 
     override fun onErrorCall(error: VolleyError?) {
-        Toast.makeText(
-            this, error?.message,
-            Toast.LENGTH_LONG
-        ).show()
+
     }
 
 

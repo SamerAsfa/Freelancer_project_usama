@@ -7,13 +7,16 @@ import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
 import android.database.Cursor
+import android.graphics.Rect
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.DocumentsContract
 import android.provider.MediaStore
+import android.util.DisplayMetrics
 import android.util.Log
+import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.Toast
@@ -25,7 +28,9 @@ import com.example.myapplication.myapplication.base.LongTermManager
 import com.example.myapplication.myapplication.base.ResponseApi
 import com.example.myapplication.myapplication.data.POSTMediasTask
 import com.example.myapplication.myapplication.models.UserModel
-import com.huawei.hms.mlsdk.livenessdetection.MLLivenessDetectView
+import com.huawei.hms.mlsdk.livenessdetection.*
+import kotlinx.android.synthetic.main.activity_custom_detection.*
+import kotlinx.android.synthetic.main.activity_custom_vid_detection.*
 import java.io.*
 import java.net.URISyntaxException
 
@@ -41,51 +46,45 @@ class CustomWithVideo : AppCompatActivity(), ResponseApi {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_custom_detection)
-        mPreviewContainer = findViewById(R.id.surface_layout)
+        setContentView(R.layout.activity_custom_vid_detection)
+        mPreviewContainer = findViewById(R.id.surface_layoutVid)
         val intent = intent
         userModel = intent.getParcelableExtra("user")
+        val outMetrics = DisplayMetrics()
+        windowManager.defaultDisplay.getMetrics(outMetrics)
+        val widthPixels = outMetrics.widthPixels
+        mlLivenessDetectView = MLLivenessDetectView.Builder()
+            .setContext(this)
+            .setOptions(MLLivenessDetectView.DETECT_MASK) // set Rect of face frame relative to surface in layout
+            .setFaceFrameRect(Rect(0, 0, widthPixels, dip2px(this, 780f)))
+            .setDetectCallback(object : OnMLLivenessDetectCallback {
+                override fun onCompleted(result: MLLivenessCaptureResult) {
+                    val value = Intent()
+                    val isLive = result.isLive
+                    if (isLive) {
+                        recordVideo()
+                    } else {
+                        value.putExtra("isLive", isLive)
+                        setResult(44, value)
+                        finish()
+                    }
+                }
 
-        recordVideo()
+                override fun onError(error: Int) {
+                    finish()
+                }
 
+                override fun onInfo(infoCode: Int, bundle: Bundle) {
 
-//        val outMetrics = DisplayMetrics()
-//        windowManager.defaultDisplay.getMetrics(outMetrics)
-//        val widthPixels = outMetrics.widthPixels
-//        mlLivenessDetectView = MLLivenessDetectView.Builder()
-//            .setContext(this)
-//            .setOptions(MLLivenessDetectView.DETECT_MASK) // set Rect of face frame relative to surface in layout
-//            .setFaceFrameRect(Rect(0, 0, widthPixels, dip2px(this, 780f)))
-//            .setDetectCallback(object : OnMLLivenessDetectCallback {
-//                override fun onCompleted(result: MLLivenessCaptureResult) {
-//                    val value = Intent()
-//                    val isLive = result.isLive
-//                    if (isLive) {
-//                        recordVideo()
-//                    } else {
-//                        value.putExtra("isLive", isLive)
-//                        setResult(44, value)
-//                        finish()
-//                    }
-//                }
-//
-//                override fun onError(error: Int) {
-//                    finish()
-//                }
-//
-//                override fun onInfo(infoCode: Int, bundle: Bundle) {
-//
-//                }
-//
-//                override fun onStateChange(state: Int, bundle: Bundle) {
-//
-//                }
-//            }).build()
-//
-//        mPreviewContainer!!.addView(mlLivenessDetectView)
-//        mlLivenessDetectView!!.onCreate(savedInstanceState)
-//
-//        regEmailButton.visibility = View.VISIBLE
+                }
+
+                override fun onStateChange(state: Int, bundle: Bundle) {
+
+                }
+            }).build()
+        mPreviewContainer!!.addView(mlLivenessDetectView)
+        mlLivenessDetectView!!.onCreate(savedInstanceState)
+        regEmailButtonVid.visibility = View.VISIBLE
     }
 
 
@@ -103,16 +102,14 @@ class CustomWithVideo : AppCompatActivity(), ResponseApi {
         val videoUri = intent?.data
         if (requestCode == VIDEO_CAPTURE) {
             if (resultCode == Activity.RESULT_OK) {
-//                /storage/emulated/0/DCIM/Camera/VID_20220402_113309.mp4
                 val filePath = videoUri?.let { getFilePath(this@CustomWithVideo, it) }
-                print("")
                 var maps: MutableMap<String, String> = HashMap()
                 maps.put("Authorization", "Bearer ${userModel?.token}")
                 maps.put("Accept", "application/json")
                 POSTMediasTask().uploadMediaWithHeader(
                     this@CustomWithVideo,
                     "http://frapi.hr-jo.com/api/uploadVod",
-                    filePath?.let { saveVideoToInternalStorage(it)?.absolutePath },
+                    filePath,
                     this@CustomWithVideo, maps
                 )
             } else if (resultCode == Activity.RESULT_CANCELED) {
@@ -134,68 +131,68 @@ class CustomWithVideo : AppCompatActivity(), ResponseApi {
         )
     }
 
-    private fun saveVideoToInternalStorage(filePath: String) : File? {
-        var newfile: File? = null
-        try {
-            val currentFile = File(filePath)
-            val fileName = currentFile.name
-            val cw = ContextWrapper(applicationContext)
-            val directory = cw.getDir("videoDir", MODE_PRIVATE)
-            newfile = File(directory, fileName)
-            if (currentFile.exists()) {
-                val `in`: InputStream = FileInputStream(currentFile)
-                val out: OutputStream = FileOutputStream(newfile)
+//    private fun saveVideoToInternalStorage(filePath: String): File? {
+//        var newfile: File? = null
+//        try {
+//            val currentFile = File(filePath)
+//            val fileName = currentFile.name
+//            val cw = ContextWrapper(applicationContext)
+//            val directory = cw.getDir("videoDir", MODE_PRIVATE)
+//            newfile = File(directory, fileName)
+//            if (currentFile.exists()) {
+//                val `in`: InputStream = FileInputStream(currentFile)
+//                val out: OutputStream = FileOutputStream(newfile)
+//
+//                // Copy the bits from instream to outstream
+//                val buf = ByteArray(1024)
+//                var len: Int
+//                while (`in`.read(buf).also { len = it } > 0) {
+//                    out.write(buf, 0, len)
+//                }
+//                `in`.close()
+//                out.close()
+//                Log.v("", "Video file saved successfully.")
+//            } else {
+//                Log.v("", "Video saving failed. Source file missing.")
+//            }
+//        } catch (e: java.lang.Exception) {
+//            e.printStackTrace()
+//        }
+//        return newfile
+//    }
+//
+//    private fun loadVideoFromInternalStorage(filePath: String): String {
+//        return Environment.getExternalStorageDirectory().toString() + filePath
+//    }
 
-                // Copy the bits from instream to outstream
-                val buf = ByteArray(1024)
-                var len: Int
-                while (`in`.read(buf).also { len = it } > 0) {
-                    out.write(buf, 0, len)
-                }
-                `in`.close()
-                out.close()
-                Log.v("", "Video file saved successfully.")
-            } else {
-                Log.v("", "Video saving failed. Source file missing.")
-            }
-        } catch (e: java.lang.Exception) {
-            e.printStackTrace()
-        }
-        return newfile
-    }
 
-    private fun loadVideoFromInternalStorage(filePath: String) : String {
-       return Environment.getExternalStorageDirectory().toString() + filePath
-    }
-
-
-    fun bitmapToFile( fileNameToSave: String): File? { // File name like "image.png"
-        //create a file to write bitmap data
-        var file: File? = null
-        return try {
-            file = File(
-                Environment.getExternalStorageDirectory()
-                    .toString() + File.separator + fileNameToSave
-            )
-            file.createNewFile()
-
-//            //Convert bitmap to byte array
-//            val bos = ByteArrayOutputStream()
-//            bitmap.compress(Bitmap.CompressFormat.JPEG, 0, bos) // YOU can also save it in JPEG
-//            val bitmapdata = bos.toByteArray()
-
-            //write the bytes in file
-            val fos = FileOutputStream(file)
-//            fos.write(bitmapdata)
-            fos.flush()
-            fos.close()
-            file
-        } catch (e: Exception) {
-            e.printStackTrace()
-            file // it will return null
-        }
-    }
-
+//    fun bitmapToFile(fileNameToSave: String): File? { // File name like "image.png"
+//        //create a file to write bitmap data
+//        var file: File? = null
+//        return try {
+//            file = File(
+//                Environment.getExternalStorageDirectory()
+//                    .toString() + File.separator + fileNameToSave
+//            )
+//            file.createNewFile()
+//
+////            //Convert bitmap to byte array
+////            val bos = ByteArrayOutputStream()
+////            bitmap.compress(Bitmap.CompressFormat.JPEG, 0, bos) // YOU can also save it in JPEG
+////            val bitmapdata = bos.toByteArray()
+//
+//            //write the bytes in file
+//            val fos = FileOutputStream(file)
+////            fos.write(bitmapdata)
+//            fos.flush()
+//            fos.close()
+//            file
+//        } catch (e: Exception) {
+//            e.printStackTrace()
+//            file // it will return null
+//        }
+//    }
+//
     @SuppressLint("NewApi")
     @Throws(URISyntaxException::class)
     fun getFilePath(context: Context, uri: Uri): String? {
@@ -273,20 +270,20 @@ class CustomWithVideo : AppCompatActivity(), ResponseApi {
     fun isGooglePhotosUri(uri: Uri): Boolean {
         return "com.google.android.apps.photos.content" == uri.authority
     }
-
-
-    fun getRealPathFromURI(context: Context, contentUri: Uri?): String? {
-        var cursor: Cursor? = null
-        return try {
-            val proj = arrayOf(MediaStore.Images.Media.DATA)
-            cursor = context.contentResolver.query(contentUri!!, proj, null, null, null)
-            val column_index = cursor!!.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-            cursor.moveToFirst()
-            cursor.getString(column_index)
-        } finally {
-            cursor?.close()
-        }
-    }
+//
+//
+//    fun getRealPathFromURI(context: Context, contentUri: Uri?): String? {
+//        var cursor: Cursor? = null
+//        return try {
+//            val proj = arrayOf(MediaStore.Images.Media.DATA)
+//            cursor = context.contentResolver.query(contentUri!!, proj, null, null, null)
+//            val column_index = cursor!!.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+//            cursor.moveToFirst()
+//            cursor.getString(column_index)
+//        } finally {
+//            cursor?.close()
+//        }
+//    }
 
     //    fun getRealPathFromURI(contentUri: Uri?): String? {
 //        val proj = arrayOf(MediaStore.Video.Media.DATA)
@@ -302,18 +299,18 @@ class CustomWithVideo : AppCompatActivity(), ResponseApi {
 
     override fun onDestroy() {
         super.onDestroy()
-//        mlLivenessDetectView!!.onDestroy()
+        mlLivenessDetectView!!.onDestroy()
     }
 
     override fun onPause() {
         super.onPause()
-//        mlLivenessDetectView!!.onPause()
+        mlLivenessDetectView!!.onPause()
     }
 
     override fun onResume() {
         super.onResume()
         HiltApplication.mContext = this
-//        mlLivenessDetectView!!.onResume()
+        mlLivenessDetectView!!.onResume()
     }
 
 

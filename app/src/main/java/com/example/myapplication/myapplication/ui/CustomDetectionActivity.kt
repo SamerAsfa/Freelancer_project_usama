@@ -52,8 +52,6 @@ class CustomDetectionActivity : AppCompatActivity(), ResponseApi {
                 override fun onCompleted(result: MLLivenessCaptureResult) {
                     val value = Intent()
 //                    value.putExtra("bitmap", result.bitmap)
-
-
                     val isLive = result.isLive
                     if (isLive) {
                         POSTMediasTask().uploadMedia(

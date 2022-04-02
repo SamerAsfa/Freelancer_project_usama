@@ -43,10 +43,10 @@
                 android:layout_marginTop="40dp"
                 android:gravity="center"
                 android:text="Already have an account?"
+                app:layout_constraintStart_toStartOf="@id/loginText"
                 android:textColor="@android:color/black"
                 android:textSize="16sp"
                 app:layout_constraintEnd_toStartOf="@id/createTextView"
-                app:layout_constraintStart_toStartOf="@id/loginText"
                 app:layout_constraintTop_toBottomOf="@id/loginText" />
 
             <TextView
@@ -55,11 +55,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
                 android:gravity="center"
+                app:layout_constraintEnd_toEndOf="parent"
                 android:text="Log In"
                 android:textColor="#233975"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="@id/loginText"
                 app:layout_constraintStart_toEndOf="@id/dontTextView"
                 app:layout_constraintTop_toBottomOf="@id/loginText" />
 
@@ -75,6 +75,7 @@
                 android:background="@drawable/shape_type_name"
                 android:gravity="center"
                 android:hint="Organization ID"
+                android:inputType="text"
                 android:padding="15dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -88,6 +89,7 @@
                 android:layout_marginTop="20dp"
                 android:maxLines="1"
                 android:imeOptions="actionNext"
+                android:inputType="text"
                 android:layout_marginEnd="20dp"
                 android:background="@drawable/shape_type_name"
                 android:gravity="center"
