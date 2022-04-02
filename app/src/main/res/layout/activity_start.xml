@@ -8,81 +8,92 @@
     tools:context=".ui.StartActivity">
 
 
-    <ImageView
-        android:id="@+id/imageImageView"
-        android:layout_width="140dp"
-        android:layout_height="150dp"
-        android:layout_marginTop="50dp"
-        android:background="@drawable/confirm_button_shape"
-        android:padding="20dp"
-        android:src="@drawable/logo"
+    <TextView
+        android:id="@+id/loginText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="30dp"
+        android:gravity="center"
+        android:text="Login"
+        android:textColor="@color/black"
+        android:textSize="27sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/emailEditText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
 
-    <TextView
-        android:id="@+id/loginText"
-        android:layout_width="0dp"
+    <EditText
+        android:id="@+id/emailEditText"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/black"
-        android:textStyle="bold"
-        android:text="Login"
-        android:layout_marginTop="30dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="75dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/shape_type_name"
         android:gravity="center"
-        app:layout_constraintStart_toStartOf="@id/imageImageView"
-        app:layout_constraintTop_toBottomOf="@id/imageImageView"
-        app:layout_constraintEnd_toEndOf="@id/imageImageView"
-        android:textSize="27sp"/>
-
-    <ImageView
-        android:layout_width="200dp"
-        android:layout_height="210dp"
-        android:elevation="15dp"
-        android:padding="30dp"
-        android:src="@drawable/face"
-        android:layout_marginTop="50dp"
+        android:hint="Organization ID or Email"
+        android:padding="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/loginText" />
 
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardView"
-        android:layout_width="200dp"
-        android:layout_height="210dp"
-        android:elevation="15dp"
-        android:layout_marginTop="50dp"
-        app:cardCornerRadius="20dp"
+    <EditText
+        android:id="@+id/passwordEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="45dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/shape_type_name"
+        android:gravity="center"
+        android:hint="Password"
+        android:padding="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/loginText" />
+        app:layout_constraintTop_toBottomOf="@id/emailEditText" />
 
-    <TextView
-        android:id="@+id/youHaveNoAccount"
-        android:layout_width="0dp"
+
+    <CheckBox
+        android:id="@+id/checkbox"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="35dp"
+        android:checked="true"
+        android:text="Keep me logged in"
         android:textColor="@color/black"
-        android:textStyle="bold"
-        android:text="you have no account?"
-        android:layout_marginTop="50dp"
-        android:gravity="center"
-        app:layout_constraintStart_toStartOf="@id/cardView"
-        app:layout_constraintTop_toBottomOf="@id/cardView"
-        app:layout_constraintEnd_toEndOf="@id/cardView"
-        android:textSize="15sp"/>
+        app:layout_constraintStart_toStartOf="@id/passwordEditText"
+        app:layout_constraintTop_toBottomOf="@id/passwordEditText" />
 
     <Button
         android:id="@+id/custom_btn"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         android:layout_width="250dp"
         android:layout_height="50dp"
-        android:layout_margin="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="45dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/confirm_button_shape"
+        android:text="Log in"
         android:textColor="@color/white"
-        android:text="SIGN UP"
-        android:background="@drawable/confirm_button_shape"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/checkbox" />
 
-
+    <Button
+        android:id="@+id/forgotPasswordButton"
+        android:layout_width="200dp"
+        android:layout_height="30dp"
+        android:textSize="12sp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="45dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/forgot_button_shape"
+        android:text="Forgot Password ?"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/custom_btn" />
 </androidx.constraintlayout.widget.ConstraintLayout>

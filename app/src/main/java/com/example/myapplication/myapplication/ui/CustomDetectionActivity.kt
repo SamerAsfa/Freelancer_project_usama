@@ -1,33 +1,45 @@
 package com.example.myapplication.myapplication.ui
 
 //import com.example.myapplication.myapplication.ui.StartActivity.Companion.customCallback
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.*
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
 import android.util.DisplayMetrics
-import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.android.volley.error.VolleyError
+import com.example.myapplication.myapplication.HiltApplication
 import com.example.myapplication.myapplication.R
+import com.example.myapplication.myapplication.base.LongTermManager
+import com.example.myapplication.myapplication.base.ResponseApi
+import com.example.myapplication.myapplication.data.POSTMediasTask
+import com.example.myapplication.myapplication.models.UserModel
 import com.huawei.hms.mlsdk.livenessdetection.*
-import java.io.ByteArrayOutputStream
-import java.io.FileOutputStream
+import kotlinx.android.synthetic.main.activity_custom_detection.*
+import okhttp3.Response
+import java.io.*
 import java.util.*
 
 
-class CustomDetectionActivity : AppCompatActivity() {
+class CustomDetectionActivity : AppCompatActivity(), ResponseApi {
 
     private var mlLivenessDetectView: MLLivenessDetectView? = null
     private var mPreviewContainer: FrameLayout? = null
     private var img_back: ImageView? = null
+    val VIDEO_CAPTURE = 101
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_custom_detection)
         mPreviewContainer = findViewById(R.id.surface_layout)
-        img_back?.setOnClickListener(View.OnClickListener { finish() })
         val outMetrics = DisplayMetrics()
         windowManager.defaultDisplay.getMetrics(outMetrics)
         val widthPixels = outMetrics.widthPixels
@@ -40,12 +52,27 @@ class CustomDetectionActivity : AppCompatActivity() {
                 override fun onCompleted(result: MLLivenessCaptureResult) {
                     val value = Intent()
 //                    value.putExtra("bitmap", result.bitmap)
+
+
                     val isLive = result.isLive
+                    if (isLive) {
+                        POSTMediasTask().uploadMedia(
+                            this@CustomDetectionActivity,
+                            "http://frapi.hr-jo.com/api/token",
+                            bitmapToFile(result.bitmap, "usama.JPEG")?.absolutePath,
+                            this@CustomDetectionActivity
+                        )
+                    } else {
+                        value.putExtra("isLive", isLive)
+                        setResult(44, value)
+                        finish()
+                    }
 //                    createImageFromBitmap(result.bitmap)
-                    value.putExtra("isLive", isLive)
+//                    value.putExtra("isLive", isLive)
+
 //                    value.putExtra("bitmap", bitmap)
-                    setResult(44, value)
-                    finish()
+//                    setResult(44, value)
+//                    finish()
                 }
 
                 override fun onError(error: Int) {
@@ -64,7 +91,45 @@ class CustomDetectionActivity : AppCompatActivity() {
         mPreviewContainer!!.addView(mlLivenessDetectView)
         mlLivenessDetectView!!.onCreate(savedInstanceState)
 
+        regEmailButton.setOnClickListener {
+            finish()
+            val intent = Intent(this, CreateAccountActivity::class.java)
+            this.startActivity(intent)
+        }
+    }
 
+    fun bitmapToFile(bitmap: Bitmap, fileNameToSave: String): File? { // File name like "image.png"
+        //create a file to write bitmap data
+        var file: File? = null
+        return try {
+            file = File(
+                Environment.getExternalStorageDirectory()
+                    .toString() + File.separator + fileNameToSave
+            )
+            file.createNewFile()
+
+            //Convert bitmap to byte array
+            val bos = ByteArrayOutputStream()
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 0, bos) // YOU can also save it in JPEG
+            val bitmapdata = bos.toByteArray()
+
+            //write the bytes in file
+            val fos = FileOutputStream(file)
+            fos.write(bitmapdata)
+            fos.flush()
+            fos.close()
+            file
+        } catch (e: Exception) {
+            e.printStackTrace()
+            file // it will return null
+        }
+    }
+
+    fun recordVideo() {
+
+
+        val intent = Intent(MediaStore.ACTION_VIDEO_CAPTURE)
+        startActivityForResult(intent, VIDEO_CAPTURE)
     }
 
     fun createImageFromBitmap(bitmap: Bitmap): String? {
@@ -74,7 +139,6 @@ class CustomDetectionActivity : AppCompatActivity() {
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
             val fo: FileOutputStream = openFileOutput(fileName, MODE_PRIVATE)
             fo.write(bytes.toByteArray())
-            // remember close file output
             fo.close()
         } catch (e: Exception) {
             e.printStackTrace()
@@ -88,12 +152,39 @@ class CustomDetectionActivity : AppCompatActivity() {
         resultCode: Int,
         intent: Intent?
     ) {
+        val videoUri = intent?.data
+        if (requestCode == VIDEO_CAPTURE) {
+            if (resultCode == Activity.RESULT_OK) {
+//                videoUri?.let {
+//                    UploadUtility(
+//                        this,
+//                        "http://frapi.hr-jo.com/api/token",
+//                        this,
+//                    ).uploadFile(it)
+//                }
+//                val value = Intent()
+//                value.putExtra("isLive", true)
+//                setResult(44, value)
+//                finish()
+            } else if (resultCode == Activity.RESULT_CANCELED) {
+                Toast.makeText(
+                    this, "Video recording cancelled.",
+                    Toast.LENGTH_LONG
+                ).show()
+            } else {
+                Toast.makeText(
+                    this, "Failed to record video",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
         super.onActivityResult(
             requestCode,
             resultCode,
             intent
         )
     }
+
 
     fun dip2px(context: Context, dpValue: Float): Int {
         val scale = context.resources.displayMetrics.density
@@ -112,7 +203,21 @@ class CustomDetectionActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        HiltApplication.mContext = this
         mlLivenessDetectView!!.onResume()
+    }
+
+
+    override fun onSuccessCall(response: String?) {
+        response?.let {
+            val userModel = UserModel().parse(it)
+            LongTermManager.getInstance().userModel = userModel
+            NavigationActivity().clearAndStart(this)
+        }
+    }
+
+    override fun onErrorCall(error: VolleyError?) {
+        print("")
     }
 
 }

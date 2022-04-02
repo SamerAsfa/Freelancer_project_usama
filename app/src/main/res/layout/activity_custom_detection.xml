@@ -1,105 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/fl_id"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="center"
-    android:background="#000000"
-    android:fitsSystemWindows="true"
-    android:minHeight="480dp"
-    tools:context=".ui.CustomDetectionActivity">
+    android:background="#000000">
 
-    <RelativeLayout
+
+    <TextView
+        android:id="@+id/loginText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="30dp"
+        android:gravity="center"
+        android:text="Get ready for \nyour Video Selfie"
+        android:textColor="@color/white"
+        android:textSize="27sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <FrameLayout
+        android:id="@+id/surface_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#00000000"
-        android:orientation="vertical">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <RelativeLayout
-            android:id="@+id/preview_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/tool_bar"
-            android:background="#FFFFFF"
-            android:minHeight="480dp">
+    <Button
+        android:id="@+id/regEmailButton"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="20dp"
+        android:textAllCaps="false"
+        android:layout_marginTop="45dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/face_detect_shape"
+        android:text="Try Login with E-Mail"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
-            <FrameLayout
-                android:id="@+id/surface_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-
-            <ImageView
-                android:id="@+id/imageview_scanbg"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_centerInParent="true"
-                android:scaleType="fitXY"
-                android:src="@drawable/search_shape" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/tool_bar"
-            android:visibility="gone"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:layout_alignParentTop="true"
-            android:background="#FFFFFF">
-
-            <ImageView
-                android:id="@+id/img_back"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="16dp"
-                android:scaleType="fitXY"
-                android:src="@drawable/confirm_button_shape" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="24dp"
-                android:layout_toEndOf="@+id/img_back"
-                android:gravity="center_vertical"
-                android:text="Face Detection"
-                android:textColor="#000000"
-                android:textSize="20dp" />
-        </RelativeLayout>
-
-        <LinearLayout
-            android:id="@+id/bg"
-            android:visibility="gone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/preview_container"
-            android:background="#FFFFFF"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/texts"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp"
-                android:gravity="center"
-                android:text="Put your face in the frame"
-                android:textColor="#000000"
-                android:textSize="16dp" />
-
-            <ImageView
-                android:id="@+id/imageViewTest"
-                android:layout_width="200dp"
-                android:layout_height="100dp"
-                android:layout_marginStart="16dp"
-                android:scaleType="fitXY" />
-        </LinearLayout>
-    </RelativeLayout>
-
-</FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
