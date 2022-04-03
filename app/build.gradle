@@ -91,5 +91,7 @@ dependencies {
     implementation 'com.huawei.hms:ml-computer-vision-livenessdetection:2.2.0.300'
     implementation("com.squareup.okhttp3:okhttp:4.7.2")
     implementation 'dev.dworks.libs:volleyplus:+'
+    implementation 'com.google.android.gms:play-services-location:19.0.1'
+    implementation 'com.skyfishjy.ripplebackground:library:1.0.1'
 
 }

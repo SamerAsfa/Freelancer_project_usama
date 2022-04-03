@@ -90,6 +90,13 @@ class CustomWithVideo : AppCompatActivity(), ResponseApi {
 
     fun recordVideo() {
         val intent = Intent(MediaStore.ACTION_VIDEO_CAPTURE)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+            intent.putExtra("android.intent.extras.CAMERA_FACING", android.hardware.Camera.CameraInfo.CAMERA_FACING_FRONT);
+            intent.putExtra("android.intent.extras.LENS_FACING_FRONT", 1);
+            intent.putExtra("android.intent.extra.USE_FRONT_CAMERA", true);
+        } else {
+            intent.putExtra("android.intent.extras.CAMERA_FACING", 1);
+        }
         intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 1);
         startActivityForResult(intent, VIDEO_CAPTURE)
     }
@@ -166,7 +173,7 @@ class CustomWithVideo : AppCompatActivity(), ResponseApi {
 //    }
 
 
-//    fun bitmapToFile(fileNameToSave: String): File? { // File name like "image.png"
+    //    fun bitmapToFile(fileNameToSave: String): File? { // File name like "image.png"
 //        //create a file to write bitmap data
 //        var file: File? = null
 //        return try {

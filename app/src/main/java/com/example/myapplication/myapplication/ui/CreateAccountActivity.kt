@@ -22,33 +22,48 @@ class CreateAccountActivity : AppCompatActivity(), ResponseApi {
         Manifest.permission.WRITE_EXTERNAL_STORAGE
     )
     private val RC_CAMERA_AND_EXTERNAL_STORAGE_CUSTOM = 0x01 shl 9
-
+    fun String.equalsIgnoreCase(other: String) =
+        (this as java.lang.String).equalsIgnoreCase(other)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_account)
         custom_btn.setOnClickListener {
-            var maps: MutableMap<String, String> = HashMap()
-            maps.put("name", nameEditText.text.toString())
-            maps.put("email", emailEditText.text.toString())
-            maps.put("password", "13456")
-            maps.put("code", "452145")
-            maps.put("mobile_number", numberPhoneEditText.text.toString())
-            if(userModel==null) {
-                POSTMediasTask().post(
-                    this@CreateAccountActivity,
-                    "http://frapi.hr-jo.com/api/register",
-                    maps,
-                    this@CreateAccountActivity
-                )
-            }else{
-                startCustomActivity(userModel!!)
+            if (emailEditText.text.toString().equalsIgnoreCase(reEmailEditText.text.toString())) {
+                if (passwordEditText.text.toString().equalsIgnoreCase(retypePasswordEditText.text.toString())) {
+                    var maps: MutableMap<String, String> = HashMap()
+                    maps.put("name", nameEditText.text.toString())
+                    maps.put("email", emailEditText.text.toString())
+                    maps.put("password", "13456")
+                    maps.put("code", "452145")
+                    maps.put("mobile_number", numberPhoneEditText.text.toString())
+                    if (userModel == null) {
+                        POSTMediasTask().post(
+                            this@CreateAccountActivity,
+                            "http://frapi.hr-jo.com/api/register",
+                            maps,
+                            this@CreateAccountActivity
+                        )
+                    } else {
+                        startCustomActivity(userModel!!)
+                    }
+                } else {
+                    Toast.makeText(
+                        this, "Password is mismatch",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            } else {
+                Toast.makeText(
+                    this, "Email is mismatch",
+                    Toast.LENGTH_LONG
+                ).show()
             }
         }
     }
 
     override fun onSuccessCall(response: String?) {
         response?.let {
-              this.userModel = UserModel().parse(it)
+            this.userModel = UserModel().parse(it)
 //            LongTermManager.getInstance().userModel = userModel
             if (ActivityCompat.checkSelfPermission(
                     this@CreateAccountActivity,

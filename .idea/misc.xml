@@ -1,5 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="app/src/main/res/drawable/bluea.xml" value="0.154" />
+        <entry key="app/src/main/res/drawable/confirm_button_shape.xml" value="0.154" />
+        <entry key="app/src/main/res/drawable/disro.xml" value="0.154" />
+        <entry key="app/src/main/res/drawable/drawable_selector.xml" value="0.154" />
+        <entry key="app/src/main/res/drawable/face_detect_shape.xml" value="0.154" />
+        <entry key="app/src/main/res/drawable/forgot_button_shape.xml" value="0.154" />
+        <entry key="app/src/main/res/drawable/gro.xml" value="0.154" />
+        <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.154" />
+        <entry key="app/src/main/res/drawable/ic_show.xml" value="0.154" />
+        <entry key="app/src/main/res/drawable/purple.xml" value="0.154" />
+        <entry key="app/src/main/res/drawable/ro.xml" value="0.154" />
+        <entry key="app/src/main/res/drawable/search_shape.xml" value="0.154" />
+        <entry key="app/src/main/res/drawable/shape_type_name.xml" value="0.154" />
+        <entry key="app/src/main/res/drawable/wh.xml" value="0.154" />
+        <entry key="app/src/main/res/layout/activity_create_account.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/activity_custom_detection.xml" value="0.13272543059777103" />
+        <entry key="app/src/main/res/layout/activity_custom_vid_detection.xml" value="0.23254759746146872" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.13272543059777103" />
+        <entry key="app/src/main/res/layout/activity_navigation.xml" value="0.23254759746146872" />
+        <entry key="app/src/main/res/layout/activity_splash.xml" value="0.23233695652173914" />
+        <entry key="app/src/main/res/layout/activity_start.xml" value="0.165" />
+        <entry key="app/src/main/res/layout/bottom_sheet_dialog.xml" value="0.13272543059777103" />
+        <entry key="app/src/main/res/layout/camera_surface.xml" value="0.23233695652173914" />
+        <entry key="app/src/main/res/layout/fragment_history.xml" value="0.23254759746146872" />
+        <entry key="app/src/main/res/layout/fragment_home.xml" value="0.23254759746146872" />
+        <entry key="app/src/main/res/layout/fragment_more.xml" value="0.23254759746146872" />
+        <entry key="app/src/main/res/layout/fragment_notifications.xml" value="0.23254759746146872" />
+        <entry key="app/src/main/res/layout/item_user_listing.xml" value="0.19934143870314083" />
+        <entry key="app/src/main/res/layout/login_with_face_activity.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/upload_items_dialog.xml" value="0.13272543059777103" />
+        <entry key="app/src/main/res/menu/bottom_nav_menu.xml" value="0.34843950406156476" />
+      </map>
+    </option>
+  </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>

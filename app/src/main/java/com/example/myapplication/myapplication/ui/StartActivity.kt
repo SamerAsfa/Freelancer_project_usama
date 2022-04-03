@@ -111,7 +111,7 @@ class StartActivity : AppCompatActivity() {
 //           val bitmap = BitmapFactory.decodeStream(this@StartActivity.openFileInput("myImage"))
             Toast.makeText(
                 this@StartActivity,
-                "Not Real Face",
+                "Face is not recognized",
                 Toast.LENGTH_LONG
             ).show()
         } else {
