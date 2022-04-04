@@ -4,14 +4,14 @@ plugins {
     id 'com.google.gms.google-services'
     id 'kotlin-kapt'
     id 'kotlin-android-extensions'
-    id 'dagger.hilt.android.plugin'
+//    id 'dagger.hilt.android.plugin'
     id 'com.huawei.agconnect'
 
 }
 
 android {
-    compileSdkVersion 30
-    buildToolsVersion '30.0.3'
+    compileSdkVersion 31
+    buildToolsVersion '31'
 
     defaultConfig {
         applicationId "com.test.face.usama"
@@ -34,12 +34,12 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
+        jvmTarget = JavaVersion.VERSION_11.toString()
     }
     androidExtensions {
         experimental = true
@@ -61,27 +61,27 @@ def glideVersion = '3.7.0'
 dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation "androidx.core:core-ktx:1.1.0"
-    implementation 'androidx.appcompat:appcompat:1.3.1'
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.0"
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.3.0"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:2.3.0"
-    implementation "androidx.activity:activity-ktx:1.3.1"
+    implementation "androidx.core:core-ktx:1.7.0"
+    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.4.1"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:2.4.1"
+    implementation "androidx.activity:activity-ktx:1.4.0"
     implementation "com.google.code.gson:gson:2.8.7"
-    implementation "com.google.dagger:hilt-android:2.35"
-    implementation "com.google.dagger:hilt-android-compiler:2.35"
+//    implementation "com.google.dagger:hilt-android:2.35"
+//    implementation "com.google.dagger:hilt-android-compiler:2.35"
     implementation platform('com.google.firebase:firebase-bom:29.0.4')
     implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.9"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9"
-    implementation 'com.google.android.material:material:1.4.0'
-    implementation 'com.squareup.moshi:moshi:1.8.0'
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2"
+    implementation 'com.google.android.material:material:1.5.0'
+    implementation 'com.squareup.moshi:moshi:1.12.0'
     implementation 'com.google.mlkit:face-detection:16.1.4'
     implementation 'com.google.android.gms:play-services-mlkit-face-detection:17.0.0'
     implementation "com.github.bumptech.glide:glide:$glideVersion"
     implementation 'com.google.firebase:firebase-storage:19.1.0'
-    kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.8.0'
-    kapt "androidx.lifecycle:lifecycle-compiler:2.3.0"
+//    kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.12.0'
+//    kapt "androidx.lifecycle:lifecycle-compiler:2.4.1"
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     implementation 'com.google.firebase:firebase-firestore-ktx'

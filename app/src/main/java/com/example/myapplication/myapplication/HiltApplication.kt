@@ -3,9 +3,9 @@ package com.example.myapplication.myapplication
 import android.app.Application
 import android.content.Context
 import com.example.myapplication.myapplication.base.LongTermManager
-import dagger.hilt.android.HiltAndroidApp
+//import dagger.hilt.android.HiltAndroidApp
 
-@HiltAndroidApp
+//@HiltAndroidApp
 class HiltApplication : Application(){
 
     companion object {
