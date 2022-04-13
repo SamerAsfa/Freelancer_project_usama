@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="#fafafa"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#fafafa">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -13,18 +13,18 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:paddingBottom="50dp"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:paddingBottom="50dp">
 
             <ImageView
                 android:id="@+id/userImage"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:scaleType="centerCrop"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="75dp"
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/wh"
+                android:scaleType="centerCrop"
                 app:layout_constraintEnd_toStartOf="@id/userNameTextView"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -52,7 +52,7 @@
                 android:layout_marginTop="55dp"
                 android:text=""
                 android:textColor="@android:color/black"
-                android:textSize="22sp"
+                android:textSize="28sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -68,17 +68,172 @@
                 android:text=""
                 android:textColor="@android:color/black"
                 android:textSize="19sp"
-                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/timeTextView"
                 tools:text="UOK" />
 
             <com.skyfishjy.library.RippleBackground
-                android:id="@+id/mainRippleBackground"
+                android:id="@+id/mainInRippleBackground"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:layout_marginTop="5dp"
+                android:visibility="invisible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/dateTextView"
+                app:rb_color="#2D44C5"
+                app:rb_duration="3000"
+                app:rb_radius="32dp"
+                app:rb_rippleAmount="4"
+                app:rb_scale="3">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp">
+
+                    <ImageView
+                        android:layout_width="110dp"
+                        android:layout_height="110dp"
+                        android:layout_centerInParent="true"
+                        android:layout_gravity="center"
+                        android:background="@drawable/bluea"
+                        android:gravity="center" />
+
+                    <ImageView
+                        android:layout_width="150dp"
+                        android:layout_height="70dp"
+                        android:layout_centerInParent="true"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:paddingBottom="20dp"
+                        android:src="@drawable/vector_punch" />
+
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="110dp"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="75dp"
+                        android:gravity="center"
+                        android:text="@string/punch_in"
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                </RelativeLayout>
+
+
+            </com.skyfishjy.library.RippleBackground>
+
+            <com.skyfishjy.library.RippleBackground
+                android:id="@+id/mainOutRippleBackground"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginTop="5dp"
+                android:visibility="invisible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/dateTextView"
+                app:rb_color="#2FF64F"
+                app:rb_duration="3000"
+                app:rb_radius="32dp"
+                app:rb_rippleAmount="4"
+                app:rb_scale="3">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp">
+
+                    <ImageView
+                        android:layout_width="110dp"
+                        android:layout_height="110dp"
+                        android:layout_centerInParent="true"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:src="@drawable/gro" />
+
+                    <ImageView
+                        android:layout_width="150dp"
+                        android:layout_height="70dp"
+                        android:layout_centerInParent="true"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:paddingBottom="20dp"
+                        android:src="@drawable/vector_punch" />
+
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="110dp"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="65dp"
+                        android:gravity="center"
+                        android:text="@string/Punch_Out"
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                </RelativeLayout>
+
+
+            </com.skyfishjy.library.RippleBackground>
+
+            <com.skyfishjy.library.RippleBackground
+                android:id="@+id/mainBreakRippleBackground"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginTop="5dp"
+                android:visibility="invisible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/dateTextView"
+                app:rb_color="#673AB7"
+                app:rb_duration="3000"
+                app:rb_radius="32dp"
+                app:rb_rippleAmount="4"
+                app:rb_scale="3">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp">
+
+                    <ImageView
+                        android:layout_width="110dp"
+                        android:layout_height="110dp"
+                        android:layout_centerInParent="true"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:src="@drawable/purple" />
+
+                    <ImageView
+                        android:layout_width="150dp"
+                        android:layout_height="70dp"
+                        android:layout_centerInParent="true"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:paddingBottom="20dp"
+                        android:src="@drawable/vector_punch" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="110dp"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="65dp"
+                        android:gravity="center"
+                        android:text="@string/breaks"
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                </RelativeLayout>
+
+
+            </com.skyfishjy.library.RippleBackground>
+
+            <com.skyfishjy.library.RippleBackground
+                android:id="@+id/mainLeaveRippleBackground"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginTop="5dp"
+                android:visibility="invisible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/dateTextView"
@@ -93,7 +248,6 @@
                     android:layout_height="250dp">
 
                     <ImageView
-                        android:id="@+id/centerImage"
                         android:layout_width="110dp"
                         android:layout_height="110dp"
                         android:layout_centerInParent="true"
@@ -101,16 +255,24 @@
                         android:gravity="center"
                         android:src="@drawable/ro" />
 
+                    <ImageView
+                        android:layout_width="150dp"
+                        android:layout_height="70dp"
+                        android:layout_centerInParent="true"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:paddingBottom="20dp"
+                        android:src="@drawable/vector_punch" />
+
                     <TextView
-                        android:id="@+id/punchInTextView"
                         android:layout_width="match_parent"
                         android:layout_height="110dp"
                         android:layout_gravity="center"
                         android:layout_marginTop="65dp"
                         android:gravity="center"
-                        android:text="Punch In"
+                        android:text="@string/leave"
                         android:textColor="@android:color/white"
-                        android:textSize="19sp"
+                        android:textSize="16sp"
                         android:textStyle="bold" />
                 </RelativeLayout>
 
@@ -129,7 +291,7 @@
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/mainRippleBackground"
+                app:layout_constraintTop_toBottomOf="@id/mainInRippleBackground"
                 tools:text="UOK" />
 
             <ImageView
@@ -143,19 +305,19 @@
                 app:layout_constraintEnd_toStartOf="@id/locationNameTextView"
                 app:layout_constraintTop_toTopOf="@id/locationNameTextView" />
 
-
             <com.skyfishjy.library.RippleBackground
-                android:id="@+id/punchOut"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
+                android:id="@+id/punchIn"
+                android:layout_width="95dp"
+                android:layout_height="95dp"
+                android:layout_marginStart="20dp"
                 android:layout_marginTop="35dp"
-                app:layout_constraintEnd_toStartOf="@id/breaks"
+                app:layout_constraintEnd_toStartOf="@id/punchOut"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/locationImage"
-                app:rb_color="#2FF64F"
+                app:rb_color="#2D44C5"
                 app:rb_duration="5000"
                 app:rb_radius="32dp"
-                app:rb_rippleAmount="3"
+                app:rb_rippleAmount="1"
                 app:rb_scale="2">
 
                 <RelativeLayout
@@ -164,25 +326,67 @@
 
                     <ImageView
                         android:id="@+id/punchInImage"
-                        android:layout_width="55dp"
-                        android:layout_height="55dp"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
                         android:layout_centerInParent="true"
                         android:layout_gravity="center"
                         android:gravity="center"
-                        android:src="@drawable/gro" />
+                        android:background="@drawable/bluea" />
 
                     <TextView
                         android:id="@+id/punchOutTextView"
                         android:layout_width="match_parent"
                         android:layout_height="55dp"
                         android:layout_gravity="center"
-                        android:layout_marginTop="35dp"
+                        android:layout_marginTop="20dp"
+                        android:gravity="center"
+                        android:text="@string/punch_in"
+                        android:textColor="@android:color/white"
+                        android:textSize="9sp"
+                        android:textStyle="bold" />
+                </RelativeLayout>
+
+
+            </com.skyfishjy.library.RippleBackground>
+
+            <com.skyfishjy.library.RippleBackground
+                android:id="@+id/punchOut"
+                android:layout_width="95dp"
+                android:layout_height="95dp"
+                android:layout_marginTop="35dp"
+                app:layout_constraintEnd_toStartOf="@id/breaks"
+                app:layout_constraintStart_toEndOf="@id/punchIn"
+                app:layout_constraintTop_toBottomOf="@id/locationImage"
+                app:rb_color="#2FF64F"
+                app:rb_duration="5000"
+                app:rb_radius="32dp"
+                app:rb_rippleAmount="1"
+                app:rb_scale="2">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp">
+
+                    <ImageView
+                        android:id="@+id/punchOutImage"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_centerInParent="true"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:background="@drawable/gro" />
+
+                    <TextView
+                        android:id="@+id/punchOutTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="20dp"
                         android:gravity="center"
                         android:text="PunchOut"
                         android:textColor="@android:color/white"
-                        android:textSize="11sp"
-                        android:textStyle="bold"
-                        />
+                        android:textSize="9sp"
+                        android:textStyle="bold" />
                 </RelativeLayout>
 
 
@@ -190,8 +394,8 @@
 
             <com.skyfishjy.library.RippleBackground
                 android:id="@+id/breaks"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
+                android:layout_width="95dp"
+                android:layout_height="95dp"
                 android:layout_marginTop="35dp"
                 app:layout_constraintEnd_toStartOf="@id/leave"
                 app:layout_constraintStart_toEndOf="@id/punchOut"
@@ -199,7 +403,7 @@
                 app:rb_color="#673AB7"
                 app:rb_duration="5000"
                 app:rb_radius="32dp"
-                app:rb_rippleAmount="3"
+                app:rb_rippleAmount="1"
                 app:rb_scale="2">
 
                 <RelativeLayout
@@ -208,39 +412,40 @@
 
                     <ImageView
                         android:id="@+id/breakImage"
-                        android:layout_width="55dp"
-                        android:layout_height="55dp"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
                         android:layout_centerInParent="true"
                         android:layout_gravity="center"
                         android:gravity="center"
-                        android:src="@drawable/purple" />
+                        android:background="@drawable/purple" />
 
                     <TextView
                         android:id="@+id/breakTextView"
                         android:layout_width="match_parent"
                         android:layout_height="55dp"
                         android:layout_gravity="center"
-                        android:layout_marginTop="35dp"
+                        android:layout_marginTop="20dp"
                         android:gravity="center"
                         android:text="Break"
                         android:textColor="@android:color/white"
-                        android:textSize="11sp"
+                        android:textSize="9sp"
                         android:textStyle="bold" />
                 </RelativeLayout>
             </com.skyfishjy.library.RippleBackground>
 
             <com.skyfishjy.library.RippleBackground
                 android:id="@+id/leave"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
+                android:layout_width="95dp"
+                android:layout_height="95dp"
                 android:layout_marginTop="35dp"
+                android:layout_marginEnd="20dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/breaks"
                 app:layout_constraintTop_toBottomOf="@id/locationImage"
-                app:rb_color="#2D44C5"
+                app:rb_color="#EF0000"
                 app:rb_duration="5000"
                 app:rb_radius="32dp"
-                app:rb_rippleAmount="3"
+                app:rb_rippleAmount="1"
                 app:rb_scale="2">
 
                 <RelativeLayout
@@ -249,23 +454,23 @@
 
                     <ImageView
                         android:id="@+id/leaveImage"
-                        android:layout_width="55dp"
-                        android:layout_height="55dp"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
                         android:layout_centerInParent="true"
                         android:layout_gravity="center"
                         android:gravity="center"
-                        android:src="@drawable/bluea" />
+                        android:background="@drawable/ro" />
 
                     <TextView
                         android:id="@+id/breaksTextView"
                         android:layout_width="match_parent"
-                        android:layout_height="55dp"
+                        android:layout_height="25dp"
                         android:layout_gravity="center"
                         android:layout_marginTop="35dp"
                         android:gravity="center"
                         android:text="Leave"
                         android:textColor="@android:color/white"
-                        android:textSize="11sp"
+                        android:textSize="9sp"
                         android:textStyle="bold" />
                 </RelativeLayout>
 
@@ -276,26 +481,27 @@
                 android:id="@+id/punchInImageView"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
+                android:layout_marginStart="45dp"
+                android:layout_marginEnd="45dp"
                 android:layout_marginTop="15dp"
+                android:background="@drawable/vectors_punch_in"
                 android:text=""
-                android:layout_marginStart="25dp"
-                android:background="@drawable/vector_time"
-                app:layout_constraintTop_toBottomOf="@id/punchOut"
-                app:layout_constraintStart_toStartOf="@id/punchOut"
+                app:layout_constraintStart_toStartOf="@id/punchIn"
+                app:layout_constraintTop_toBottomOf="@id/punchIn"
                 tools:text="UOK" />
 
             <TextView
                 android:id="@+id/punchInSTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="5dp"
                 android:text=""
                 android:textColor="@android:color/black"
                 android:textSize="19sp"
                 android:textStyle="bold"
-                app:layout_constraintTop_toBottomOf="@id/punchInImageView"
                 app:layout_constraintEnd_toEndOf="@id/punchInImageView"
                 app:layout_constraintStart_toStartOf="@id/punchInImageView"
+                app:layout_constraintTop_toBottomOf="@id/punchInImageView"
                 tools:text="UOK" />
 
 
@@ -303,14 +509,14 @@
                 android:id="@+id/punchInStaticTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="5dp"
                 android:text="Punch In"
                 android:textColor="#585A66"
                 android:textSize="16sp"
-                app:layout_constraintTop_toBottomOf="@id/punchInSTextView"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@id/punchInSTextView"
                 app:layout_constraintStart_toStartOf="@id/punchInSTextView"
+                app:layout_constraintTop_toBottomOf="@id/punchInSTextView"
                 tools:text="Punch In" />
 
 
@@ -319,39 +525,40 @@
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:layout_marginTop="15dp"
+                android:layout_marginStart="45dp"
+                android:layout_marginEnd="45dp"
+                android:background="@drawable/vectors_punch_out"
                 android:text=""
-                android:layout_marginEnd="25dp"
-                android:background="@drawable/vector_time"
-                app:layout_constraintTop_toBottomOf="@id/punchOut"
                 app:layout_constraintEnd_toEndOf="@id/leave"
+                app:layout_constraintTop_toBottomOf="@id/punchOut"
                 tools:text="UOK" />
 
             <TextView
                 android:id="@+id/punchOutSateTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="5dp"
                 android:text=""
                 android:textColor="@android:color/black"
                 android:textSize="19sp"
                 android:textStyle="bold"
-                app:layout_constraintTop_toBottomOf="@id/punchOutImageView"
                 app:layout_constraintEnd_toEndOf="@id/punchOutImageView"
                 app:layout_constraintStart_toStartOf="@id/punchOutImageView"
+                app:layout_constraintTop_toBottomOf="@id/punchOutImageView"
                 tools:text="UOK" />
 
             <TextView
                 android:id="@+id/punchOutStaticTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="5dp"
                 android:text="Punch In"
                 android:textColor="#585A66"
                 android:textSize="16sp"
-                app:layout_constraintTop_toBottomOf="@id/punchOutSateTextView"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@id/punchOutSateTextView"
                 app:layout_constraintStart_toStartOf="@id/punchOutSateTextView"
+                app:layout_constraintTop_toBottomOf="@id/punchOutSateTextView"
                 tools:text="Punch Out" />
 
 

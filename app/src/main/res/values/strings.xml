@@ -8,4 +8,8 @@
     <string name="type_the_name">Type the Name</string>
     <string name="upload_image">Upload Image</string>
     <string name="done">Done</string>
+    <string name="punch_in">Punch In</string>
+    <string name="Punch_Out">Punch Out</string>
+    <string name="breaks">Break</string>
+    <string name="leave">Leave</string>
 </resources>

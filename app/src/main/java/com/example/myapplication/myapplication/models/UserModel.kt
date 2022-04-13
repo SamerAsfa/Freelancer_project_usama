@@ -24,8 +24,9 @@ data class UserModel(
     val location: LocationModel? = null,
     @SerializedName("action")
     @Expose
-    val actionModel: ArrayList<ActionModel>? = ArrayList(),
+    val actionModel: ArrayList<ActionModel?>? = ArrayList(),
 ) : Parcelable {
+
 
 
     @Throws(JSONException::class)

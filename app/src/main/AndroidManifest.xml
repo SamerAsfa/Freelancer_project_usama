@@ -37,6 +37,7 @@
         <activity android:name=".ui.CreateAccountActivity"/>
         <activity android:name=".ui.NavigationActivity"/>
         <activity android:name=".ui.CustomWithVideo"/>
+        <activity android:name=".ui.PunchCamDetectionActivity"/>
 
 
 

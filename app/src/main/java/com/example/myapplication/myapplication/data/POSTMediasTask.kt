@@ -11,7 +11,9 @@ import com.android.volley.error.VolleyError
 import com.android.volley.request.SimpleMultiPartRequest
 import com.android.volley.request.StringRequest
 import com.android.volley.toolbox.Volley
+import com.example.myapplication.myapplication.base.LongTermManager
 import com.example.myapplication.myapplication.base.ResponseApi
+import com.example.myapplication.myapplication.models.UserModel
 
 
 class POSTMediasTask {
@@ -77,9 +79,7 @@ class POSTMediasTask {
             }
         )
         multiPartRequestWithParams.headers = header
-//        multiPartRequestWithParams.addFile("attachment", "/${filePath}")
         multiPartRequestWithParams.addFile("attachment", filePath)
-//        multiPartRequestWithParams.addStringParam("param2", "SomeParamValue2")
         val queue = Volley.newRequestQueue(context)
         queue.add(multiPartRequestWithParams)
     }
@@ -115,6 +115,43 @@ class POSTMediasTask {
             override fun getHeaders(): Map<String, String> {
                 val params: MutableMap<String, String> = HashMap()
                 params["Content-Type"] = "application/x-www-form-urlencoded"
+                return params
+            }
+        }
+        queue.add(sr)
+    }
+
+
+    fun get(
+        context: Activity?,
+        url: String?,
+        concat: String? = "",
+        responseApi: ResponseApi
+    ) {
+        val userModel: UserModel = LongTermManager.getInstance().userModel
+        val queue = Volley.newRequestQueue(context)
+        val sr: StringRequest = object : StringRequest(
+            Method.GET, "${url}${concat}",
+            Response.Listener {
+                responseApi.onSuccessCall(it)
+            },
+            Response.ErrorListener { error ->
+                val errors = VolleyError(error?.networkResponse?.data?.let { String(it) });
+                responseApi.onErrorCall(errors)
+                Toast.makeText(
+                    context, errors.message,
+                    Toast.LENGTH_LONG
+                ).show()
+            }) {
+            @Throws(AuthFailureError::class)
+            //                        maps.put("Authorization", "Bearer 1|7fsrJprTOi4jyHLWFTICI7Tgs2B6ZhxwBTrZKTLL")
+
+            override fun getHeaders(): Map<String, String> {
+                val params: MutableMap<String, String> = HashMap()
+                params["Content-Type"] = "application/x-www-form-urlencoded"
+//                params["Authorization"] = "Bearer ${userModel.token}"
+                params["Authorization"] = "Bearer 1|7fsrJprTOi4jyHLWFTICI7Tgs2B6ZhxwBTrZKTLL"
+                params["Accept"] = "application/json"
                 return params
             }
         }

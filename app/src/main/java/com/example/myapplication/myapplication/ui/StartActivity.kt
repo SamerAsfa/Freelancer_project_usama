@@ -33,49 +33,12 @@ private val RC_CAMERA_AND_EXTERNAL_STORAGE_CUSTOM = 0x01 shl 9
 
 class StartActivity : AppCompatActivity() {
 
-    val customCallback: MLLivenessCapture.Callback = object : MLLivenessCapture.Callback {
-        override fun onSuccess(result: MLLivenessCaptureResult) {
-            Toast.makeText(
-                this@StartActivity,
-                "onRequestPermissionsResult",
-                Toast.LENGTH_LONG
-            ).show()
-//                mTextResult!!.text = result.toString()
-//                mTextResult!!.setBackgroundResource(if (result.isLive) R.drawable.bg_blue else R.drawable.bg_red)
-//                mImageResult?.setImageBitmap(result.bitmap)
-        }
-
-        override fun onFailure(errorCode: Int) {
-//                mTextResult!!.text = "errorCode:$errorCode"
-        }
-    }
-//        }
-//        }
-
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.login_with_face_activity)
-//        mTextResult = findViewById(R.id.text_detect_result)
-//        mImageResult = findViewById(R.id.img_detect_result)
         customLogin.setOnClickListener(View.OnClickListener {
-            if (ActivityCompat.checkSelfPermission(
-                    this@StartActivity,
-                    Manifest.permission.CAMERA
-                ) == PackageManager.PERMISSION_GRANTED
-            ) {
-                startCustomActivity()
-                return@OnClickListener
-            }
-            ActivityCompat.requestPermissions(
-                this@StartActivity,
-                PERMISSIONS,
-                RC_CAMERA_AND_EXTERNAL_STORAGE_CUSTOM,
-            )
-
-
+            loginBy()
         })
 
         createTextView.setOnClickListener {
@@ -83,6 +46,22 @@ class StartActivity : AppCompatActivity() {
             this.startActivity(intent)
         }
 
+    }
+
+
+    fun loginBy(){
+        if (ActivityCompat.checkSelfPermission(
+                this@StartActivity,
+                Manifest.permission.CAMERA
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            startCustomActivity()
+        }
+        ActivityCompat.requestPermissions(
+            this@StartActivity,
+            PERMISSIONS,
+            RC_CAMERA_AND_EXTERNAL_STORAGE_CUSTOM,
+        )
     }
 
 
@@ -109,6 +88,7 @@ class StartActivity : AppCompatActivity() {
         if (requestCode == 44 && resultCode == 44) {
             val isLive = intent?.getBooleanExtra("isLive", false)
 //           val bitmap = BitmapFactory.decodeStream(this@StartActivity.openFileInput("myImage"))
+            loginBy()
             Toast.makeText(
                 this@StartActivity,
                 "Face is not recognized",

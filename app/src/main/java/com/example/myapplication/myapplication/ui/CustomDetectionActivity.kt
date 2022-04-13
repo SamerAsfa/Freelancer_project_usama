@@ -1,6 +1,5 @@
 package com.example.myapplication.myapplication.ui
 
-//import com.example.myapplication.myapplication.ui.StartActivity.Companion.customCallback
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -18,13 +17,13 @@ import com.example.myapplication.myapplication.HiltApplication
 import com.example.myapplication.myapplication.R
 import com.example.myapplication.myapplication.base.LongTermManager
 import com.example.myapplication.myapplication.base.ResponseApi
+import com.example.myapplication.myapplication.data.BaseRequest
+import com.example.myapplication.myapplication.data.BaseRequest.Companion.loginApi
 import com.example.myapplication.myapplication.data.POSTMediasTask
 import com.example.myapplication.myapplication.models.UserModel
 import com.huawei.hms.mlsdk.livenessdetection.*
 import kotlinx.android.synthetic.main.activity_custom_detection.*
-import okhttp3.Response
 import java.io.*
-import java.util.*
 
 
 class CustomDetectionActivity : AppCompatActivity(), ResponseApi {
@@ -56,7 +55,7 @@ class CustomDetectionActivity : AppCompatActivity(), ResponseApi {
                     if (isLive) {
                         POSTMediasTask().uploadMedia(
                             this@CustomDetectionActivity,
-                            "http://frapi.hr-jo.com/api/token",
+                            loginApi,
                             bitmapToFile(result.bitmap, "usama.JPEG")?.absolutePath,
                             this@CustomDetectionActivity
                         )

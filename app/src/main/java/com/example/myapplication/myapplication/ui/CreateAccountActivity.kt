@@ -9,8 +9,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.android.volley.error.VolleyError
 import com.example.myapplication.myapplication.R
-import com.example.myapplication.myapplication.base.LongTermManager
 import com.example.myapplication.myapplication.base.ResponseApi
+import com.example.myapplication.myapplication.data.BaseRequest.Companion.registerApi
 import com.example.myapplication.myapplication.data.POSTMediasTask
 import com.example.myapplication.myapplication.models.UserModel
 import kotlinx.android.synthetic.main.activity_create_account.*
@@ -24,12 +24,15 @@ class CreateAccountActivity : AppCompatActivity(), ResponseApi {
     private val RC_CAMERA_AND_EXTERNAL_STORAGE_CUSTOM = 0x01 shl 9
     fun String.equalsIgnoreCase(other: String) =
         (this as java.lang.String).equalsIgnoreCase(other)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_account)
         custom_btn.setOnClickListener {
             if (emailEditText.text.toString().equalsIgnoreCase(reEmailEditText.text.toString())) {
-                if (passwordEditText.text.toString().equalsIgnoreCase(retypePasswordEditText.text.toString())) {
+                if (passwordEditText.text.toString()
+                        .equalsIgnoreCase(retypePasswordEditText.text.toString())
+                ) {
                     var maps: MutableMap<String, String> = HashMap()
                     maps.put("name", nameEditText.text.toString())
                     maps.put("email", emailEditText.text.toString())
@@ -39,7 +42,7 @@ class CreateAccountActivity : AppCompatActivity(), ResponseApi {
                     if (userModel == null) {
                         POSTMediasTask().post(
                             this@CreateAccountActivity,
-                            "http://frapi.hr-jo.com/api/register",
+                            registerApi,
                             maps,
                             this@CreateAccountActivity
                         )

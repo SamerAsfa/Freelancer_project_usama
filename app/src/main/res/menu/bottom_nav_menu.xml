@@ -5,18 +5,22 @@
     <item
         android:id="@+id/home"
         android:visible="true"
+        android:icon="@drawable/vector_home"
         android:title="Home" />
     <item
         android:id="@+id/history"
         android:visible="true"
+        android:icon="@drawable/vector_history"
         android:title="History" />
     <item
         android:id="@+id/notification"
         android:visible="true"
+        android:icon="@drawable/vector_notifications"
         android:title="Notifications" />
 
     <item
         android:id="@+id/more"
         android:visible="true"
+        android:icon="@drawable/vector_more"
         android:title="More" />
 </menu>

@@ -26,6 +26,7 @@ import com.example.myapplication.myapplication.HiltApplication
 import com.example.myapplication.myapplication.R
 import com.example.myapplication.myapplication.base.LongTermManager
 import com.example.myapplication.myapplication.base.ResponseApi
+import com.example.myapplication.myapplication.data.BaseRequest.Companion.uploadVodApi
 import com.example.myapplication.myapplication.data.POSTMediasTask
 import com.example.myapplication.myapplication.models.UserModel
 import com.huawei.hms.mlsdk.livenessdetection.*
@@ -115,7 +116,7 @@ class CustomWithVideo : AppCompatActivity(), ResponseApi {
                 maps.put("Accept", "application/json")
                 POSTMediasTask().uploadMediaWithHeader(
                     this@CustomWithVideo,
-                    "http://frapi.hr-jo.com/api/uploadVod",
+                    uploadVodApi,
                     filePath,
                     this@CustomWithVideo, maps
                 )
