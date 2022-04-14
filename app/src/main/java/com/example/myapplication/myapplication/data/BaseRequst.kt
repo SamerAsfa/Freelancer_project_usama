@@ -10,6 +10,8 @@ class BaseRequest {
         val registerApi: String = "${baseUrl}/register"
         val dashboardApi: String = "${baseUrl}/dashboard"
         val punchHistoryApi: String = "${baseUrl}/punchHistory"
+        val leaveApi: String = "${baseUrl}/leave"
+        val leaveTypeApi: String = "${baseUrl}/leaveType"
 
         val PINApi: String = "${baseUrl}/PIN"
         val POUTApi: String = "${baseUrl}/POUT"

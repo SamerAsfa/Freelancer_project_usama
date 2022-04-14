@@ -9,9 +9,8 @@ import com.example.myapplication.myapplication.R
 import com.example.myapplication.myapplication.data.DateUtils
 import com.example.myapplication.myapplication.models.HistoryModel
 
-
-class HistoryAdapter(private val arrayList: ArrayList<HistoryModel?>?) :
-    RecyclerView.Adapter<HistoryAdapter.ViewHolder>() {
+class LeavesAdapter(private val arrayList: ArrayList<HistoryModel?>?) :
+    RecyclerView.Adapter<LeavesAdapter.ViewHolder>() {
 
 
     override fun onCreateViewHolder(
@@ -29,17 +28,10 @@ class HistoryAdapter(private val arrayList: ArrayList<HistoryModel?>?) :
         position: Int
     ) {
         holder.titleDateTextView.text =
-            DateUtils().getDateForaAdapterFromTimeStamp(arrayList?.get(holder.adapterPosition)?.date)
-        holder.titleInTextView.text = arrayList?.get(holder.adapterPosition)?.pin
-        holder.titleOutTextView.text = arrayList?.get(holder.adapterPosition)?.pout
-        val hours = arrayList?.get(holder.adapterPosition)?.breaks?.div(60)
-        val minutes = arrayList?.get(holder.adapterPosition)?.breaks?.rem(60)
-        val time = String.format("%d:%02d", hours, minutes)
-        if(arrayList?.get(holder.adapterPosition)?.breaks==0){
-            holder.titleBreakTextView.text = "--:--"
-        }else{
-            holder.titleBreakTextView.text = time
-        }
+            DateUtils().getDateForaAdapterFromTimeStamp(arrayList?.get(holder.adapterPosition)?.start_date)
+        holder.titleInTextView.text =  DateUtils().getLeaveForaAdapterFromTimeStamp(arrayList?.get(holder.adapterPosition)?.start_date)
+        holder.titleOutTextView.text =  DateUtils().getLeaveForaAdapterFromTimeStamp(arrayList?.get(holder.adapterPosition)?.end_date)
+        holder.titleBreakTextView.text = arrayList?.get(holder.adapterPosition)?.status
     }
 
     override fun getItemCount(): Int {

@@ -44,6 +44,58 @@ class DateUtils {
         return null
     }
 
+    fun monthDate(date: Int?): String? {
+        try {
+            val format1 = SimpleDateFormat("MM", Locale.CANADA)
+            val format = SimpleDateFormat("MMM", Locale.CANADA)
+            val c = Calendar.getInstance()
+            c.time = format1.parse(date.toString())
+            return format.format(c.time)
+        } catch (e: ParseException) {
+            e.printStackTrace()
+        }
+        return null
+    }
+
+    fun yearDate(date: Int?): String? {
+        try {
+            val format1 = SimpleDateFormat("yyyy", Locale.CANADA)
+            val format = SimpleDateFormat("yy", Locale.CANADA)
+            val c = Calendar.getInstance()
+            c.time = format1.parse(date.toString())
+            return format.format(c.time)
+        } catch (e: ParseException) {
+            e.printStackTrace()
+        }
+        return null
+    }
+
+    fun dayDate(date: Int?): String? {
+        try {
+            val format1 = SimpleDateFormat("dd", Locale.CANADA)
+            val format = SimpleDateFormat("EEEE", Locale.CANADA)
+            val c = Calendar.getInstance()
+            c.time = format1.parse(date.toString())
+            return format.format(c.time)
+        } catch (e: ParseException) {
+            e.printStackTrace()
+        }
+        return null
+    }
+
+
+    fun getLeaveForaAdapterFromTimeStamp(date: String?): String? {
+        try {
+            val format1 = SimpleDateFormat("yyyy-MM-dd hh:mm", Locale.CANADA)
+            val format = SimpleDateFormat("hh:mm a", Locale.CANADA)
+            val c = Calendar.getInstance()
+            c.time = format1.parse(date)
+            return format.format(c.time)
+        } catch (e: ParseException) {
+            e.printStackTrace()
+        }
+        return null
+    }
 
 
 

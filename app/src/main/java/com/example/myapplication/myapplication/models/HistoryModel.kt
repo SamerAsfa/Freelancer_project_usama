@@ -14,6 +14,11 @@ data class HistoryModel(
     val date: String? = null,
     val pin: String? = null,
     val pout: String? = null,
+    val amount_in_min: String? = null,
+    val start_date: String? = null,
+    val end_date: String? = null,
+    val type_id: Int? = null,
+    val status: String? = null,
     @SerializedName("break")
     @Expose
     val breaks: Int? = 0,

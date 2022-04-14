@@ -143,18 +143,12 @@ class POSTMediasTask {
                     Toast.LENGTH_LONG
                 ).show()
             }) {
-            @Throws(AuthFailureError::class)
-            //                        maps.put("Authorization", "Bearer 1|7fsrJprTOi4jyHLWFTICI7Tgs2B6ZhxwBTrZKTLL")
-
-            override fun getHeaders(): Map<String, String> {
-                val params: MutableMap<String, String> = HashMap()
-                params["Content-Type"] = "application/x-www-form-urlencoded"
-//                params["Authorization"] = "Bearer ${userModel.token}"
-                params["Authorization"] = "Bearer 1|7fsrJprTOi4jyHLWFTICI7Tgs2B6ZhxwBTrZKTLL"
-                params["Accept"] = "application/json"
-                return params
-            }
         }
+        val maps: MutableMap<String, String> = HashMap()
+        maps.put("Authorization", "Bearer ${userModel.token}")
+        maps.put("Accept", "application/json")
+        maps.put("Content-Type", "application/x-www-form-urlencoded")
+        sr.headers = maps
         queue.add(sr)
     }
 
