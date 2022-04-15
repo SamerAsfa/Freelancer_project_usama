@@ -57,10 +57,36 @@ class DateUtils {
         return null
     }
 
+    fun monthDateApi(date: Int?): String? {
+        try {
+            val format1 = SimpleDateFormat("MM", Locale.CANADA)
+            val format = SimpleDateFormat("MM", Locale.CANADA)
+            val c = Calendar.getInstance()
+            c.time = format1.parse(date.toString())
+            return format.format(c.time)
+        } catch (e: ParseException) {
+            e.printStackTrace()
+        }
+        return null
+    }
+
     fun yearDate(date: Int?): String? {
         try {
             val format1 = SimpleDateFormat("yyyy", Locale.CANADA)
             val format = SimpleDateFormat("yy", Locale.CANADA)
+            val c = Calendar.getInstance()
+            c.time = format1.parse(date.toString())
+            return format.format(c.time)
+        } catch (e: ParseException) {
+            e.printStackTrace()
+        }
+        return null
+    }
+
+    fun yearDateApi(date: Int?): String? {
+        try {
+            val format1 = SimpleDateFormat("yyyy", Locale.CANADA)
+            val format = SimpleDateFormat("yyyy", Locale.CANADA)
             val c = Calendar.getInstance()
             c.time = format1.parse(date.toString())
             return format.format(c.time)
@@ -83,7 +109,18 @@ class DateUtils {
         return null
     }
 
-
+    fun dayDateApi(date: Int?): String? {
+        try {
+            val format1 = SimpleDateFormat("dd", Locale.CANADA)
+            val format = SimpleDateFormat("dd", Locale.CANADA)
+            val c = Calendar.getInstance()
+            c.time = format1.parse(date.toString())
+            return format.format(c.time)
+        } catch (e: ParseException) {
+            e.printStackTrace()
+        }
+        return null
+    }
     fun getLeaveForaAdapterFromTimeStamp(date: String?): String? {
         try {
             val format1 = SimpleDateFormat("yyyy-MM-dd hh:mm", Locale.CANADA)

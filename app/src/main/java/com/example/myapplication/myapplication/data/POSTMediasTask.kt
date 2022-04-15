@@ -84,6 +84,49 @@ class POSTMediasTask {
         queue.add(multiPartRequestWithParams)
     }
 
+    fun uploadMediaWithHeaderBody(
+        context: Activity?,
+        url: String?,
+        filePath: String?,
+        responseApi: ResponseApi,
+        header: MutableMap<String, String>,
+        startDate: String,
+        end_date: String,
+        type_id: String,
+    ) {
+        context?.let { toggleProgressDialog(true, it) }
+        val multiPartRequestWithParams = SimpleMultiPartRequest(
+            Request.Method.POST, url,
+            object : Response.Listener<String?> {
+                override fun onResponse(response: String?) {
+                    responseApi.onSuccessCall(response)
+                    context?.let { toggleProgressDialog(false, it) }
+                }
+
+            }, object : Response.ErrorListener {
+                override fun onErrorResponse(error: VolleyError?) {
+                    val errors = VolleyError(error?.networkResponse?.data?.let { String(it) });
+                    responseApi.onErrorCall(errors)
+                    context?.let { toggleProgressDialog(false, it) }
+                    Toast.makeText(
+                        context, errors.message,
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+
+            }
+        )
+        multiPartRequestWithParams.headers = header
+        multiPartRequestWithParams.addFile("attachment", filePath)
+        multiPartRequestWithParams.addStringParam("start_date", startDate)
+        multiPartRequestWithParams.addStringParam("end_date", end_date)
+        multiPartRequestWithParams.addStringParam("type_id", type_id)
+        val queue = Volley.newRequestQueue(context)
+        queue.add(multiPartRequestWithParams)
+    }
+
+
+
     fun post(
         context: Activity?,
         url: String?,

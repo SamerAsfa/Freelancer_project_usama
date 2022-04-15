@@ -12,6 +12,7 @@ import com.example.myapplication.myapplication.base.LongTermManager
 import com.example.myapplication.myapplication.models.UserModel
 import com.example.myapplication.myapplication.ui.CustomWithVideo
 import com.example.myapplication.myapplication.ui.MyLeavesActivity
+import com.example.myapplication.myapplication.ui.SplashActivity
 import kotlinx.android.synthetic.main.fragment_history.view.*
 import kotlinx.android.synthetic.main.fragment_home.view.*
 import kotlinx.android.synthetic.main.fragment_home.view.userImage
@@ -64,7 +65,8 @@ class MoreFragment : Fragment(R.layout.fragment_more) {
         }
 
         view.logOutTextView.setOnClickListener {
-
+            LongTermManager.getInstance().clearAll()
+            SplashActivity().clearAndStart(requireContext())
         }
 
         return view

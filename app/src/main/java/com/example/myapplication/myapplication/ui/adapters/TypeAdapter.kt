@@ -23,7 +23,7 @@ class TypeAdapter(private val arrayList: ArrayList<TypesModel?>?,private val cli
 
 
     interface Clicks{
-        fun click(model: TypesModel,position: Int)
+        fun click(typesModel: TypesModel,position: Int)
     }
 
     override fun onBindViewHolder(

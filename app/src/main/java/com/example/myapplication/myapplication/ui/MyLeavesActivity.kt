@@ -26,7 +26,7 @@ class MyLeavesActivity : AppCompatActivity() {
             val intent = Intent(this, RequstLeaveActivity::class.java)
             startActivity(intent)
         }
-        initCurrentDate(Date().time)
+
         vectorRightImageView.setOnClickListener {
             increaseMonth()
         }
@@ -34,6 +34,11 @@ class MyLeavesActivity : AppCompatActivity() {
             decreaseMonth()
         }
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        initCurrentDate(Date().time)
     }
 
     private fun increaseMonth() {

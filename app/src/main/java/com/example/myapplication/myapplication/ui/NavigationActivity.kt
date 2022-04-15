@@ -38,10 +38,7 @@ class NavigationActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_navigation)
-//        logOutButton.setOnClickListener {
-//            LongTermManager.getInstance().clearAll()
-//            SplashActivity().clearAndStart(this)
-//        }
+
 
 
         val homeFragment = HomeFragment.getInstance()

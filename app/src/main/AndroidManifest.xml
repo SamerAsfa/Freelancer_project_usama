@@ -18,7 +18,7 @@
     <application
         android:name=".HiltApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/vectors_logo"
         android:label="FaceTest"
         android:usesCleartextTraffic="true"
         android:requestLegacyExternalStorage="true"
