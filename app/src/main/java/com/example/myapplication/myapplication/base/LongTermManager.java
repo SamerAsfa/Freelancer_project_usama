@@ -2,8 +2,15 @@ package com.example.myapplication.myapplication.base;
 
 
 import android.content.Context;
+
+import com.example.myapplication.myapplication.models.NotificationModel;
 import com.example.myapplication.myapplication.models.UserModel;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Collection;
 
 
 public class LongTermManager {
@@ -11,6 +18,8 @@ public class LongTermManager {
     private static SharedPreferencesManger mSharedPreference;
     private static Gson gson;
     private UserModel userModel;
+    private String notificationsToken = "";
+    private ArrayList<NotificationModel> notificationModelArrayList;
 
     public static synchronized LongTermManager getInstance() {
         if (mInstance == null) {
@@ -27,12 +36,45 @@ public class LongTermManager {
 
     public void setContext(Context mContext) {
         mSharedPreference = new SharedPreferencesManger();
+        notificationsToken = mSharedPreference.GetStringPreferences("notificationsToken", "");
+
         try {
             userModel = gson.fromJson(mSharedPreference.GetStringPreferences("userModel", ""), UserModel.class);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+
+        try {
+            Type collectionType = new TypeToken<Collection<NotificationModel>>() {
+            }.getType();
+            notificationModelArrayList = gson.fromJson(mSharedPreference.GetStringPreferences("notificationModelArrayList", ""), collectionType);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
+
+    public ArrayList<NotificationModel> getNotificationModelArrayList() {
+        return notificationModelArrayList == null ? new ArrayList<>() : notificationModelArrayList;
+    }
+
+    public void setNotificationModelArrayList(ArrayList<NotificationModel> notificationModelArrayList) {
+        this.notificationModelArrayList = notificationModelArrayList;
+        try {
+            mSharedPreference.SetStringPreferences("notificationModelArrayList", gson.toJson(notificationModelArrayList));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public String getNotificationsToken() {
+        return notificationsToken;
+    }
+
+    public void setNotificationsToken(String notificationsToken) {
+        this.notificationsToken = notificationsToken;
+        mSharedPreference.SetStringPreferences("notificationsToken", notificationsToken);
+    }
+
 
     public UserModel getUserModel() {
         return userModel;

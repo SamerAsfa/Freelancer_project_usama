@@ -2,6 +2,7 @@ package com.example.myapplication.myapplication.ui
 
 import android.app.Activity
 import android.content.Context
+import android.content.ContextWrapper
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Rect
@@ -24,9 +25,9 @@ import com.huawei.hms.mlsdk.livenessdetection.MLLivenessCaptureResult
 import com.huawei.hms.mlsdk.livenessdetection.MLLivenessDetectView
 import com.huawei.hms.mlsdk.livenessdetection.OnMLLivenessDetectCallback
 import kotlinx.android.synthetic.main.activity_custom_detection.*
-import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.FileOutputStream
+import java.io.*
+import java.util.*
+import kotlin.collections.HashMap
 
 class PunchCamDetectionActivity : AppCompatActivity(), ResponseApi {
 
@@ -64,7 +65,7 @@ class PunchCamDetectionActivity : AppCompatActivity(), ResponseApi {
                         POSTMediasTask().uploadMediaWithHeader(
                             this@PunchCamDetectionActivity,
                             urlPath,
-                            bitmapToFile(result.bitmap, "usama.JPEG")?.absolutePath,
+                            bitmapToFile(result.bitmap),
                             this@PunchCamDetectionActivity, maps
                         )
                     } else {
@@ -95,6 +96,23 @@ class PunchCamDetectionActivity : AppCompatActivity(), ResponseApi {
             val intent = Intent(this, CreateAccountActivity::class.java)
             this.startActivity(intent)
         }
+    }
+
+    private fun bitmapToFile(bitmap:Bitmap): String {
+        val wrapper = ContextWrapper(applicationContext)
+        var file = wrapper.getDir("Images",Context.MODE_PRIVATE)
+        file = File(file,"${UUID.randomUUID()}.jpg")
+        try{
+            val stream: OutputStream = FileOutputStream(file)
+            bitmap.compress(Bitmap.CompressFormat.JPEG,100,stream)
+            stream.flush()
+            stream.close()
+        }catch (e: IOException){
+            e.printStackTrace()
+        }
+
+        // Return the saved bitmap uri
+        return file.absolutePath
     }
 
     fun getIn() {
@@ -189,7 +207,7 @@ class PunchCamDetectionActivity : AppCompatActivity(), ResponseApi {
 
     override fun onSuccessCall(response: String?) {
         response?.let {
-            val actionModels = ActionModel().parseArray(it)
+            val user = UserModel().parse(it)
             val userModel: UserModel = LongTermManager.getInstance().userModel
             val mainUserModel = UserModel(
                 userModel.id,
@@ -197,10 +215,10 @@ class PunchCamDetectionActivity : AppCompatActivity(), ResponseApi {
                 userModel.email,
                 userModel.profile_photo_path,
                 userModel.token,
-                userModel.inSide,
-                userModel.out,
+                user?.inSide,
+                user?.out,
                 userModel.location,
-                actionModels
+                user?.actionModel
             )
             LongTermManager.getInstance().userModel = mainUserModel
             val value = Intent()

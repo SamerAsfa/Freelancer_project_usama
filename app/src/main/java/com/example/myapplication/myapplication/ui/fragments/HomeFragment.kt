@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -15,10 +16,8 @@ import android.text.format.DateFormat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import com.android.volley.error.VolleyError
 import com.bumptech.glide.Glide
@@ -32,9 +31,7 @@ import com.example.myapplication.myapplication.data.BaseRequest.Companion.PINApi
 import com.example.myapplication.myapplication.data.BaseRequest.Companion.POUTApi
 import com.example.myapplication.myapplication.data.DateUtils
 import com.example.myapplication.myapplication.data.POSTMediasTask
-import com.example.myapplication.myapplication.models.ActionModel
 import com.example.myapplication.myapplication.models.UserModel
-import com.example.myapplication.myapplication.ui.CustomDetectionActivity
 import com.example.myapplication.myapplication.ui.PunchCamDetectionActivity
 import com.google.android.gms.location.*
 import kotlinx.android.synthetic.main.fragment_home.*
@@ -53,7 +50,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     var userModel: UserModel? = null
     lateinit var mFusedLocationClient: FusedLocationProviderClient
     protected var mainView: View? = null
-
+    var location: Location? = null
 
     companion object {
         val fragmentName : String = "HomeFragment"
@@ -112,6 +109,14 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         mainView?.leave?.setOnClickListener {
             state = ButtonState.LEAVE
             loginBy()
+        }
+        mainView?.punchInImageView?.setOnClickListener {
+
+            val intent = Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse("http://maps.google.com/maps?saddr=${location?.latitude},${location?.longitude}&daddr=${location?.latitude},${location?.longitude}")
+            )
+            startActivity(intent)
         }
     }
 
@@ -321,6 +326,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     fun myLocation(location: Location) {
+        this.location = location
         mainView?.locationNameTextView?.text = "x"
         var lat = userModel?.location?.lat
         var lon = userModel?.location?.lng

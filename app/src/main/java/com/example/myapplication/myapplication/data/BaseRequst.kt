@@ -12,11 +12,12 @@ class BaseRequest {
         val punchHistoryApi: String = "${baseUrl}/punchHistory"
         val leaveApi: String = "${baseUrl}/leave"
         val leaveTypeApi: String = "${baseUrl}/leaveType"
+        val updateTokenFcmApi: String = "${baseUrl}/updateTokenFcm"
 
-        val PINApi: String = "${baseUrl}/PIN"
-        val POUTApi: String = "${baseUrl}/POUT"
-        val BREAKApi: String = "${baseUrl}/BREAK"
-        val LEAVEApi: String = "${baseUrl}/LEAVE"
+        val PINApi: String = "${baseUrl}/punch/PIN"
+        val POUTApi: String = "${baseUrl}/punch/POUT"
+        val BREAKApi: String = "${baseUrl}/punch/BREAK"
+        val LEAVEApi: String = "${baseUrl}/punch/LEAVE"
 
 
     }

@@ -18,6 +18,12 @@ class DateUtils {
         return sdf.format(netDate)
     }
 
+    fun getDateFromTimeStampNotification(timeStamp: Long): String {
+        val sdf = SimpleDateFormat("yyyy-MM-dd hh:mm", Locale.CANADA)
+        val netDate = Date(timeStamp)
+        return sdf.format(netDate)
+    }
+
     fun getDateForApiFromTimeStamp(timeStamp: Long): String {
         val sdf = SimpleDateFormat("yyyy-MM", Locale.CANADA)
         val netDate = Date(timeStamp)

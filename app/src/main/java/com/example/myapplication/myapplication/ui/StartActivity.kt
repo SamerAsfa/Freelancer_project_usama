@@ -13,6 +13,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.example.myapplication.myapplication.R
+import com.example.myapplication.myapplication.base.LongTermManager
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.messaging.FirebaseMessaging
 import com.huawei.hms.mlsdk.livenessdetection.MLLivenessCapture
 import com.huawei.hms.mlsdk.livenessdetection.MLLivenessCaptureResult
 import kotlinx.android.synthetic.main.activity_custom_detection.*
@@ -37,6 +40,7 @@ class StartActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.login_with_face_activity)
+        getFcm()
         customLogin.setOnClickListener(View.OnClickListener {
             loginBy()
         })
@@ -48,6 +52,17 @@ class StartActivity : AppCompatActivity() {
 
     }
 
+
+    fun getFcm(){
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                return@OnCompleteListener
+            }
+            val token = task.result
+            LongTermManager.getInstance().notificationsToken = token
+        })
+
+    }
 
     fun loginBy(){
         if (ActivityCompat.checkSelfPermission(

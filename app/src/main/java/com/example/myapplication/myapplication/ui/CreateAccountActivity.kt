@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.android.volley.error.VolleyError
 import com.example.myapplication.myapplication.R
+import com.example.myapplication.myapplication.base.LongTermManager
 import com.example.myapplication.myapplication.base.ResponseApi
 import com.example.myapplication.myapplication.data.BaseRequest.Companion.registerApi
 import com.example.myapplication.myapplication.data.POSTMediasTask
@@ -39,6 +40,7 @@ class CreateAccountActivity : AppCompatActivity(), ResponseApi {
                     maps.put("password", "13456")
                     maps.put("code", "452145")
                     maps.put("mobile_number", numberPhoneEditText.text.toString())
+                    maps.put("fcm", LongTermManager.getInstance().notificationsToken)
                     if (userModel == null) {
                         POSTMediasTask().post(
                             this@CreateAccountActivity,

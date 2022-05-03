@@ -2,8 +2,10 @@ package com.example.myapplication.myapplication.ui
 
 import android.app.Activity
 import android.content.Context
+import android.content.ContextWrapper
 import android.content.Intent
 import android.graphics.*
+import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
@@ -24,6 +26,7 @@ import com.example.myapplication.myapplication.models.UserModel
 import com.huawei.hms.mlsdk.livenessdetection.*
 import kotlinx.android.synthetic.main.activity_custom_detection.*
 import java.io.*
+import java.util.*
 
 
 class CustomDetectionActivity : AppCompatActivity(), ResponseApi {
@@ -56,7 +59,8 @@ class CustomDetectionActivity : AppCompatActivity(), ResponseApi {
                         POSTMediasTask().uploadMedia(
                             this@CustomDetectionActivity,
                             loginApi,
-                            bitmapToFile(result.bitmap, "usama.JPEG")?.absolutePath,
+                            bitmapToFile(result.bitmap),
+//                            bitmapToFile(result.bitmap, "usama.JPEG")?.absolutePath,
                             this@CustomDetectionActivity
                         )
                     } else {
@@ -122,9 +126,25 @@ class CustomDetectionActivity : AppCompatActivity(), ResponseApi {
         }
     }
 
+    private fun bitmapToFile(bitmap:Bitmap): String {
+        val wrapper = ContextWrapper(applicationContext)
+        var file = wrapper.getDir("Images",Context.MODE_PRIVATE)
+        file = File(file,"${UUID.randomUUID()}.jpg")
+        try{
+            val stream:OutputStream = FileOutputStream(file)
+            bitmap.compress(Bitmap.CompressFormat.JPEG,100,stream)
+            stream.flush()
+            stream.close()
+        }catch (e:IOException){
+            e.printStackTrace()
+        }
+
+        // Return the saved bitmap uri
+        return file.absolutePath
+    }
+
+
     fun recordVideo() {
-
-
         val intent = Intent(MediaStore.ACTION_VIDEO_CAPTURE)
         startActivityForResult(intent, VIDEO_CAPTURE)
     }
