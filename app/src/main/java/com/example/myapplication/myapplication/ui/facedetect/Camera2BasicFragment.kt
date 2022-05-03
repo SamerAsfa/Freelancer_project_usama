@@ -262,6 +262,8 @@ class Camera2BasicFragment @SuppressLint("ValidFragment") private constructor(
         view.findViewById<View>(R.id.picture).setOnClickListener(this)
         view.findViewById<View>(R.id.info).setOnClickListener(this)
         textureView = view.findViewById(R.id.texture)
+//        lockFocus()
+//        unlockFocus()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -283,6 +285,7 @@ class Camera2BasicFragment @SuppressLint("ValidFragment") private constructor(
         } else {
             textureView.surfaceTextureListener = surfaceTextureListener
         }
+
     }
 
     override fun onPause() {

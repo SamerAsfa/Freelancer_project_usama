@@ -26,7 +26,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.facedetect.FaceDetectionActivity">
+        <activity android:name=".ui.face2.FaceDetectionActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
