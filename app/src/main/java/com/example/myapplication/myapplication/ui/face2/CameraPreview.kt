@@ -1,14 +1,14 @@
 package com.example.myapplication.myapplication.ui.face2
 
 import android.content.Context
-import android.graphics.BitmapFactory
-import android.graphics.Rect
-import android.graphics.YuvImage
+import android.graphics.*
 import android.hardware.Camera
 import android.hardware.Camera.PreviewCallback
+import android.os.Build
 import android.util.Log
 import android.view.SurfaceHolder
 import android.view.SurfaceView
+import androidx.annotation.RequiresApi
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 
@@ -22,14 +22,13 @@ class CameraPreview(context: Context?, camera: Camera, imageBitmapListener: Imag
     private var mmageBitmapListener: ImageBitmapListener? = null
 
 
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun surfaceCreated(holder: SurfaceHolder) {
         // The Surface has been created, now tell the camera where to draw the preview.
         try {
             mCamera.setDisplayOrientation(90)
             mCamera.setPreviewDisplay(holder)
             mCamera.startPreview()
-
-
             mCamera.setPreviewCallback(PreviewCallback { _data, _camera ->
                 val params = _camera.parameters
                 val w = params.previewSize.width
@@ -40,13 +39,29 @@ class CameraPreview(context: Context?, camera: Camera, imageBitmapListener: Imag
                 val area = Rect(0, 0, w, h)
                 image.compressToJpeg(area, 50, out)
                 val bm = BitmapFactory.decodeByteArray(out.toByteArray(), 0, out.size())
-                mmageBitmapListener?.showStreamingImagesBitmap(bm)
+                rotate(bm,w,h)?.let { mmageBitmapListener?.showStreamingImagesBitmap(it) }
             })
         } catch (e: IOException) {
             print("")
         }
     }
 
+
+    fun rotate(bitmap: Bitmap, width: Int, height: Int): Bitmap? {
+        val matrix = Matrix()
+        matrix.postRotate(270f)
+        val scaledBitmap = Bitmap.createScaledBitmap(bitmap, width, height, true)
+        val rotatedBitmap = Bitmap.createBitmap(
+            scaledBitmap,
+            0,
+            0,
+            scaledBitmap.width,
+            scaledBitmap.height,
+            matrix,
+            true
+        )
+        return rotatedBitmap
+    }
 
     override fun surfaceDestroyed(holder: SurfaceHolder) {
         // empty. Take care of releasing the Camera preview in your activity.

@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.hardware.Camera
+import android.hardware.Camera.CameraInfo
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -41,7 +42,6 @@ class FaceDetectionActivity : AppCompatActivity() , ImageBitmapListener {
         }
     }
 
-
     protected fun setFragment() {
         val mCamera = getCameraInstance()
         val mPreview = mCamera?.let { CameraPreview(this, it , this) }
@@ -51,13 +51,28 @@ class FaceDetectionActivity : AppCompatActivity() , ImageBitmapListener {
     fun getCameraInstance(): Camera? {
         var c: Camera? = null
         try {
-            c = Camera.open()
+            c = Camera.open(getFrontCameraId())
+
         } catch (e: java.lang.Exception) {
 
         }
         return c
     }
 
+
+
+    private fun getFrontCameraId(): Int {
+        var camId = -1
+        val numberOfCameras = Camera.getNumberOfCameras()
+        val ci = CameraInfo()
+        for (i in 0 until numberOfCameras) {
+            Camera.getCameraInfo(i, ci)
+            if (ci.facing == CameraInfo.CAMERA_FACING_FRONT) {
+                camId = i
+            }
+        }
+        return camId
+    }
 
     private fun callCameraPermission() {
         try {
