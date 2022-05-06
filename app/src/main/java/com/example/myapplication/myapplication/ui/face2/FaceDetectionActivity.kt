@@ -40,16 +40,16 @@ class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
     var turnFaceToLeftLock: Boolean = true
     var turnFaceToRightLock: Boolean = true
     var first: Boolean = false
-    var leftHeadThrushHold = 15
-    var rightHeadThrushHold = -15
+    var leftHeadThrushHold = 5
+    var rightHeadThrushHold = -5
     var closeLeftEyeThrushHold = 0.006
     var closeRightEyeThrushHold = 0.006
-    var smileThrushHold = 0.2
+    var smileThrushHold = 0.010
     var stringValues : StringBuilder = StringBuilder()
 
     val arrayOfTextActions = arrayOf(
         "Keep Smiling",
-        "Keep Lef Eye Closed",
+        "Keep Left Eye Closed",
         "Keep Right Eye Closed",
         "Keep Your Face on Left",
         "Keep Your Face on Right"
@@ -129,19 +129,19 @@ class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
     fun checkCases() {
         if (getActionIndex() == ActionsType.SMILING.ordinal) {
             smileLock()
-            imageBitmap?.let { detectSmile(it) }
+            imageBitmap?.let { detectAll(it) }
         } else if (getActionIndex() == ActionsType.LEFT_EYE_CLOSED.ordinal) {
             leftEyeLock()
-            imageBitmap?.let { detectLeftEyeClosed(it) }
+            imageBitmap?.let { detectAll(it) }
         } else if (getActionIndex() == ActionsType.RIGHT_EYE_CLOSED.ordinal) {
             rightEyeLock()
-            imageBitmap?.let { detectRightEyeClosed(it) }
+            imageBitmap?.let { detectAll(it) }
         } else if (getActionIndex() == ActionsType.HEAD_LEFT.ordinal) {
             turnFaceToLeftLock()
-            imageBitmap?.let { detectLeftHead(it) }
+            imageBitmap?.let { detectAll(it) }
         } else if (getActionIndex() == ActionsType.HEAD_RIGHT.ordinal) {
             turnFaceToRightLock()
-            imageBitmap?.let { detectRightHead(it) }
+            imageBitmap?.let { detectAll(it) }
         }
     }
 
@@ -244,7 +244,7 @@ class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
                     startRandomTextActions()
                 }
             },
-            0, oneSecond * 2
+            0, 500
         )
     }
 
@@ -280,97 +280,74 @@ class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
         imageBitmap = bitmap
     }
 
-
-    private fun detectSmile(bitmap: Bitmap) {
+    private fun detectAll(bitmap: Bitmap) {
         try {
             Log.d("detect", "Start = ${System.currentTimeMillis()}")
             detector!!.detectInImage(FirebaseVisionImage.fromBitmap(bitmap))
                 .addOnSuccessListener { faces ->
+                    stringValues.append("started")
+                    addToText()
                     var smileProb = 0f
+                    var rightEyeOpenProb = 0f
+                    var leftEyeOpenProb = 0f
+                    var headEulerAngleY = 0f
                     Log.d("detect", "befLoop = ${System.currentTimeMillis()}")
                     for (face in faces) {
                         Log.d("detect", "after = ${System.currentTimeMillis()}")
                         if (face.smilingProbability != FirebaseVisionFace.UNCOMPUTED_PROBABILITY) {
                             smileProb = face.smilingProbability
+                            stringValues.append("Smile : ${smileProb}\n")
+                            addToText()
+                            if (smileProb > smileThrushHold) {
+                                smileOpen()
+                            } else if (smileProb >= 0.01) {
+                                smileLock()
+                            }
                         }
-                        stringValues.append("Smile : ${smileProb}\n")
-                        addToText()
-                        if (smileProb > smileThrushHold) {
-                            smileOpen()
-                        } else if (smileProb >= 0.01) {
-                            smileLock()
-                        }
-                    }
-                }
-        } catch (ex: Exception) {
-            ex.message
-        }
-    }
-
-
-    private fun detectLeftEyeClosed(bitmap: Bitmap) {
-        try {
-            detector!!.detectInImage(FirebaseVisionImage.fromBitmap(bitmap))
-                .addOnSuccessListener { faces ->
-                    var rightEyeOpenProb = 0f
-                    for (face in faces) {
+                        //
                         if (face.rightEyeOpenProbability != FirebaseVisionFace.UNCOMPUTED_PROBABILITY) {
                             rightEyeOpenProb = face.rightEyeOpenProbability
+                            stringValues.append("LeftEyeClosed : ${rightEyeOpenProb}\n")
+                            addToText()
+                            if (rightEyeOpenProb <= closeLeftEyeThrushHold) {
+                                leftEyeOpen()
+                            } else if (rightEyeOpenProb >= 0.99) {
+                                leftEyeLock()
+                            }
                         }
-                        stringValues.append("LeftEyeClosed : ${rightEyeOpenProb}\n")
-                        addToText()
-                        if (rightEyeOpenProb <= closeLeftEyeThrushHold) {
-                            leftEyeOpen()
-                        } else if (rightEyeOpenProb >= 0.99) {
-                            leftEyeLock()
-                        }
-                    }
-                }
-        } catch (ex: Exception) {
-            ex.message
-        }
-    }
-
-    private fun detectRightEyeClosed(bitmap: Bitmap) {
-        try {
-            detector!!.detectInImage(FirebaseVisionImage.fromBitmap(bitmap))
-                .addOnSuccessListener { faces ->
-                    var leftEyeOpenProb = 0f
-                    for (face in faces) {
+                        //
                         if (face.leftEyeOpenProbability != FirebaseVisionFace.UNCOMPUTED_PROBABILITY) {
                             leftEyeOpenProb = face.leftEyeOpenProbability
+                            stringValues.append("RightEyeClosed : ${leftEyeOpenProb}\n")
+                            addToText()
+                            if (leftEyeOpenProb <= closeRightEyeThrushHold) {
+                                rightEyeOpen()
+                            } else if (leftEyeOpenProb >= 0.99) {
+                                rightEyeLock()
+                            }
                         }
-                        stringValues.append("RightEyeClosed : ${leftEyeOpenProb}\n")
-                        addToText()
-                        if (leftEyeOpenProb <= closeRightEyeThrushHold) {
-                            rightEyeOpen()
-                        } else if (leftEyeOpenProb >= 0.99) {
-                            rightEyeLock()
-                        }
-                    }
-                }
-        } catch (ex: Exception) {
-            ex.message
-        }
-    }
-
-
-    private fun detectLeftHead(bitmap: Bitmap) {
-        try {
-            detector!!.detectInImage(FirebaseVisionImage.fromBitmap(bitmap))
-                .addOnSuccessListener { faces ->
-                    var headEulerAngleY = 0f
-                    for (face in faces) {
+                        //
                         if (face.headEulerAngleY != FirebaseVisionFace.UNCOMPUTED_PROBABILITY) {
                             headEulerAngleY = face.headEulerAngleY
+                            stringValues.append("LeftHead : ${headEulerAngleY}\n")
+                            Log.d("myTag", headEulerAngleY.toString())
+                            addToText()
+                            if (headEulerAngleY >= leftHeadThrushHold) {
+                                turnFaceToLeftOpen()
+                            } else {
+                                turnFaceToLeftLock()
+                            }
                         }
-                        stringValues.append("LeftHead : ${headEulerAngleY}\n")
-                        Log.d("myTag", headEulerAngleY.toString())
-                        addToText()
-                        if (headEulerAngleY >= leftHeadThrushHold) {
-                            turnFaceToLeftOpen()
-                        } else {
-                            turnFaceToLeftLock()
+                        //
+                        if (face.headEulerAngleY != FirebaseVisionFace.UNCOMPUTED_PROBABILITY) {
+                            headEulerAngleY = face.headEulerAngleY
+                            stringValues.append("RightHead : ${headEulerAngleY}\n")
+                            addToText()
+                            if (headEulerAngleY <= rightHeadThrushHold) {
+                                turnFaceToRightOpen()
+                            } else {
+                                turnFaceToRightLock()
+                            }
                         }
                     }
                 }
@@ -379,28 +356,6 @@ class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
         }
     }
 
-    private fun detectRightHead(bitmap: Bitmap) {
-        try {
-            detector!!.detectInImage(FirebaseVisionImage.fromBitmap(bitmap))
-                .addOnSuccessListener { faces ->
-                    var headEulerAngleY = 0f
-                    for (face in faces) {
-                        if (face.headEulerAngleY != FirebaseVisionFace.UNCOMPUTED_PROBABILITY) {
-                            headEulerAngleY = face.headEulerAngleY
-                        }
-                        stringValues.append("RightHead : ${headEulerAngleY}\n")
-                        addToText()
-                        if (headEulerAngleY <= rightHeadThrushHold) {
-                            turnFaceToRightOpen()
-                        } else {
-                            turnFaceToRightLock()
-                        }
-                    }
-                }
-        } catch (ex: Exception) {
-            ex.message
-        }
-    }
 
 
     fun addToText(){
