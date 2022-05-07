@@ -18,6 +18,7 @@ import com.google.firebase.ml.vision.face.FirebaseVisionFace
 import com.google.firebase.ml.vision.face.FirebaseVisionFaceDetector
 import com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions
 import kotlinx.android.synthetic.main.activity_face_detection.*
+import okhttp3.internal.wait
 import java.util.*
 
 
@@ -30,7 +31,9 @@ class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
     var currentIndex: Int = 0
     var actionsToCheck: Int = 4
     var imageBitmap: Bitmap? = null
-    private val publicTimer = Timer()
+
+    private val timerToProcess = Timer()
+    private val timerToSchedule = Timer()
     val arrayOfIndex: ArrayList<Int> = ArrayList()
     val lockCases: ArrayList<Boolean> = ArrayList()
     val hashOfSet: HashMap<Int, Int> = HashMap()
@@ -40,12 +43,10 @@ class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
     var turnFaceToLeftLock: Boolean = true
     var turnFaceToRightLock: Boolean = true
     var first: Boolean = false
-    var leftHeadThrushHold = 5
-    var rightHeadThrushHold = -5
-    var closeLeftEyeThrushHold = 0.006
-    var closeRightEyeThrushHold = 0.006
-    var smileThrushHold = 0.010
-    var stringValues : StringBuilder = StringBuilder()
+
+    ///
+    var stringValues: StringBuilder = StringBuilder()
+
 
     val arrayOfTextActions = arrayOf(
         "Keep Smiling",
@@ -86,19 +87,19 @@ class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
         if (requestCode == RC_CAMERA_AND_EXTERNAL_STORAGE_CUSTOM && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             setFragment()
             startTimerToSchedule()
+            startTimerToProcess()
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     private fun startRandomTextActions() {
         if (!isAllChecked()) {
-            if (lockCases[getActionIndex()]) {
-                val randomIndex = getRandomNumber()
-                drStateTextView.text = arrayOfTextActions.get(randomIndex)
-            }
+            val randomIndex = getRandomNumber()
+            drStateTextView.text = arrayOfTextActions.get(randomIndex)
             checkCases()
         } else {
-            publicTimer.cancel()
+            timerToSchedule.cancel()
+            timerToProcess.cancel()
             drStateTextView.text = "Done"
         }
     }
@@ -125,24 +126,55 @@ class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
         container.addView(mPreview);
     }
 
+    var leftHeadThrushHold = 30
+    var rightHeadThrushHold = -30
+    var closeLeftEyeThrushHold = 0.5
+    var closeRightEyeThrushHold = 0.5
+    var smileThrushHold = 0.028
 
+    //
+    var smileProb = 0f
+    var rightEyeOpenProb = 0.80f
+    var leftEyeOpenProb = 0.80f
+    var leftHeadAngleY = 0f
+    var rightHeadAngleY = 0f
     fun checkCases() {
         if (getActionIndex() == ActionsType.SMILING.ordinal) {
             smileLock()
-            imageBitmap?.let { detectAll(it) }
+            if (smileProb > smileThrushHold) {
+                smileOpen()
+            }
         } else if (getActionIndex() == ActionsType.LEFT_EYE_CLOSED.ordinal) {
             leftEyeLock()
-            imageBitmap?.let { detectAll(it) }
+            if (rightEyeOpenProb <= closeLeftEyeThrushHold) {
+                leftEyeOpen()
+            }
         } else if (getActionIndex() == ActionsType.RIGHT_EYE_CLOSED.ordinal) {
             rightEyeLock()
-            imageBitmap?.let { detectAll(it) }
-        } else if (getActionIndex() == ActionsType.HEAD_LEFT.ordinal) {
-            turnFaceToLeftLock()
-            imageBitmap?.let { detectAll(it) }
-        } else if (getActionIndex() == ActionsType.HEAD_RIGHT.ordinal) {
-            turnFaceToRightLock()
-            imageBitmap?.let { detectAll(it) }
-        }
+            if (leftEyeOpenProb <= closeRightEyeThrushHold) {
+                rightEyeOpen()
+            }
+        } else
+            if (getActionIndex() == ActionsType.HEAD_LEFT.ordinal) {
+                turnFaceToLeftLock()
+                if (leftHeadAngleY != 0f) {
+                    if (leftHeadAngleY >= leftHeadThrushHold) {
+                        turnFaceToLeftOpen()
+                    }
+                }
+            } else if (getActionIndex() == ActionsType.HEAD_RIGHT.ordinal) {
+                turnFaceToRightLock()
+                if (rightHeadAngleY != 0f) {
+                    if (rightHeadAngleY <= rightHeadThrushHold) {
+                        turnFaceToRightOpen()
+                    }
+                }
+            }
+        Log.d("SMILING", "SMILING ${smileProb}")
+        Log.d("LEFT_EYE_CLOSED", "LEFT_EYE_CLOSED ${rightEyeOpenProb}")
+        Log.d("RIGHT_EYE_CLOSED", "RIGHT_EYE_CLOSED${leftEyeOpenProb}")
+        Log.d("HEAD_LEFT", "HEAD_LEFT${leftHeadAngleY}")
+        Log.d("HEAD_RIGHT", "HEAD_RIGHT${rightHeadAngleY}")
     }
 
     fun increase() {
@@ -226,7 +258,7 @@ class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
                 c = Camera.open(getFrontCameraId())
             }
             var options = FirebaseVisionFaceDetectorOptions.Builder()
-                .setPerformanceMode(FirebaseVisionFaceDetectorOptions.FAST)
+                .setPerformanceMode(FirebaseVisionFaceDetectorOptions.ACCURATE)
                 .setLandmarkMode(FirebaseVisionFaceDetectorOptions.ALL_LANDMARKS)
                 .setClassificationMode(FirebaseVisionFaceDetectorOptions.ALL_CLASSIFICATIONS)
                 .build()
@@ -238,13 +270,24 @@ class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
     }
 
     private fun startTimerToSchedule() {
-        publicTimer.scheduleAtFixedRate(
+        timerToSchedule.scheduleAtFixedRate(
             object : TimerTask() {
                 override fun run() {
                     startRandomTextActions()
                 }
             },
-            0, 500
+            0, 10
+        )
+    }
+
+    private fun startTimerToProcess() {
+        timerToProcess.scheduleAtFixedRate(
+            object : TimerTask() {
+                override fun run() {
+                    imageBitmap?.let { detectAll(it) }
+                }
+            },
+            0, oneSecond * 4
         )
     }
 
@@ -280,91 +323,39 @@ class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
         imageBitmap = bitmap
     }
 
+    var state = false
     private fun detectAll(bitmap: Bitmap) {
         try {
-            Log.d("detect", "Start = ${System.currentTimeMillis()}")
-            detector!!.detectInImage(FirebaseVisionImage.fromBitmap(bitmap))
-                .addOnSuccessListener { faces ->
-                    stringValues.append("started")
-                    addToText()
-                    var smileProb = 0f
-                    var rightEyeOpenProb = 0f
-                    var leftEyeOpenProb = 0f
-                    var headEulerAngleY = 0f
-                    Log.d("detect", "befLoop = ${System.currentTimeMillis()}")
-                    for (face in faces) {
-                        Log.d("detect", "after = ${System.currentTimeMillis()}")
-                        if (face.smilingProbability != FirebaseVisionFace.UNCOMPUTED_PROBABILITY) {
-                            smileProb = face.smilingProbability
-                            stringValues.append("Smile : ${smileProb}\n")
-                            addToText()
-                            if (smileProb > smileThrushHold) {
-                                smileOpen()
-                            } else if (smileProb >= 0.01) {
-                                smileLock()
-                            }
-                        }
-                        //
-                        if (face.rightEyeOpenProbability != FirebaseVisionFace.UNCOMPUTED_PROBABILITY) {
-                            rightEyeOpenProb = face.rightEyeOpenProbability
-                            stringValues.append("LeftEyeClosed : ${rightEyeOpenProb}\n")
-                            addToText()
-                            if (rightEyeOpenProb <= closeLeftEyeThrushHold) {
-                                leftEyeOpen()
-                            } else if (rightEyeOpenProb >= 0.99) {
-                                leftEyeLock()
-                            }
-                        }
-                        //
-                        if (face.leftEyeOpenProbability != FirebaseVisionFace.UNCOMPUTED_PROBABILITY) {
-                            leftEyeOpenProb = face.leftEyeOpenProbability
-                            stringValues.append("RightEyeClosed : ${leftEyeOpenProb}\n")
-                            addToText()
-                            if (leftEyeOpenProb <= closeRightEyeThrushHold) {
-                                rightEyeOpen()
-                            } else if (leftEyeOpenProb >= 0.99) {
-                                rightEyeLock()
-                            }
-                        }
-                        //
-                        if (face.headEulerAngleY != FirebaseVisionFace.UNCOMPUTED_PROBABILITY) {
-                            headEulerAngleY = face.headEulerAngleY
-                            stringValues.append("LeftHead : ${headEulerAngleY}\n")
-                            Log.d("myTag", headEulerAngleY.toString())
-                            addToText()
-                            if (headEulerAngleY >= leftHeadThrushHold) {
-                                turnFaceToLeftOpen()
-                            } else {
-                                turnFaceToLeftLock()
-                            }
-                        }
-                        //
-                        if (face.headEulerAngleY != FirebaseVisionFace.UNCOMPUTED_PROBABILITY) {
-                            headEulerAngleY = face.headEulerAngleY
-                            stringValues.append("RightHead : ${headEulerAngleY}\n")
-                            addToText()
-                            if (headEulerAngleY <= rightHeadThrushHold) {
-                                turnFaceToRightOpen()
-                            } else {
-                                turnFaceToRightLock()
-                            }
-                        }
-                    }
+            detector?.detectInImage(FirebaseVisionImage.fromBitmap(bitmap))
+                ?.addOnSuccessListener { faces ->
+                    smileProb = faces[0].smilingProbability
+                    rightEyeOpenProb = faces[0].rightEyeOpenProbability
+                    leftEyeOpenProb = faces[0].leftEyeOpenProbability
+                    leftHeadAngleY = faces[0].headEulerAngleY
+                    rightHeadAngleY = faces[0].headEulerAngleY
+//                    for (face in faces) {
+//                        smileProb = face.smilingProbability
+//                        rightEyeOpenProb = face.rightEyeOpenProbability
+//                        leftEyeOpenProb = face.leftEyeOpenProbability
+//                        leftHeadAngleY = face.headEulerAngleY
+//                        rightHeadAngleY = face.headEulerAngleY
+//                    }
                 }
+
         } catch (ex: Exception) {
             ex.message
         }
     }
 
 
-
-    fun addToText(){
+    fun addToText() {
         textAll.text = stringValues
     }
 
     enum class ActionsType {
         SMILING, LEFT_EYE_CLOSED,
-        RIGHT_EYE_CLOSED, HEAD_LEFT, HEAD_RIGHT
+        RIGHT_EYE_CLOSED,
+        HEAD_LEFT, HEAD_RIGHT
     }
 
 }

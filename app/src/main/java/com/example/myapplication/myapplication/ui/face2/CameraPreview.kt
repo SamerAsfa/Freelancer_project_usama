@@ -39,7 +39,9 @@ class CameraPreview(context: Context?, camera: Camera, imageBitmapListener: Imag
                 val area = Rect(0, 0, w, h)
                 image.compressToJpeg(area, 50, out)
                 val bm = BitmapFactory.decodeByteArray(out.toByteArray(), 0, out.size())
-                rotate(bm,w,h)?.let { mmageBitmapListener?.showStreamingImagesBitmap(it) }
+                rotate(bm,w,h)?.let {
+                    mmageBitmapListener?.showStreamingImagesBitmap(it)
+                }
             })
         } catch (e: IOException) {
             print("")
