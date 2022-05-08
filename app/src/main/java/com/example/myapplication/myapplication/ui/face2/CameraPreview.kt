@@ -71,7 +71,7 @@ class CameraPreview(context: Context?, camera: Camera, imageBitmapListener: Imag
 
     override fun surfaceChanged(holder: SurfaceHolder, format: Int, w: Int, h: Int) {
         // If your preview can change or rotate, take care of those events here.
-        // Make sure to stop the preview before resizing or reformatting it.
+        // Make sure to stop the preview before re∂ç`SMILINGsizing or reformatting it.
         if (mHolder.surface == null) {
             // preview surface does not exist
             return

@@ -12,11 +12,11 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.example.myapplication.myapplication.R
-import com.google.firebase.ml.vision.FirebaseVision
-import com.google.firebase.ml.vision.common.FirebaseVisionImage
-import com.google.firebase.ml.vision.face.FirebaseVisionFace
-import com.google.firebase.ml.vision.face.FirebaseVisionFaceDetector
-import com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions
+import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.face.FaceContour
+import com.google.mlkit.vision.face.FaceDetection
+import com.google.mlkit.vision.face.FaceDetector
+import com.google.mlkit.vision.face.FaceDetectorOptions
 import kotlinx.android.synthetic.main.activity_face_detection.*
 import okhttp3.internal.wait
 import java.util.*
@@ -25,7 +25,7 @@ import java.util.*
 class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
 
     private val RC_CAMERA_AND_EXTERNAL_STORAGE_CUSTOM = 0x01 shl 9
-    var detector: FirebaseVisionFaceDetector? = null
+    var detector: FaceDetector? = null
     val oneSecond: Long = 1000
     val oneLessSecond: Long = 100
     var currentIndex: Int = 0
@@ -34,6 +34,7 @@ class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
 
     private val timerToProcess = Timer()
     private val timerToSchedule = Timer()
+    private val timerTo = Timer()
     val arrayOfIndex: ArrayList<Int> = ArrayList()
     val lockCases: ArrayList<Boolean> = ArrayList()
     val hashOfSet: HashMap<Int, Int> = HashMap()
@@ -42,7 +43,7 @@ class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
     var rightEyeLock: Boolean = true
     var turnFaceToLeftLock: Boolean = true
     var turnFaceToRightLock: Boolean = true
-    var first: Boolean = false
+    var statePublic: Boolean = false
 
     ///
     var stringValues: StringBuilder = StringBuilder()
@@ -257,12 +258,12 @@ class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
             } else {
                 c = Camera.open(getFrontCameraId())
             }
-            var options = FirebaseVisionFaceDetectorOptions.Builder()
-                .setPerformanceMode(FirebaseVisionFaceDetectorOptions.ACCURATE)
-                .setLandmarkMode(FirebaseVisionFaceDetectorOptions.ALL_LANDMARKS)
-                .setClassificationMode(FirebaseVisionFaceDetectorOptions.ALL_CLASSIFICATIONS)
+            var options = FaceDetectorOptions.Builder()
+                .setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_ACCURATE)
+                .setLandmarkMode(FaceDetectorOptions.LANDMARK_MODE_ALL)
+                .setClassificationMode(FaceDetectorOptions.CLASSIFICATION_MODE_ALL)
                 .build()
-            detector = FirebaseVision.getInstance().getVisionFaceDetector(options)
+            detector = FaceDetection.getClient(options)
         } catch (e: java.lang.Exception) {
             e.message
         }
@@ -284,10 +285,12 @@ class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
         timerToProcess.scheduleAtFixedRate(
             object : TimerTask() {
                 override fun run() {
-                    imageBitmap?.let { detectAll(it) }
+                    if (!statePublic) {
+                        imageBitmap?.let { detectAll(it) }
+                    }
                 }
             },
-            0, oneSecond * 4
+            0, 10
         )
     }
 
@@ -326,13 +329,16 @@ class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
     var state = false
     private fun detectAll(bitmap: Bitmap) {
         try {
-            detector?.detectInImage(FirebaseVisionImage.fromBitmap(bitmap))
+            statePublic = true
+            detector?.process(InputImage.fromBitmap(bitmap, 0))
                 ?.addOnSuccessListener { faces ->
-                    smileProb = faces[0].smilingProbability
-                    rightEyeOpenProb = faces[0].rightEyeOpenProbability
-                    leftEyeOpenProb = faces[0].leftEyeOpenProbability
-                    leftHeadAngleY = faces[0].headEulerAngleY
-                    rightHeadAngleY = faces[0].headEulerAngleY
+                    statePublic = false
+                    if (faces.size > 0) {
+                        smileProb = faces[0].smilingProbability!!
+                        rightEyeOpenProb = faces[0].rightEyeOpenProbability!!
+                        leftEyeOpenProb = faces[0].leftEyeOpenProbability!!
+                        leftHeadAngleY = faces[0].headEulerAngleY
+                        rightHeadAngleY = faces[0].headEulerAngleY
 //                    for (face in faces) {
 //                        smileProb = face.smilingProbability
 //                        rightEyeOpenProb = face.rightEyeOpenProbability
@@ -340,6 +346,7 @@ class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
 //                        leftHeadAngleY = face.headEulerAngleY
 //                        rightHeadAngleY = face.headEulerAngleY
 //                    }
+                    }
                 }
 
         } catch (ex: Exception) {
