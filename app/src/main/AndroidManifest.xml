@@ -26,7 +26,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.face2.FaceDetectionActivity">
+        <activity android:name=".ui.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -42,7 +42,7 @@
         <activity android:name=".ui.PunchCamDetectionActivity" />
         <activity android:name=".ui.MyLeavesActivity" />
         <activity android:name=".ui.RequstLeaveActivity" />
-<!--        <activity android:name=".ui.FaceDetectionActivity" />-->
+        <activity android:name=".ui.face2.FaceDetectionActivity" />
 
 
         <service

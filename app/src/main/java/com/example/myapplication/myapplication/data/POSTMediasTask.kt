@@ -231,7 +231,6 @@ class POSTMediasTask {
         maps.put("Accept", "application/json")
         maps.put("Content-Type", "application/x-www-form-urlencoded")
         sr.headers = maps
-
         queue.add(sr)
     }
 
