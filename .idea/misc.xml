@@ -3,6 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/drawable/approved_shape.xml" value="0.1895" />
+        <entry key="app/src/main/res/drawable/approved_state.xml" value="0.1895" />
+        <entry key="app/src/main/res/drawable/bg_grays.xml" value="0.1895" />
+        <entry key="app/src/main/res/drawable/bg_red.xml" value="0.1895" />
         <entry key="app/src/main/res/drawable/bluea.xml" value="0.154" />
         <entry key="app/src/main/res/drawable/confirm_button_shape.xml" value="0.154" />
         <entry key="app/src/main/res/drawable/disro.xml" value="0.154" />
@@ -15,23 +19,43 @@
         <entry key="app/src/main/res/drawable/purple.xml" value="0.154" />
         <entry key="app/src/main/res/drawable/ro.xml" value="0.154" />
         <entry key="app/src/main/res/drawable/search_shape.xml" value="0.154" />
+        <entry key="app/src/main/res/drawable/shape_leave.xml" value="0.1895" />
+        <entry key="app/src/main/res/drawable/shape_leave_select.xml" value="0.1895" />
         <entry key="app/src/main/res/drawable/shape_type_name.xml" value="0.154" />
+        <entry key="app/src/main/res/drawable/vector_arrow_left.xml" value="0.1895" />
+        <entry key="app/src/main/res/drawable/vector_arrow_right_green.xml" value="0.1895" />
+        <entry key="app/src/main/res/drawable/vector_history.xml" value="0.1895" />
+        <entry key="app/src/main/res/drawable/vector_notifications.xml" value="0.1895" />
+        <entry key="app/src/main/res/drawable/vectors_logo.xml" value="0.1895" />
         <entry key="app/src/main/res/drawable/wh.xml" value="0.154" />
         <entry key="app/src/main/res/layout/activity_create_account.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_custom_detection.xml" value="0.13272543059777103" />
         <entry key="app/src/main/res/layout/activity_custom_vid_detection.xml" value="0.23254759746146872" />
+        <entry key="app/src/main/res/layout/activity_face_detection.xml" value="0.29465095194922936" />
+        <entry key="app/src/main/res/layout/activity_leave_request.xml" value="0.3209428830462375" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.13272543059777103" />
+        <entry key="app/src/main/res/layout/activity_my_leaves.xml" value="0.3209428830462375" />
         <entry key="app/src/main/res/layout/activity_navigation.xml" value="0.23254759746146872" />
+        <entry key="app/src/main/res/layout/activity_requst_leave.xml" value="0.335" />
         <entry key="app/src/main/res/layout/activity_splash.xml" value="0.23233695652173914" />
         <entry key="app/src/main/res/layout/activity_start.xml" value="0.165" />
+        <entry key="app/src/main/res/layout/activity_state.xml" value="0.23129542539546816" />
+        <entry key="app/src/main/res/layout/adapter_history.xml" value="0.55" />
+        <entry key="app/src/main/res/layout/adapter_item.xml" value="0.20307823856348867" />
+        <entry key="app/src/main/res/layout/adapter_leaves.xml" value="0.3209428830462375" />
         <entry key="app/src/main/res/layout/bottom_sheet_dialog.xml" value="0.13272543059777103" />
+        <entry key="app/src/main/res/layout/camera_fragment.xml" value="0.2509619495510902" />
         <entry key="app/src/main/res/layout/camera_surface.xml" value="0.23233695652173914" />
-        <entry key="app/src/main/res/layout/fragment_history.xml" value="0.23254759746146872" />
+        <entry key="app/src/main/res/layout/dialog_types.xml" value="0.20307823856348867" />
+        <entry key="app/src/main/res/layout/fragment_camera2_basic.xml" value="0.29465095194922936" />
+        <entry key="app/src/main/res/layout/fragment_history.xml" value="0.375" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.23254759746146872" />
+        <entry key="app/src/main/res/layout/fragment_leave.xml" value="0.3209428830462375" />
         <entry key="app/src/main/res/layout/fragment_more.xml" value="0.23254759746146872" />
         <entry key="app/src/main/res/layout/fragment_notifications.xml" value="0.23254759746146872" />
         <entry key="app/src/main/res/layout/item_user_listing.xml" value="0.19934143870314083" />
         <entry key="app/src/main/res/layout/login_with_face_activity.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/notification_item.xml" value="0.2578024796921761" />
         <entry key="app/src/main/res/layout/upload_items_dialog.xml" value="0.13272543059777103" />
         <entry key="app/src/main/res/menu/bottom_nav_menu.xml" value="0.34843950406156476" />
       </map>
