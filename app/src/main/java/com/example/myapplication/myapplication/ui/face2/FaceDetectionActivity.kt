@@ -5,21 +5,45 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.hardware.Camera
 import android.hardware.Camera.CameraInfo
 import android.os.Bundle
+import android.os.Environment
+import android.os.Handler
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import com.ctech.bitmp4.Encoder
+import com.ctech.bitmp4.MP4Encoder
 import com.example.myapplication.myapplication.R
 import com.google.mlkit.vision.common.InputImage
-import com.google.mlkit.vision.face.FaceContour
 import com.google.mlkit.vision.face.FaceDetection
 import com.google.mlkit.vision.face.FaceDetector
 import com.google.mlkit.vision.face.FaceDetectorOptions
+//import com.homesoft.encoder.Muxer
+//import com.homesoft.encoder.MuxingCompletionListener
+//import com.homesoft.encoder.TAG
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_face_detection.*
-import okhttp3.internal.wait
+import org.jcodec.api.SequenceEncoder
+import org.jcodec.api.awt.AWTSequenceEncoder
+import org.jcodec.common.io.NIOUtils
+import org.jcodec.common.model.ColorSpace.RGB
+import org.jcodec.common.model.Picture
+import org.jcodec.common.model.Rational
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.lang.System.out
+import java.net.MalformedURLException
+import java.net.URL
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 
 class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
@@ -29,7 +53,7 @@ class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
     val oneSecond: Long = 1000
     val oneLessSecond: Long = 100
     var currentIndex: Int = 0
-    var actionsToCheck: Int = 4
+    var actionsToCheck: Int = 1
     var imageBitmap: Bitmap? = null
 
     private val timerToProcess = Timer()
@@ -37,6 +61,8 @@ class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
     private val timerTo = Timer()
     val arrayOfIndex: ArrayList<Int> = ArrayList()
     val lockCases: ArrayList<Boolean> = ArrayList()
+    val arrayOfImages: ArrayList<Bitmap> = ArrayList()
+    val arrayOfImagesFinalImages: ArrayList<Bitmap> = ArrayList()
     val hashOfSet: HashMap<Int, Int> = HashMap()
     var smileLock: Boolean = true
     var leftEyeLock: Boolean = true
@@ -48,13 +74,15 @@ class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
     ///
     var stringValues: StringBuilder = StringBuilder()
 
+    private lateinit var exportDisposable: Disposable
+    private lateinit var encoder: Encoder
 
     val arrayOfTextActions = arrayOf(
         "Keep Smiling",
         "Keep Left Eye Closed",
-        "Keep Right Eye Closed",
-        "Keep Your Face on Left",
-        "Keep Your Face on Right"
+//        "Keep Right Eye Closed",
+//        "Keep Your Face on Left",
+//        "Keep Your Face on Right"
     )
 
     companion object {
@@ -101,10 +129,152 @@ class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
         } else {
             timerToSchedule.cancel()
             timerToProcess.cancel()
+            getFinalImageArray()
             drStateTextView.text = "Done"
+//            addVideo()
+            convertImagesToVideo()
+//            addImagesToVideo()
+//            startExport()
+
         }
     }
 
+
+    fun getFinalImageArray() {
+        for (i in 1..4) {
+            arrayOfImagesFinalImages.add(arrayOfImages[i])
+        }
+    }
+
+    fun creteRootPath(): File? {
+        var file: File? = null
+        try {
+            file = File(
+                Environment.getExternalStorageDirectory()
+                    .toString() + File.separator + "UsamaSd.mp4"
+            )
+            file.createNewFile()
+            val bos = ByteArrayOutputStream()
+            val bitmapdata = bos.toByteArray()
+            val fos = FileOutputStream(file)
+            fos.write(bitmapdata)
+            fos.flush()
+            fos.close()
+            file
+        } catch (e: Exception) {
+            e.printStackTrace()
+            file // it will return null
+        }
+        return file
+    }
+//    fun addVideo() {
+//        try {
+//            val muxer = creteRootPath()?.let { Muxer(this, it) }
+//            muxer?.setOnMuxingCompletedListener(object : MuxingCompletionListener {
+//                override fun onVideoSuccessful(file: File) {
+//                    Log.d(TAG, "Video muxed - file path: ${file.absolutePath}")
+//                }
+//
+//                override fun onVideoError(error: Throwable) {
+//                    Log.e(TAG, "There was an error muxing the video")
+//                }
+//            })
+//            Thread(Runnable {
+//                muxer?.mux(arrayOfImagesFinalImages)
+//            }).start()
+//        } catch (ex: java.lang.Exception) {
+//            ex.stackTrace
+//        }
+//    }
+
+
+    fun convertImagesToVideo() {
+        try {//Rational(1, 1). SequenceEncoder
+            val output = creteRootPath()
+            val enc =
+                AWTSequenceEncoder.createWithFps(NIOUtils.writableChannel(output), Rational.R(2, 1))
+            for (bitmap in arrayOfImagesFinalImages) {
+                enc.encodeNativeFrame(fromBitmaps(bitmap))
+            }
+            enc.finish()
+        } finally {
+            NIOUtils.closeQuietly(out);
+        }
+    }
+
+    fun fromBitmaps(src: Bitmap): Picture {
+        val dst: Picture = Picture.create(src.width, src.height, RGB)
+        AndroidUtil.fromBitmap(src, dst)
+        return dst
+    }
+
+    fun fromBitmap(src: Bitmap, dst: Picture) {
+        val dstData: ByteArray? = dst.getPlaneData(0)
+        val packed = IntArray(src.width * src.height)
+        src.getPixels(packed, 0, src.width, 0, 0, src.width, src.height)
+        var i = 0
+        var srcOff = 0
+        var dstOff = 0
+        while (i < src.height) {
+            var j = 0
+            while (j < src.width) {
+                val rgb = packed[srcOff]
+                dstData?.set(dstOff, (rgb shr 16 and 0xff).toByte())
+                dstData?.set(dstOff + 1, (rgb shr 8 and 0xff).toByte())
+                dstData?.set(dstOff + 2, (rgb and 0xff).toByte())
+                j++
+                srcOff++
+                dstOff += 3
+            }
+            i++
+        }
+    }
+
+    fun addImagesToVideo() {
+        try {
+//            val downloarDir = getExternalFilesDir(null)
+            val exportedFile = creteRootPath()
+            encoder = MP4Encoder()
+            encoder.setFrameDelay(50)
+            encoder.setOutputFilePath(exportedFile?.path)
+        } catch (ex: Exception) {
+            ex.stackTrace
+        }
+    }
+
+    private fun startExport() {
+        encoder.setOutputSize(100, 200)
+        encoder.startEncode()
+        exportDisposable = Observable.interval(30, TimeUnit.MILLISECONDS)
+            .map {
+                arrayOfImagesFinalImages
+            }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+                encoder.addFrame(it[0])
+
+            }
+        Handler().postDelayed({
+            stopExport()
+        }, 400)
+    }
+
+    private fun createBitmapFromView(v: View): Bitmap {
+        val bitmap = Bitmap.createBitmap(
+            v.width,
+            v.height,
+            Bitmap.Config.ARGB_8888
+        )
+
+        val c = Canvas(bitmap)
+        v.draw(c)
+        return bitmap
+    }
+
+    private fun stopExport() {
+        encoder.stopEncode()
+        exportDisposable.dispose()
+    }
 
     private fun isAllChecked(): Boolean {
         return currentIndex == arrayOfIndex.size
@@ -324,6 +494,7 @@ class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
 
     override fun showStreamingImagesBitmap(bitmap: Bitmap) {
         imageBitmap = bitmap
+        arrayOfImages.add(bitmap)
     }
 
     var state = false

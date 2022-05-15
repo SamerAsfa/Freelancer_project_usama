@@ -8,6 +8,7 @@ import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
 import com.example.myapplication.myapplication.R
 import com.example.myapplication.myapplication.base.LongTermManager
+import com.example.myapplication.myapplication.ui.face2.FaceDetectionActivity
 
 
 class SplashActivity : AppCompatActivity() {
@@ -31,9 +32,10 @@ class SplashActivity : AppCompatActivity() {
                 startActivity(i)
                 finish()
             }else{
-                val i = Intent(this@SplashActivity, StartActivity::class.java)
-                startActivity(i)
-                finish()
+//                val i = Intent(this@SplashActivity, StartActivity::class.java)
+//                startActivity(i)
+//                finish()////TODO USAMA HOLDAY
+                FaceDetectionActivity.startActivity(this)
             }
         }, 2000)
     }

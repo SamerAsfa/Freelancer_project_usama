@@ -29,6 +29,7 @@ import com.example.myapplication.myapplication.base.ResponseApi
 import com.example.myapplication.myapplication.data.BaseRequest.Companion.uploadVodApi
 import com.example.myapplication.myapplication.data.POSTMediasTask
 import com.example.myapplication.myapplication.models.UserModel
+import com.example.myapplication.myapplication.ui.face2.FaceDetectionActivity
 import com.huawei.hms.mlsdk.livenessdetection.*
 import kotlinx.android.synthetic.main.activity_custom_detection.*
 import kotlinx.android.synthetic.main.activity_custom_vid_detection.*
@@ -60,15 +61,16 @@ class CustomWithVideo : AppCompatActivity(), ResponseApi {
             .setFaceFrameRect(Rect(0, 0, widthPixels, dip2px(this, 780f)))
             .setDetectCallback(object : OnMLLivenessDetectCallback {
                 override fun onCompleted(result: MLLivenessCaptureResult) {
-                    val value = Intent()
-                    val isLive = result.isLive
-                    if (isLive) {
-                        recordVideo()
-                    } else {
-                        value.putExtra("isLive", isLive)
-                        setResult(44, value)
-                        finish()
-                    }
+                    recordVideo()
+//                    val value = Intent()
+//                    val isLive = result.isLive
+//                    if (isLive) {
+//                        recordVideo()
+//                    } else {
+//                        value.putExtra("isLive", isLive)
+//                        setResult(44, value)
+//                        finish()
+//                    }
                 }
 
                 override fun onError(error: Int) {
@@ -90,16 +92,17 @@ class CustomWithVideo : AppCompatActivity(), ResponseApi {
 
 
     fun recordVideo() {
-        val intent = Intent(MediaStore.ACTION_VIDEO_CAPTURE)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-            intent.putExtra("android.intent.extras.CAMERA_FACING", android.hardware.Camera.CameraInfo.CAMERA_FACING_FRONT);
-            intent.putExtra("android.intent.extras.LENS_FACING_FRONT", 1);
-            intent.putExtra("android.intent.extra.USE_FRONT_CAMERA", true);
-        } else {
-            intent.putExtra("android.intent.extras.CAMERA_FACING", 1);
-        }
-        intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 1);
-        startActivityForResult(intent, VIDEO_CAPTURE)
+        FaceDetectionActivity.startActivity(this)////TODO USAMA HOLDAY
+//        val intent = Intent(MediaStore.ACTION_VIDEO_CAPTURE)
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+//            intent.putExtra("android.intent.extras.CAMERA_FACING", android.hardware.Camera.CameraInfo.CAMERA_FACING_FRONT);
+//            intent.putExtra("android.intent.extras.LENS_FACING_FRONT", 1);
+//            intent.putExtra("android.intent.extra.USE_FRONT_CAMERA", true);
+//        } else {
+//            intent.putExtra("android.intent.extras.CAMERA_FACING", 1);
+//        }
+//        intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 1);
+//        startActivityForResult(intent, VIDEO_CAPTURE)
     }
 
     override fun onActivityResult(

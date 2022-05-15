@@ -110,10 +110,20 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics'
 //    implementation 'com.google.mlkit:face-detection:16.1.5'
 //    implementation 'com.google.android.gms:play-services-mlkit-face-detection:17.0.1'
-
+    configurations.all {
+        resolutionStrategy.force 'com.google.code.findbugs:jsr305:3.0.2'
+    }
+    implementation 'com.github.dbof10:Bitmp4:0.1.1'
+    implementation 'org.jcodec:jcodec:0.2.3'
+    implementation 'org.jcodec:jcodec-android:0.2.3'
     implementation 'com.google.mlkit:face-detection:16.1.5'
     implementation 'com.google.android.gms:play-services-mlkit-face-detection:17.0.1'
-
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
+    implementation 'org.jcodec:jcodec:0.2.5'
+    implementation 'org.jcodec:jcodec-android:0.2.5'
+    implementation 'org.jcodec:jcodec-javase:0.2.5'
+    implementation 'com.writingminds:FFmpegAndroid:0.3.2'
+//    implementation 'com.github.israel-fl:bitmap2video:2.0.0'
 
 //    implementation 'com.google.firebase:firebase-ml-vision:23.0.0'
 //    implementation 'com.google.android.gms:play-services-vision:20.0.0'
