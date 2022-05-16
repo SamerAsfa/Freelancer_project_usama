@@ -30,40 +30,39 @@ class CreateAccountActivity : AppCompatActivity(), ResponseApi {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_account)
         custom_btn.setOnClickListener {
-            startCustomActivity(UserModel())////TODO USAMA HOLDAY
-//            if (emailEditText.text.toString().equalsIgnoreCase(reEmailEditText.text.toString())) {
-//                if (passwordEditText.text.toString()
-//                        .equalsIgnoreCase(retypePasswordEditText.text.toString())
-//                ) {
-//                    var maps: MutableMap<String, String> = HashMap()
-//                    maps.put("name", nameEditText.text.toString())
-//                    maps.put("email", emailEditText.text.toString())
-//                    maps.put("password", "13456")
-//                    maps.put("code", "452145")
-//                    maps.put("mobile_number", numberPhoneEditText.text.toString())
-//                    maps.put("fcm", LongTermManager.getInstance().notificationsToken)
-//                    if (userModel == null) {
-//                        POSTMediasTask().post(
-//                            this@CreateAccountActivity,
-//                            registerApi,
-//                            maps,
-//                            this@CreateAccountActivity
-//                        )
-//                    } else {
-//                        startCustomActivity(userModel!!)
-//                    }
-//                } else {
-//                    Toast.makeText(
-//                        this, "Password is mismatch",
-//                        Toast.LENGTH_LONG
-//                    ).show()
-//                }
-//            } else {
-//                Toast.makeText(
-//                    this, "Email is mismatch",
-//                    Toast.LENGTH_LONG
-//                ).show()
-//            }
+            if (emailEditText.text.toString().equalsIgnoreCase(reEmailEditText.text.toString())) {
+                if (passwordEditText.text.toString()
+                        .equalsIgnoreCase(retypePasswordEditText.text.toString())
+                ) {
+                    var maps: MutableMap<String, String> = HashMap()
+                    maps.put("name", nameEditText.text.toString())
+                    maps.put("email", emailEditText.text.toString())
+                    maps.put("password", passwordEditText.text.toString())
+                    maps.put("code", organizationEditText.text.toString())
+                    maps.put("mobile_number", numberPhoneEditText.text.toString())
+                    maps.put("fcm", LongTermManager.getInstance().notificationsToken)
+                    if (userModel == null) {
+                        POSTMediasTask().post(
+                            this@CreateAccountActivity,
+                            registerApi,
+                            maps,
+                            this@CreateAccountActivity
+                        )
+                    } else {
+                        startCustomActivity(userModel!!)
+                    }
+                } else {
+                    Toast.makeText(
+                        this, "Password is mismatch",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            } else {
+                Toast.makeText(
+                    this, "Email is mismatch",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
         }
     }
 

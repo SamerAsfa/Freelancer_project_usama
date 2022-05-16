@@ -32,10 +32,10 @@ class SplashActivity : AppCompatActivity() {
                 startActivity(i)
                 finish()
             }else{
-//                val i = Intent(this@SplashActivity, StartActivity::class.java)
-//                startActivity(i)
-//                finish()////TODO USAMA HOLDAY
-                FaceDetectionActivity.startActivity(this)
+                val i = Intent(this@SplashActivity, StartActivity::class.java)
+                startActivity(i)
+                finish()
+//                FaceDetectionActivity.startActivity(this)
             }
         }, 2000)
     }

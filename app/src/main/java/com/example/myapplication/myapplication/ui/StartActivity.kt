@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.example.myapplication.myapplication.R
 import com.example.myapplication.myapplication.base.LongTermManager
+import com.example.myapplication.myapplication.ui.face2.FaceDetectionActivity
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
 import com.huawei.hms.mlsdk.livenessdetection.MLLivenessCapture

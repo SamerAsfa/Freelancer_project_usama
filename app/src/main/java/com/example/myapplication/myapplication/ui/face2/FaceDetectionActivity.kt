@@ -1,6 +1,10 @@
 package com.example.myapplication.myapplication.ui.face2
 
+//import com.homesoft.encoder.Muxer
+//import com.homesoft.encoder.MuxingCompletionListener
+//import com.homesoft.encoder.TAG
 import android.Manifest
+import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -22,14 +26,10 @@ import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.face.FaceDetection
 import com.google.mlkit.vision.face.FaceDetector
 import com.google.mlkit.vision.face.FaceDetectorOptions
-//import com.homesoft.encoder.Muxer
-//import com.homesoft.encoder.MuxingCompletionListener
-//import com.homesoft.encoder.TAG
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_face_detection.*
-import org.jcodec.api.SequenceEncoder
 import org.jcodec.api.awt.AWTSequenceEncoder
 import org.jcodec.common.io.NIOUtils
 import org.jcodec.common.model.ColorSpace.RGB
@@ -38,10 +38,7 @@ import org.jcodec.common.model.Rational
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
-import java.io.IOException
 import java.lang.System.out
-import java.net.MalformedURLException
-import java.net.URL
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -53,7 +50,7 @@ class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
     val oneSecond: Long = 1000
     val oneLessSecond: Long = 100
     var currentIndex: Int = 0
-    var actionsToCheck: Int = 1
+    var actionsToCheck: Int = 4
     var imageBitmap: Bitmap? = null
 
     private val timerToProcess = Timer()
@@ -70,25 +67,25 @@ class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
     var turnFaceToLeftLock: Boolean = true
     var turnFaceToRightLock: Boolean = true
     var statePublic: Boolean = false
-
+    var dialog: ProgressDialog? = null
+    var file: File? = null
     ///
     var stringValues: StringBuilder = StringBuilder()
 
     private lateinit var exportDisposable: Disposable
     private lateinit var encoder: Encoder
-
+    var camera: Camera? = null
     val arrayOfTextActions = arrayOf(
         "Keep Smiling",
         "Keep Left Eye Closed",
-//        "Keep Right Eye Closed",
-//        "Keep Your Face on Left",
-//        "Keep Your Face on Right"
+        "Keep Right Eye Closed",
+        "Keep Your Face on Left",
+        "Keep Your Face on Right"
     )
 
     companion object {
-        fun startActivity(context: Context) {
-            val intent = Intent(context, FaceDetectionActivity::class.java)
-            context.startActivity(intent)
+        fun startActivity(context: Context): Intent {
+            return Intent(context, FaceDetectionActivity::class.java)
         }
     }
 
@@ -99,6 +96,7 @@ class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
         createRandomIndex()
         callCameraPermission()
     }
+
 
     private fun createRandomIndex() {
         val numbers = listOf(0..actionsToCheck).random().shuffled()
@@ -130,15 +128,42 @@ class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
             timerToSchedule.cancel()
             timerToProcess.cancel()
             getFinalImageArray()
-            drStateTextView.text = "Done"
-//            addVideo()
+            runOnUiThread{
+                drStateTextView.text = "Wait to configuration"
+                showDialog()
+                container.removeAllViews()
+            }
             convertImagesToVideo()
-//            addImagesToVideo()
-//            startExport()
-
         }
     }
 
+//    override fun onStop() {
+//        super.onStop()
+//        timerToSchedule.cancel()
+//        timerToProcess.cancel()
+//    }
+//
+//
+//    override fun onPause() {
+//        super.onPause()
+//        timerToSchedule.cancel()
+//        timerToProcess.cancel()
+//    }
+//
+
+    override fun onDestroy() {
+        super.onDestroy()
+        timerToSchedule.cancel()
+        timerToProcess.cancel()
+    }
+
+    fun showDialog() {
+        dialog = ProgressDialog.show(this, "", "Loading...", true);
+    }
+
+    fun hideDialog() {
+        dialog?.hide()
+    }
 
     fun getFinalImageArray() {
         for (i in 1..4) {
@@ -147,13 +172,12 @@ class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
     }
 
     fun creteRootPath(): File? {
-        var file: File? = null
         try {
             file = File(
                 Environment.getExternalStorageDirectory()
                     .toString() + File.separator + "UsamaSd.mp4"
             )
-            file.createNewFile()
+            file?.createNewFile()
             val bos = ByteArrayOutputStream()
             val bitmapdata = bos.toByteArray()
             val fos = FileOutputStream(file)
@@ -189,7 +213,7 @@ class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
 
 
     fun convertImagesToVideo() {
-        try {//Rational(1, 1). SequenceEncoder
+        try {
             val output = creteRootPath()
             val enc =
                 AWTSequenceEncoder.createWithFps(NIOUtils.writableChannel(output), Rational.R(2, 1))
@@ -199,7 +223,20 @@ class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
             enc.finish()
         } finally {
             NIOUtils.closeQuietly(out);
+            runOnUiThread{
+                hideDialog()
+
+            }
+
         }
+        endIntent()
+    }
+
+    fun endIntent(){
+        val returnIntent = Intent()
+        returnIntent.putExtra("result", file?.absoluteFile)
+        setResult(RESULT_OK, returnIntent)
+        finish()
     }
 
     fun fromBitmaps(src: Bitmap): Picture {
@@ -421,12 +458,12 @@ class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
     }
 
     fun getCameraInstance(): Camera? {
-        var c: Camera? = null
+
         try {
             if (getFrontCameraId() == -1) {
-                c = Camera.open()
+                camera = Camera.open()
             } else {
-                c = Camera.open(getFrontCameraId())
+                camera = Camera.open(getFrontCameraId())
             }
             var options = FaceDetectorOptions.Builder()
                 .setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_ACCURATE)
@@ -437,7 +474,7 @@ class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
         } catch (e: java.lang.Exception) {
             e.message
         }
-        return c
+        return camera
     }
 
     private fun startTimerToSchedule() {

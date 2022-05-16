@@ -30,17 +30,19 @@ class CameraPreview(context: Context?, camera: Camera, imageBitmapListener: Imag
             mCamera.setPreviewDisplay(holder)
             mCamera.startPreview()
             mCamera.setPreviewCallback(PreviewCallback { _data, _camera ->
-                val params = _camera.parameters
-                val w = params.previewSize.width
-                val h = params.previewSize.height
-                val format = params.previewFormat
-                val image = YuvImage(_data, format, w, h, null)
-                val out = ByteArrayOutputStream()
-                val area = Rect(0, 0, w, h)
-                image.compressToJpeg(area, 50, out)
-                val bm = BitmapFactory.decodeByteArray(out.toByteArray(), 0, out.size())
-                rotate(bm,w,h)?.let {
-                    mmageBitmapListener?.showStreamingImagesBitmap(it)
+                if (_camera != null) {
+                    val params = _camera.parameters
+                    val w = params.previewSize.width
+                    val h = params.previewSize.height
+                    val format = params.previewFormat
+                    val image = YuvImage(_data, format, w, h, null)
+                    val out = ByteArrayOutputStream()
+                    val area = Rect(0, 0, w, h)
+                    image.compressToJpeg(area, 50, out)
+                    val bm = BitmapFactory.decodeByteArray(out.toByteArray(), 0, out.size())
+                    rotate(bm, w, h)?.let {
+                        mmageBitmapListener?.showStreamingImagesBitmap(it)
+                    }
                 }
             })
         } catch (e: IOException) {

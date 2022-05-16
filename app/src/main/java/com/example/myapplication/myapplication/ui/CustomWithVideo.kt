@@ -21,6 +21,7 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import com.android.volley.error.VolleyError
 import com.example.myapplication.myapplication.HiltApplication
 import com.example.myapplication.myapplication.R
@@ -61,16 +62,16 @@ class CustomWithVideo : AppCompatActivity(), ResponseApi {
             .setFaceFrameRect(Rect(0, 0, widthPixels, dip2px(this, 780f)))
             .setDetectCallback(object : OnMLLivenessDetectCallback {
                 override fun onCompleted(result: MLLivenessCaptureResult) {
-                    recordVideo()
-//                    val value = Intent()
-//                    val isLive = result.isLive
-//                    if (isLive) {
-//                        recordVideo()
-//                    } else {
-//                        value.putExtra("isLive", isLive)
-//                        setResult(44, value)
-//                        finish()
-//                    }
+//                    recordVideo()
+                    val value = Intent()
+                    val isLive = result.isLive
+                    if (isLive) {
+                        recordVideo()
+                    } else {
+                        value.putExtra("isLive", isLive)
+                        setResult(44, value)
+                        finish()
+                    }
                 }
 
                 override fun onError(error: Int) {
@@ -92,7 +93,8 @@ class CustomWithVideo : AppCompatActivity(), ResponseApi {
 
 
     fun recordVideo() {
-        FaceDetectionActivity.startActivity(this)////TODO USAMA HOLDAY
+        ActivityCompat.startActivityForResult(this, FaceDetectionActivity.startActivity(this), VIDEO_CAPTURE,null)
+        ////TODO USAMA HOLDAY
 //        val intent = Intent(MediaStore.ACTION_VIDEO_CAPTURE)
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
 //            intent.putExtra("android.intent.extras.CAMERA_FACING", android.hardware.Camera.CameraInfo.CAMERA_FACING_FRONT);
@@ -110,10 +112,10 @@ class CustomWithVideo : AppCompatActivity(), ResponseApi {
         resultCode: Int,
         intent: Intent?
     ) {
-        val videoUri = intent?.data
+//        val videoUri = intent?.data
+        val filePath  = (intent?.extras?.get("result") as File).absoluteFile.path
         if (requestCode == VIDEO_CAPTURE) {
             if (resultCode == Activity.RESULT_OK) {
-                val filePath = videoUri?.let { getFilePath(this@CustomWithVideo, it) }
                 var maps: MutableMap<String, String> = HashMap()
                 maps.put("Authorization", "Bearer ${userModel?.token}")
                 maps.put("Accept", "application/json")
@@ -310,18 +312,18 @@ class CustomWithVideo : AppCompatActivity(), ResponseApi {
 
     override fun onDestroy() {
         super.onDestroy()
-        mlLivenessDetectView!!.onDestroy()
+        mlLivenessDetectView?.onDestroy()
     }
 
     override fun onPause() {
         super.onPause()
-        mlLivenessDetectView!!.onPause()
+        mlLivenessDetectView?.onPause()
     }
 
     override fun onResume() {
         super.onResume()
         HiltApplication.mContext = this
-        mlLivenessDetectView!!.onResume()
+        mlLivenessDetectView?.onResume()
     }
 
 
