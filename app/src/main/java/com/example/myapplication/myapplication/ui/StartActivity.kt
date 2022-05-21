@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.example.myapplication.myapplication.R
+import com.example.myapplication.myapplication.base.BaseActivity
 import com.example.myapplication.myapplication.base.LongTermManager
 import com.example.myapplication.myapplication.ui.face2.FaceDetectionActivity
 import com.google.android.gms.tasks.OnCompleteListener
@@ -35,7 +36,7 @@ import java.io.OutputStream
 private val PERMISSIONS = arrayOf(Manifest.permission.CAMERA, WRITE_EXTERNAL_STORAGE)
 private val RC_CAMERA_AND_EXTERNAL_STORAGE_CUSTOM = 0x01 shl 9
 
-class StartActivity : AppCompatActivity() {
+class StartActivity : BaseActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -93,7 +94,6 @@ class StartActivity : AppCompatActivity() {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        Toast.makeText(this, "onRequestPermissionsResult", Toast.LENGTH_LONG).show()
         if (requestCode == RC_CAMERA_AND_EXTERNAL_STORAGE_CUSTOM && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             startCustomActivity()
         }
@@ -102,7 +102,7 @@ class StartActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
         super.onActivityResult(requestCode, resultCode, intent)
         if (requestCode == 44 && resultCode == 44) {
-            val isLive = intent?.getBooleanExtra("isLive", false)
+//            val isLive = intent?.getBooleanExtra("isLive", false)
 //           val bitmap = BitmapFactory.decodeStream(this@StartActivity.openFileInput("myImage"))
             loginBy()
             Toast.makeText(

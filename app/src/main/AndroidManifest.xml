@@ -13,7 +13,10 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage"
+        android:minSdkVersion="30"
+        />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
 
@@ -24,6 +27,7 @@
         android:label="FaceTest"
         android:requestLegacyExternalStorage="true"
         android:supportsRtl="true"
+        android:installLocation="preferExternal"
         android:theme="@style/Theme.MyApplication"
         android:usesCleartextTraffic="true">
         <activity android:name=".ui.SplashActivity">

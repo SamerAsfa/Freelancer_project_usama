@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.error.VolleyError
 import com.example.myapplication.myapplication.R
+import com.example.myapplication.myapplication.base.BaseActivity
 import com.example.myapplication.myapplication.base.LongTermManager
 import com.example.myapplication.myapplication.base.ResponseApi
 import com.example.myapplication.myapplication.data.BaseRequest
@@ -40,7 +41,7 @@ import java.net.URISyntaxException
 import java.util.*
 
 
-class RequstLeaveActivity : AppCompatActivity() {
+class RequstLeaveActivity : BaseActivity() {
     var userModel: UserModel? = null
     var filePath: String? = null
     var leaveDate: DatePicker? = null
@@ -206,6 +207,7 @@ class RequstLeaveActivity : AppCompatActivity() {
     }
 
     fun requstLeave(startDate: String, endDate: String) {
+        toggleProgressDialog(show = true,this,this.resources.getString(R.string.loading))
         var maps: MutableMap<String, String> = HashMap()
         maps.put("Authorization", "Bearer ${userModel?.token}")
         maps.put("Accept", "application/json")
@@ -215,11 +217,12 @@ class RequstLeaveActivity : AppCompatActivity() {
             filePath,
             responseApi = object : ResponseApi {
                 override fun onSuccessCall(response: String?) {
+                    toggleProgressDialog(show = false,this@RequstLeaveActivity,this@RequstLeaveActivity.resources.getString(R.string.loading))
                     finish()
                 }
 
                 override fun onErrorCall(error: VolleyError?) {
-
+                    toggleProgressDialog(show = false,this@RequstLeaveActivity,this@RequstLeaveActivity.resources.getString(R.string.loading))
                 }
             }, maps,
             startDate, endDate, typeModel?.id.toString()

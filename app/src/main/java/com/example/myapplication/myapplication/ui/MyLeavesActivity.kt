@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.volley.error.VolleyError
 import com.example.myapplication.myapplication.R
+import com.example.myapplication.myapplication.base.BaseActivity
 import com.example.myapplication.myapplication.base.ResponseApi
 import com.example.myapplication.myapplication.data.BaseRequest
 import com.example.myapplication.myapplication.data.DateUtils
@@ -15,7 +16,7 @@ import com.example.myapplication.myapplication.ui.adapters.LeavesAdapter
 import kotlinx.android.synthetic.main.activity_my_leaves.*
 import java.util.*
 
-class MyLeavesActivity : AppCompatActivity() {
+class MyLeavesActivity : BaseActivity() {
     var currentIndex: Int = 0
 
 

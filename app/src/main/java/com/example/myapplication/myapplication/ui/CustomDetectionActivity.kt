@@ -6,6 +6,7 @@ import android.content.ContextWrapper
 import android.content.Intent
 import android.graphics.*
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
@@ -14,29 +15,33 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import com.android.volley.error.VolleyError
 import com.example.myapplication.myapplication.HiltApplication
 import com.example.myapplication.myapplication.R
+import com.example.myapplication.myapplication.base.BaseActivity
 import com.example.myapplication.myapplication.base.LongTermManager
 import com.example.myapplication.myapplication.base.ResponseApi
 import com.example.myapplication.myapplication.data.BaseRequest
 import com.example.myapplication.myapplication.data.BaseRequest.Companion.loginApi
 import com.example.myapplication.myapplication.data.POSTMediasTask
 import com.example.myapplication.myapplication.models.UserModel
+import com.example.myapplication.myapplication.ui.face2.FaceDetectionActivity
 import com.huawei.hms.mlsdk.livenessdetection.*
 import kotlinx.android.synthetic.main.activity_custom_detection.*
 import java.io.*
 import java.util.*
 
 
-class CustomDetectionActivity : AppCompatActivity(), ResponseApi {
+class CustomDetectionActivity : BaseActivity(), ResponseApi {
 
     private var mlLivenessDetectView: MLLivenessDetectView? = null
     private var mPreviewContainer: FrameLayout? = null
     private var img_back: ImageView? = null
     val VIDEO_CAPTURE = 101
+    lateinit var bitMapToSave : Bitmap
 
-
+    var userModelToSave: UserModel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,27 +58,15 @@ class CustomDetectionActivity : AppCompatActivity(), ResponseApi {
             .setDetectCallback(object : OnMLLivenessDetectCallback {
                 override fun onCompleted(result: MLLivenessCaptureResult) {
                     val value = Intent()
-//                    value.putExtra("bitmap", result.bitmap)
                     val isLive = result.isLive
                     if (isLive) {
-                        POSTMediasTask().uploadMedia(
-                            this@CustomDetectionActivity,
-                            loginApi,
-                            bitmapToFile(result.bitmap),
-//                            bitmapToFile(result.bitmap, "usama.JPEG")?.absolutePath,
-                            this@CustomDetectionActivity
-                        )
+                        bitMapToSave = result.bitmap
+                        startRecorder()
                     } else {
                         value.putExtra("isLive", isLive)
                         setResult(44, value)
                         finish()
                     }
-//                    createImageFromBitmap(result.bitmap)
-//                    value.putExtra("isLive", isLive)
-
-//                    value.putExtra("bitmap", bitmap)
-//                    setResult(44, value)
-//                    finish()
                 }
 
                 override fun onError(error: Int) {
@@ -97,6 +90,12 @@ class CustomDetectionActivity : AppCompatActivity(), ResponseApi {
             val intent = Intent(this, CreateAccountActivity::class.java)
             this.startActivity(intent)
         }
+    }
+
+
+
+    fun startRecorder() {
+        ActivityCompat.startActivityForResult(this, FaceDetectionActivity.startActivity(this), VIDEO_CAPTURE,null)
     }
 
     fun bitmapToFile(bitmap: Bitmap, fileNameToSave: String): File? { // File name like "image.png"
@@ -126,24 +125,30 @@ class CustomDetectionActivity : AppCompatActivity(), ResponseApi {
         }
     }
 
-    private fun bitmapToFile(bitmap:Bitmap): String {
-        val wrapper = ContextWrapper(applicationContext)
-        var file = wrapper.getDir("Images",Context.MODE_PRIVATE)
-        file = File(file,"${UUID.randomUUID()}.jpg")
-        try{
-            val stream:OutputStream = FileOutputStream(file)
+    fun bitmapToFile(bitmap: Bitmap): File? {
+        var file: File? = null
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                file = File(
+                    getApplicationContext().getExternalFilesDir("")
+                        .toString() + File.separator + "UsamaImage.jpg"
+                )
+            } else {
+                file =
+                    File(Environment.getExternalStorageDirectory().absolutePath.toString() + File.separator + "UsamaImage.jpg")
+            }
+            if (file.exists()) {
+                file.mkdirs()
+            }
+            val stream: OutputStream = FileOutputStream(file)
             bitmap.compress(Bitmap.CompressFormat.JPEG,100,stream)
             stream.flush()
             stream.close()
-        }catch (e:IOException){
+        } catch (e: Exception) {
             e.printStackTrace()
         }
-
-        // Return the saved bitmap uri
-        return file.absolutePath
+        return file?.absoluteFile
     }
-
-
     fun recordVideo() {
         val intent = Intent(MediaStore.ACTION_VIDEO_CAPTURE)
         startActivityForResult(intent, VIDEO_CAPTURE)
@@ -169,28 +174,26 @@ class CustomDetectionActivity : AppCompatActivity(), ResponseApi {
         resultCode: Int,
         intent: Intent?
     ) {
-        val videoUri = intent?.data
+        val filePath = (intent?.extras?.get("result") as File).absoluteFile.path
         if (requestCode == VIDEO_CAPTURE) {
             if (resultCode == Activity.RESULT_OK) {
-//                videoUri?.let {
-//                    UploadUtility(
-//                        this,
-//                        "http://frapi.hr-jo.com/api/token",
-//                        this,
-//                    ).uploadFile(it)
-//                }
-//                val value = Intent()
-//                value.putExtra("isLive", true)
-//                setResult(44, value)
-//                finish()
+                if (!filePath.isNullOrBlank()) {
+                    toggleProgressDialog(show = true,this,this.resources.getString(R.string.loading))
+                    POSTMediasTask().uploadMedia(
+                        this@CustomDetectionActivity,
+                        loginApi,
+                        bitmapToFile(bitMapToSave).toString(),
+                        this@CustomDetectionActivity
+                    )
+                }
             } else if (resultCode == Activity.RESULT_CANCELED) {
                 Toast.makeText(
-                    this, "Video recording cancelled.",
+                    this, "Not correct detection",
                     Toast.LENGTH_LONG
                 ).show()
             } else {
                 Toast.makeText(
-                    this, "Failed to record video",
+                    this, "Not correct detection",
                     Toast.LENGTH_LONG
                 ).show()
             }
@@ -201,7 +204,6 @@ class CustomDetectionActivity : AppCompatActivity(), ResponseApi {
             intent
         )
     }
-
 
     fun dip2px(context: Context, dpValue: Float): Int {
         val scale = context.resources.displayMetrics.density
@@ -226,14 +228,17 @@ class CustomDetectionActivity : AppCompatActivity(), ResponseApi {
 
 
     override fun onSuccessCall(response: String?) {
+        toggleProgressDialog(show = false,this,this.resources.getString(R.string.loading))
         response?.let {
-            val userModel = UserModel().parse(it)
-            LongTermManager.getInstance().userModel = userModel
+            userModelToSave = UserModel().parse(it)
+            LongTermManager.getInstance().userModel = userModelToSave
             NavigationActivity().clearAndStart(this)
         }
     }
 
+
     override fun onErrorCall(error: VolleyError?) {
+        toggleProgressDialog(show = false,this,this.resources.getString(R.string.loading))
         print("")
     }
 

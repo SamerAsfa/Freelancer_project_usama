@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ContentUris
 import android.content.Context
-import android.content.ContextWrapper
 import android.content.Intent
 import android.database.Cursor
 import android.graphics.Rect
@@ -15,16 +14,15 @@ import android.os.Environment
 import android.provider.DocumentsContract
 import android.provider.MediaStore
 import android.util.DisplayMetrics
-import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.android.volley.error.VolleyError
 import com.example.myapplication.myapplication.HiltApplication
 import com.example.myapplication.myapplication.R
+import com.example.myapplication.myapplication.base.BaseActivity
 import com.example.myapplication.myapplication.base.LongTermManager
 import com.example.myapplication.myapplication.base.ResponseApi
 import com.example.myapplication.myapplication.data.BaseRequest.Companion.uploadVodApi
@@ -32,13 +30,12 @@ import com.example.myapplication.myapplication.data.POSTMediasTask
 import com.example.myapplication.myapplication.models.UserModel
 import com.example.myapplication.myapplication.ui.face2.FaceDetectionActivity
 import com.huawei.hms.mlsdk.livenessdetection.*
-import kotlinx.android.synthetic.main.activity_custom_detection.*
 import kotlinx.android.synthetic.main.activity_custom_vid_detection.*
 import java.io.*
 import java.net.URISyntaxException
 
 
-class CustomWithVideo : AppCompatActivity(), ResponseApi {
+class CustomWithVideo : BaseActivity(), ResponseApi {
 
     private var mlLivenessDetectView: MLLivenessDetectView? = null
     private var mPreviewContainer: FrameLayout? = null
@@ -62,7 +59,6 @@ class CustomWithVideo : AppCompatActivity(), ResponseApi {
             .setFaceFrameRect(Rect(0, 0, widthPixels, dip2px(this, 780f)))
             .setDetectCallback(object : OnMLLivenessDetectCallback {
                 override fun onCompleted(result: MLLivenessCaptureResult) {
-//                    recordVideo()
                     val value = Intent()
                     val isLive = result.isLive
                     if (isLive) {
@@ -94,17 +90,6 @@ class CustomWithVideo : AppCompatActivity(), ResponseApi {
 
     fun recordVideo() {
         ActivityCompat.startActivityForResult(this, FaceDetectionActivity.startActivity(this), VIDEO_CAPTURE,null)
-        ////TODO USAMA HOLDAY
-//        val intent = Intent(MediaStore.ACTION_VIDEO_CAPTURE)
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-//            intent.putExtra("android.intent.extras.CAMERA_FACING", android.hardware.Camera.CameraInfo.CAMERA_FACING_FRONT);
-//            intent.putExtra("android.intent.extras.LENS_FACING_FRONT", 1);
-//            intent.putExtra("android.intent.extra.USE_FRONT_CAMERA", true);
-//        } else {
-//            intent.putExtra("android.intent.extras.CAMERA_FACING", 1);
-//        }
-//        intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 1);
-//        startActivityForResult(intent, VIDEO_CAPTURE)
     }
 
     override fun onActivityResult(
@@ -112,10 +97,10 @@ class CustomWithVideo : AppCompatActivity(), ResponseApi {
         resultCode: Int,
         intent: Intent?
     ) {
-//        val videoUri = intent?.data
         val filePath  = (intent?.extras?.get("result") as File).absoluteFile.path
         if (requestCode == VIDEO_CAPTURE) {
             if (resultCode == Activity.RESULT_OK) {
+                toggleProgressDialog(show = true,this,this.resources.getString(R.string.loading))
                 var maps: MutableMap<String, String> = HashMap()
                 maps.put("Authorization", "Bearer ${userModel?.token}")
                 maps.put("Accept", "application/json")
@@ -328,6 +313,8 @@ class CustomWithVideo : AppCompatActivity(), ResponseApi {
 
 
     override fun onSuccessCall(response: String?) {
+        toggleProgressDialog(show = false,this,this.resources.getString(R.string.loading))
+
         response?.let {
             LongTermManager.getInstance().userModel = userModel
             NavigationActivity().clearAndStart(this)
@@ -335,6 +322,8 @@ class CustomWithVideo : AppCompatActivity(), ResponseApi {
     }
 
     override fun onErrorCall(error: VolleyError?) {
+        toggleProgressDialog(show = false,this,this.resources.getString(R.string.loading))
+
         print("")
     }
 

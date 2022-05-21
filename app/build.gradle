@@ -122,7 +122,7 @@ dependencies {
     implementation 'org.jcodec:jcodec:0.2.5'
     implementation 'org.jcodec:jcodec-android:0.2.5'
     implementation 'org.jcodec:jcodec-javase:0.2.5'
-    implementation 'com.writingminds:FFmpegAndroid:0.3.2'
+//    implementation 'com.writingminds:FFmpegAndroid:0.3.2'
 //    implementation 'com.github.israel-fl:bitmap2video:2.0.0'
 
 //    implementation 'com.google.firebase:firebase-ml-vision:23.0.0'

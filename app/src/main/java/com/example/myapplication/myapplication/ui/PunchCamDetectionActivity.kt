@@ -6,20 +6,20 @@ import android.content.ContextWrapper
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Rect
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.util.DisplayMetrics
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import com.android.volley.error.VolleyError
 import com.example.myapplication.myapplication.HiltApplication
 import com.example.myapplication.myapplication.R
+import com.example.myapplication.myapplication.base.BaseActivity
 import com.example.myapplication.myapplication.base.LongTermManager
 import com.example.myapplication.myapplication.base.ResponseApi
 import com.example.myapplication.myapplication.data.POSTMediasTask
-import com.example.myapplication.myapplication.models.ActionModel
 import com.example.myapplication.myapplication.models.UserModel
 import com.huawei.hms.mlsdk.livenessdetection.MLLivenessCaptureResult
 import com.huawei.hms.mlsdk.livenessdetection.MLLivenessDetectView
@@ -29,7 +29,7 @@ import java.io.*
 import java.util.*
 import kotlin.collections.HashMap
 
-class PunchCamDetectionActivity : AppCompatActivity(), ResponseApi {
+class PunchCamDetectionActivity : BaseActivity(), ResponseApi {
 
     private var mlLivenessDetectView: MLLivenessDetectView? = null
     private var mPreviewContainer: FrameLayout? = null
@@ -37,7 +37,6 @@ class PunchCamDetectionActivity : AppCompatActivity(), ResponseApi {
     val VIDEO_CAPTURE = 101
     var urlPath: String? = null
     var userModel: UserModel? = null
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,14 +57,18 @@ class PunchCamDetectionActivity : AppCompatActivity(), ResponseApi {
                     val value = Intent()
                     val isLive = result.isLive
                     if (isLive) {
+                        toggleProgressDialog(
+                            show = true,
+                            this@PunchCamDetectionActivity,
+                            this@PunchCamDetectionActivity.resources.getString(R.string.loading)
+                        )
                         var maps: MutableMap<String, String> = HashMap()
                         maps.put("Authorization", "Bearer ${userModel?.token}")
-//                        maps.put("Authorization", "Bearer 1|7fsrJprTOi4jyHLWFTICI7Tgs2B6ZhxwBTrZKTLL")
                         maps.put("Accept", "application/json")
                         POSTMediasTask().uploadMediaWithHeader(
                             this@PunchCamDetectionActivity,
                             urlPath,
-                            bitmapToFile(result.bitmap),
+                            bitmapToFile(result.bitmap).toString(),
                             this@PunchCamDetectionActivity, maps
                         )
                     } else {
@@ -98,22 +101,49 @@ class PunchCamDetectionActivity : AppCompatActivity(), ResponseApi {
         }
     }
 
-    private fun bitmapToFile(bitmap:Bitmap): String {
-        val wrapper = ContextWrapper(applicationContext)
-        var file = wrapper.getDir("Images",Context.MODE_PRIVATE)
-        file = File(file,"${UUID.randomUUID()}.jpg")
-        try{
+
+    fun bitmapToFile(bitmap: Bitmap): File? {
+        var file: File? = null
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                file = File(
+                    getApplicationContext().getExternalFilesDir("")
+                        .toString() + File.separator + "UsamaImage.jpg"
+                )
+            } else {
+                file =
+                    File(Environment.getExternalStorageDirectory().absolutePath.toString() + File.separator + "UsamaImage.jpg")
+            }
+            if (file.exists() == true) {
+                file.mkdirs()
+            }
             val stream: OutputStream = FileOutputStream(file)
             bitmap.compress(Bitmap.CompressFormat.JPEG,100,stream)
             stream.flush()
             stream.close()
-        }catch (e: IOException){
+        } catch (e: Exception) {
             e.printStackTrace()
         }
-
-        // Return the saved bitmap uri
-        return file.absolutePath
+        return file?.absoluteFile
     }
+
+//
+//    private fun bitmapToFile(bitmap:Bitmap): String {
+//        val wrapper = ContextWrapper(applicationContext)
+//        var file = wrapper.getDir("Images",Context.MODE_PRIVATE)
+//        file = File(file,"${UUID.randomUUID()}.jpg")
+//        try{
+//            val stream: OutputStream = FileOutputStream(file)
+//            bitmap.compress(Bitmap.CompressFormat.JPEG,100,stream)
+//            stream.flush()
+//            stream.close()
+//        }catch (e: IOException){
+//            e.printStackTrace()
+//        }
+//
+//        // Return the saved bitmap uri
+//        return file.absolutePath
+//    }
 
     fun getIn() {
         val intent = intent
@@ -206,6 +236,11 @@ class PunchCamDetectionActivity : AppCompatActivity(), ResponseApi {
 
 
     override fun onSuccessCall(response: String?) {
+        toggleProgressDialog(
+            show = false,
+            this@PunchCamDetectionActivity,
+            this@PunchCamDetectionActivity.resources.getString(R.string.loading)
+        )
         response?.let {
             val user = UserModel().parse(it)
             val userModel: UserModel = LongTermManager.getInstance().userModel
@@ -228,6 +263,11 @@ class PunchCamDetectionActivity : AppCompatActivity(), ResponseApi {
     }
 
     override fun onErrorCall(error: VolleyError?) {
+        toggleProgressDialog(
+            show = false,
+            this@PunchCamDetectionActivity,
+            this@PunchCamDetectionActivity.resources.getString(R.string.loading)
+        )
         finish()
     }
 

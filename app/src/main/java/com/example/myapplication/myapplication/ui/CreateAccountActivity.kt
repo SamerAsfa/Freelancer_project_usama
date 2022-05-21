@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.android.volley.error.VolleyError
 import com.example.myapplication.myapplication.R
+import com.example.myapplication.myapplication.base.BaseActivity
 import com.example.myapplication.myapplication.base.LongTermManager
 import com.example.myapplication.myapplication.base.ResponseApi
 import com.example.myapplication.myapplication.data.BaseRequest.Companion.registerApi
@@ -16,7 +17,7 @@ import com.example.myapplication.myapplication.data.POSTMediasTask
 import com.example.myapplication.myapplication.models.UserModel
 import kotlinx.android.synthetic.main.activity_create_account.*
 
-class CreateAccountActivity : AppCompatActivity(), ResponseApi {
+class CreateAccountActivity : BaseActivity(), ResponseApi {
     var userModel: UserModel? = null
     private val PERMISSIONS = arrayOf(
         Manifest.permission.CAMERA,
@@ -34,6 +35,7 @@ class CreateAccountActivity : AppCompatActivity(), ResponseApi {
                 if (passwordEditText.text.toString()
                         .equalsIgnoreCase(retypePasswordEditText.text.toString())
                 ) {
+                    toggleProgressDialog(show = true,this,this.resources.getString(R.string.loading))
                     var maps: MutableMap<String, String> = HashMap()
                     maps.put("name", nameEditText.text.toString())
                     maps.put("email", emailEditText.text.toString())
@@ -67,9 +69,9 @@ class CreateAccountActivity : AppCompatActivity(), ResponseApi {
     }
 
     override fun onSuccessCall(response: String?) {
+        toggleProgressDialog(show = false,this,this.resources.getString(R.string.loading))
         response?.let {
             this.userModel = UserModel().parse(it)
-//            LongTermManager.getInstance().userModel = userModel
             if (ActivityCompat.checkSelfPermission(
                     this@CreateAccountActivity,
                     Manifest.permission.CAMERA
@@ -103,7 +105,10 @@ class CreateAccountActivity : AppCompatActivity(), ResponseApi {
     }
 
     override fun onErrorCall(error: VolleyError?) {
-
+        toggleProgressDialog(show = false,this,this.resources.getString(R.string.loading))
+        showDialogOneButtonsCustom("Error", error?.message.toString(), "Ok") { dialog ->
+            dialog.dismiss()
+        }
     }
 
 

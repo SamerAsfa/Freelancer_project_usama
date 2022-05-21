@@ -3,6 +3,7 @@ package com.example.myapplication.myapplication.ui.face2
 //import com.homesoft.encoder.Muxer
 //import com.homesoft.encoder.MuxingCompletionListener
 //import com.homesoft.encoder.TAG
+
 import android.Manifest
 import android.app.ProgressDialog
 import android.content.Context
@@ -12,6 +13,7 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.hardware.Camera
 import android.hardware.Camera.CameraInfo
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
@@ -35,9 +37,9 @@ import org.jcodec.common.io.NIOUtils
 import org.jcodec.common.model.ColorSpace.RGB
 import org.jcodec.common.model.Picture
 import org.jcodec.common.model.Rational
-import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
+import java.io.IOException
 import java.lang.System.out
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -69,6 +71,7 @@ class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
     var statePublic: Boolean = false
     var dialog: ProgressDialog? = null
     var file: File? = null
+
     ///
     var stringValues: StringBuilder = StringBuilder()
 
@@ -93,6 +96,8 @@ class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_face_detection)
+
+        creteRootPath()
         createRandomIndex()
         callCameraPermission()
     }
@@ -128,7 +133,7 @@ class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
             timerToSchedule.cancel()
             timerToProcess.cancel()
             getFinalImageArray()
-            runOnUiThread{
+            runOnUiThread {
                 drStateTextView.text = "Wait to configuration"
                 showDialog()
                 container.removeAllViews()
@@ -137,19 +142,6 @@ class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
         }
     }
 
-//    override fun onStop() {
-//        super.onStop()
-//        timerToSchedule.cancel()
-//        timerToProcess.cancel()
-//    }
-//
-//
-//    override fun onPause() {
-//        super.onPause()
-//        timerToSchedule.cancel()
-//        timerToProcess.cancel()
-//    }
-//
 
     override fun onDestroy() {
         super.onDestroy()
@@ -173,43 +165,20 @@ class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
 
     fun creteRootPath(): File? {
         try {
-            file = File(
-                Environment.getExternalStorageDirectory()
-                    .toString() + File.separator + "UsamaSd.mp4"
-            )
-            file?.createNewFile()
-            val bos = ByteArrayOutputStream()
-            val bitmapdata = bos.toByteArray()
-            val fos = FileOutputStream(file)
-            fos.write(bitmapdata)
-            fos.flush()
-            fos.close()
-            file
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                file =  File(getApplicationContext().getExternalFilesDir("").toString() + File.separator + "UsamaSd.mp4")
+            } else {
+                file = File(Environment.getExternalStorageDirectory().absolutePath.toString() + File.separator + "UsamaSd.mp4")
+            }
+            if (file?.exists() == true) {
+                file?.mkdirs()
+            }
         } catch (e: Exception) {
             e.printStackTrace()
             file // it will return null
         }
         return file
     }
-//    fun addVideo() {
-//        try {
-//            val muxer = creteRootPath()?.let { Muxer(this, it) }
-//            muxer?.setOnMuxingCompletedListener(object : MuxingCompletionListener {
-//                override fun onVideoSuccessful(file: File) {
-//                    Log.d(TAG, "Video muxed - file path: ${file.absolutePath}")
-//                }
-//
-//                override fun onVideoError(error: Throwable) {
-//                    Log.e(TAG, "There was an error muxing the video")
-//                }
-//            })
-//            Thread(Runnable {
-//                muxer?.mux(arrayOfImagesFinalImages)
-//            }).start()
-//        } catch (ex: java.lang.Exception) {
-//            ex.stackTrace
-//        }
-//    }
 
 
     fun convertImagesToVideo() {
@@ -222,17 +191,12 @@ class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
             }
             enc.finish()
         } finally {
-            NIOUtils.closeQuietly(out);
-            runOnUiThread{
-                hideDialog()
-
-            }
-
+            NIOUtils.closeQuietly(out);/////storage/emulated/0/UsamaSd.mp4
         }
         endIntent()
     }
 
-    fun endIntent(){
+    fun endIntent() {
         val returnIntent = Intent()
         returnIntent.putExtra("result", file?.absoluteFile)
         setResult(RESULT_OK, returnIntent)

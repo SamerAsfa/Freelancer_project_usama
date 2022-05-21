@@ -15,31 +15,25 @@ import com.android.volley.toolbox.Volley
 import com.example.myapplication.myapplication.base.LongTermManager
 import com.example.myapplication.myapplication.base.ResponseApi
 import com.example.myapplication.myapplication.models.UserModel
+import java.io.File
 
 
 class POSTMediasTask {
-    var dialog: ProgressDialog? = null
 
-    // //storage/emulated/0/usama.JPEG
     fun uploadMedia(context: Activity?, url: String?, filePath: String?, responseApi: ResponseApi) {
-        context?.let { toggleProgressDialog(true, it) }
+
         val multiPartRequestWithParams = SimpleMultiPartRequest(
             Request.Method.POST, url,
             object : Response.Listener<String?> {
                 override fun onResponse(response: String?) {
                     responseApi.onSuccessCall(response)
-                    context?.let { toggleProgressDialog(false, it) }
+
                 }
 
             }, object : Response.ErrorListener {
                 override fun onErrorResponse(error: VolleyError?) {
                     val errors = VolleyError(error?.networkResponse?.data?.let { String(it) });
                     responseApi.onErrorCall(errors)
-                    context?.let { toggleProgressDialog(false, it) }
-                    Toast.makeText(
-                        context, errors.message,
-                        Toast.LENGTH_LONG
-                    ).show()
                 }
 
             })
@@ -51,39 +45,32 @@ class POSTMediasTask {
         val queue = Volley.newRequestQueue(context)
         queue.add(multiPartRequestWithParams)
     }
-
+/////data/user/0/com.test.face.usama/app_Images/92c6fabf-c582-4be4-bd84-12bda5bb18b2.jpg
     //    /storage/emulated/0/DCIM/Camera/VID_20220402_113309.mp4
     fun uploadMediaWithHeader(
-        context: Activity?,
-        url: String?,
-        filePath: String?,
-        responseApi: ResponseApi,
-        header: MutableMap<String, String>
+    context: Activity?,
+    url: String?,
+    filePath: String,
+    responseApi: ResponseApi,
+    header: MutableMap<String, String>
     ) {
-        context?.let { toggleProgressDialog(true, it) }
         val multiPartRequestWithParams = SimpleMultiPartRequest(
             Request.Method.POST, url,
             object : Response.Listener<String?> {
                 override fun onResponse(response: String?) {
                     responseApi.onSuccessCall(response)
-                    context?.let { toggleProgressDialog(false, it) }
                 }
 
             }, object : Response.ErrorListener {
                 override fun onErrorResponse(error: VolleyError?) {
                     val errors = VolleyError(error?.networkResponse?.data?.let { String(it) });
                     responseApi.onErrorCall(errors)
-                    context?.let { toggleProgressDialog(false, it) }
-                    Toast.makeText(
-                        context, errors.message,
-                        Toast.LENGTH_LONG
-                    ).show()
                 }
 
             }
         )
         multiPartRequestWithParams.headers = header
-        multiPartRequestWithParams.addFile("attachment", filePath)
+        multiPartRequestWithParams.addFile("attachment", filePath.toString())
         val queue = Volley.newRequestQueue(context)
         queue.add(multiPartRequestWithParams)
     }
@@ -98,24 +85,17 @@ class POSTMediasTask {
         end_date: String,
         type_id: String,
     ) {
-        context?.let { toggleProgressDialog(true, it) }
         val multiPartRequestWithParams = SimpleMultiPartRequest(
             Request.Method.POST, url,
             object : Response.Listener<String?> {
                 override fun onResponse(response: String?) {
                     responseApi.onSuccessCall(response)
-                    context?.let { toggleProgressDialog(false, it) }
                 }
 
             }, object : Response.ErrorListener {
                 override fun onErrorResponse(error: VolleyError?) {
                     val errors = VolleyError(error?.networkResponse?.data?.let { String(it) });
                     responseApi.onErrorCall(errors)
-                    context?.let { toggleProgressDialog(false, it) }
-                    Toast.makeText(
-                        context, errors.message,
-                        Toast.LENGTH_LONG
-                    ).show()
                 }
 
             }
@@ -172,22 +152,15 @@ class POSTMediasTask {
         params: MutableMap<String, String>,
         responseApi: ResponseApi
     ) {
-        context?.let { toggleProgressDialog(true, it) }
         val queue = Volley.newRequestQueue(context)
         val sr: StringRequest = object : StringRequest(
             Method.POST, url,
             Response.Listener {
                 responseApi.onSuccessCall(it)
-                context?.let { toggleProgressDialog(false, it) }
             },
             Response.ErrorListener { error ->
                 val errors = VolleyError(error?.networkResponse?.data?.let { String(it) });
                 responseApi.onErrorCall(errors)
-                context?.let { toggleProgressDialog(false, it) }
-                Toast.makeText(
-                    context, errors.message,
-                    Toast.LENGTH_LONG
-                ).show()
             }) {
             override fun getParams(): Map<String, String> {
                 return params
@@ -232,47 +205,6 @@ class POSTMediasTask {
         maps.put("Content-Type", "application/x-www-form-urlencoded")
         sr.headers = maps
         queue.add(sr)
-    }
-
-//    fun getJsonObjectRequest(
-//        context: Activity?,
-//        url: String?,
-//        concat: String? = "",
-//        responseApi: ResponseApi
-//    ) {
-//        val userModel: UserModel = LongTermManager.getInstance().userModel
-//        val queue = Volley.newRequestQueue(context)
-//        val sr: StringRequest = object : JsonObjectRequest(
-//            Method.GET, "${url}${concat}",
-//            Response.Listener {
-////                responseApi.onSuccessCall(it)
-//            },
-//            Response.ErrorListener { error ->
-//                val errors = VolleyError(error?.networkResponse?.data?.let { String(it) });
-//                responseApi.onErrorCall(errors)
-//                Toast.makeText(
-//                    context, errors.message,
-//                    Toast.LENGTH_LONG
-//                ).show()
-//            }) {
-//        }
-//        val maps: MutableMap<String, String> = HashMap()
-//        maps.put("Authorization", "Bearer ${userModel.token}")
-//        maps.put("Accept", "application/json")
-//        maps.put("Content-Type", "application/x-www-form-urlencoded")
-//        sr.headers = maps
-//
-//        queue.add(sr)
-//    }
-
-    fun toggleProgressDialog(show: Boolean, activity: Activity) {
-        activity.runOnUiThread {
-            if (show) {
-                dialog = ProgressDialog.show(activity, "", "Uploading file...", true);
-            } else {
-                dialog?.dismiss();
-            }
-        }
     }
 
 

@@ -10,6 +10,7 @@
     <string name="done">Done</string>
     <string name="punch_in">Punch In</string>
     <string name="Punch_Out">Punch Out</string>
+    <string name="loading">Loading ...</string>
     <string name="breaks">Break</string>
     <string name="leave">Leave</string>
     <string name="picture">Picture</string>
