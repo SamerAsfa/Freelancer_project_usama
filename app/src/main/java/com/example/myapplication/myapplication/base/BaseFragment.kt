@@ -5,6 +5,7 @@ import android.app.Dialog
 import android.app.ProgressDialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.media.audiofx.AcousticEchoCanceler
 import android.view.View
 import android.view.Window
 import androidx.fragment.app.Fragment
@@ -139,6 +140,26 @@ open class BaseFragment : Fragment() {
             ok.invoke(dialogAndroidAppCus)
         }
         dialogAndroidAppCus.setCancelable(true)
+        dialogAndroidAppCus.show()
+    }
+
+    fun showDialogOneButtonsCustom(
+        isCanceler: Boolean,
+        body: String,
+        okButtonText: String,
+        ok: (Dialog) -> Unit,
+    ) {
+        val dialogAndroidAppCus = Dialog(requireContext())
+        dialogAndroidAppCus.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialogAndroidAppCus.setContentView(R.layout.dialog_msg)
+        dialogAndroidAppCus.userNameTextView.text = "We are sorry"
+        dialogAndroidAppCus.okButton.text = okButtonText
+        dialogAndroidAppCus.cancelButton.visibility = View.GONE
+        dialogAndroidAppCus.bodyNameEditText.text = body
+        dialogAndroidAppCus.okButton.setOnClickListener {
+            ok.invoke(dialogAndroidAppCus)
+        }
+        dialogAndroidAppCus.setCancelable(isCanceler)
         dialogAndroidAppCus.show()
     }
 

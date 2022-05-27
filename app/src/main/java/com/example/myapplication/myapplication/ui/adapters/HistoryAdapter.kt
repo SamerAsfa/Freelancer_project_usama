@@ -30,8 +30,16 @@ class HistoryAdapter(private val arrayList: ArrayList<HistoryModel?>?) :
     ) {
         holder.titleDateTextView.text =
             DateUtils().getDateForaAdapterFromTimeStamp(arrayList?.get(holder.adapterPosition)?.date)
-        holder.titleInTextView.text = arrayList?.get(holder.adapterPosition)?.pin
-        holder.titleOutTextView.text = arrayList?.get(holder.adapterPosition)?.pout
+        holder.titleInTextView.text = arrayList?.get(holder.adapterPosition)?.pin?.toLong()?.let {
+            DateUtils().getTime(
+                it
+            )
+        }
+        holder.titleOutTextView.text = arrayList?.get(holder.adapterPosition)?.pout?.toLong()?.let {
+            DateUtils().getTime(
+                it
+            )
+        }
         val hours = arrayList?.get(holder.adapterPosition)?.breaks?.div(60)
         val minutes = arrayList?.get(holder.adapterPosition)?.breaks?.rem(60)
         val time = String.format("%d:%02d", hours, minutes)

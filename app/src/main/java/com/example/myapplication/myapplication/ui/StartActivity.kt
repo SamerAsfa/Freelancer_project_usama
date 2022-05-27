@@ -25,10 +25,6 @@ import com.example.myapplication.myapplication.models.UserModel
 import com.example.myapplication.myapplication.ui.face2.FaceDetectionActivity
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
-import com.huawei.hms.mlsdk.livenessdetection.MLLivenessCapture
-import com.huawei.hms.mlsdk.livenessdetection.MLLivenessCaptureResult
-import kotlinx.android.synthetic.main.activity_custom_detection.*
-import kotlinx.android.synthetic.main.activity_start.*
 import kotlinx.android.synthetic.main.login_with_face_activity.*
 import java.io.BufferedOutputStream
 import java.io.File

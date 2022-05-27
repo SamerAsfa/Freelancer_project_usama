@@ -14,12 +14,10 @@ class BaseRequest {
         val leaveTypeApi: String = "${baseUrl}leaveType"
         val updateTokenFcmApi: String = "${baseUrl}updateTokenFcm"
         val notificationsApi: String = "${baseUrl}notifications"
-//http://frapi.hr-jo.com/api/notifications
         val PINApi: String = "${baseUrl}punch/PIN"
         val POUTApi: String = "${baseUrl}punch/POUT"
-        val BREAKApi: String = "${baseUrl}punch/BREAK"
+        val BREAKInApi: String = "${baseUrl}punch/BREAKIN"
+        val BREAKOutApi: String = "${baseUrl}punch/BREAKOUT"
         val LEAVEApi: String = "${baseUrl}punch/LEAVE"
-
-
     }
 }
