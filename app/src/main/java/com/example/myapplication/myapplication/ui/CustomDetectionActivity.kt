@@ -25,6 +25,7 @@ import com.example.myapplication.myapplication.base.ResponseApi
 import com.example.myapplication.myapplication.data.BaseRequest
 import com.example.myapplication.myapplication.data.BaseRequest.Companion.loginApi
 import com.example.myapplication.myapplication.data.POSTMediasTask
+import com.example.myapplication.myapplication.models.FaceBundle
 import com.example.myapplication.myapplication.models.UserModel
 import com.example.myapplication.myapplication.ui.face2.FaceDetectionActivity
 import com.huawei.hms.mlsdk.livenessdetection.*
@@ -95,35 +96,11 @@ class CustomDetectionActivity : BaseActivity(), ResponseApi {
 
 
     fun startRecorder() {
-        ActivityCompat.startActivityForResult(this, FaceDetectionActivity.startActivity(this), VIDEO_CAPTURE,null)
+        ActivityCompat.startActivityForResult(this, FaceDetectionActivity.startActivity(this,
+            FaceBundle(numberOfActions = 1)
+        ), VIDEO_CAPTURE,null)
     }
 
-    fun bitmapToFile(bitmap: Bitmap, fileNameToSave: String): File? { // File name like "image.png"
-        //create a file to write bitmap data
-        var file: File? = null
-        return try {
-            file = File(
-                Environment.getExternalStorageDirectory()
-                    .toString() + File.separator + fileNameToSave
-            )
-            file.createNewFile()
-
-            //Convert bitmap to byte array
-            val bos = ByteArrayOutputStream()
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 0, bos) // YOU can also save it in JPEG
-            val bitmapdata = bos.toByteArray()
-
-            //write the bytes in file
-            val fos = FileOutputStream(file)
-            fos.write(bitmapdata)
-            fos.flush()
-            fos.close()
-            file
-        } catch (e: Exception) {
-            e.printStackTrace()
-            file // it will return null
-        }
-    }
 
     fun bitmapToFile(bitmap: Bitmap): File? {
         var file: File? = null
@@ -149,35 +126,17 @@ class CustomDetectionActivity : BaseActivity(), ResponseApi {
         }
         return file?.absoluteFile
     }
-    fun recordVideo() {
-        val intent = Intent(MediaStore.ACTION_VIDEO_CAPTURE)
-        startActivityForResult(intent, VIDEO_CAPTURE)
-    }
 
-    fun createImageFromBitmap(bitmap: Bitmap): String? {
-        var fileName: String? = "myImage" //no .png or .jpg needed
-        try {
-            val bytes = ByteArrayOutputStream()
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
-            val fo: FileOutputStream = openFileOutput(fileName, MODE_PRIVATE)
-            fo.write(bytes.toByteArray())
-            fo.close()
-        } catch (e: Exception) {
-            e.printStackTrace()
-            fileName = null
-        }
-        return fileName
-    }
 
     override fun onActivityResult(
         requestCode: Int,
         resultCode: Int,
         intent: Intent?
     ) {
-        val filePath = (intent?.extras?.get("result") as File).absoluteFile.path
+        val filePath  = (intent?.extras?.get("result") as String)
         if (requestCode == VIDEO_CAPTURE) {
             if (resultCode == Activity.RESULT_OK) {
-                if (!filePath.isNullOrBlank()) {
+                if (!filePath.isNullOrEmpty()) {
                     toggleProgressDialog(show = true,this,this.resources.getString(R.string.loading))
                     POSTMediasTask().uploadMedia(
                         this@CustomDetectionActivity,
@@ -239,7 +198,9 @@ class CustomDetectionActivity : BaseActivity(), ResponseApi {
 
     override fun onErrorCall(error: VolleyError?) {
         toggleProgressDialog(show = false,this,this.resources.getString(R.string.loading))
-        print("")
+        showDialogOneButtonsCustom("Error", error?.message.toString(), "Ok") { dialog ->
+            dialog.dismiss()
+        }
     }
 
 }

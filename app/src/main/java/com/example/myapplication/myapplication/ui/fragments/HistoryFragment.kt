@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.volley.error.VolleyError
 import com.example.myapplication.myapplication.R
+import com.example.myapplication.myapplication.base.BaseFragment
 import com.example.myapplication.myapplication.base.ResponseApi
 import com.example.myapplication.myapplication.data.BaseRequest
 import com.example.myapplication.myapplication.data.DateUtils
@@ -17,7 +18,7 @@ import com.example.myapplication.myapplication.ui.adapters.HistoryAdapter
 import kotlinx.android.synthetic.main.fragment_history.view.*
 import java.util.*
 
-class HistoryFragment : Fragment(R.layout.fragment_history) {
+class HistoryFragment : BaseFragment() {
 
     companion object {
         val fragmentName : String = "HistoryFragment"
@@ -90,7 +91,9 @@ class HistoryFragment : Fragment(R.layout.fragment_history) {
                 }
 
                 override fun onErrorCall(error: VolleyError?) {
-                    print("")
+                    showDialogOneButtonsCustom("Error", error?.message.toString(), "Ok") { dialog ->
+                        dialog.dismiss()
+                    }
                 }
             }
         )

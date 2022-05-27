@@ -139,7 +139,9 @@ class RequstLeaveActivity : BaseActivity() {
                     }
 
                     override fun onErrorCall(error: VolleyError?) {
-                        print("")
+                        showDialogOneButtonsCustom("Error", error?.message.toString(), "Ok") { dialog ->
+                            dialog.dismiss()
+                        }
                     }
                 }
             )
@@ -210,6 +212,7 @@ class RequstLeaveActivity : BaseActivity() {
         toggleProgressDialog(show = true,this,this.resources.getString(R.string.loading))
         var maps: MutableMap<String, String> = HashMap()
         maps.put("Authorization", "Bearer ${userModel?.token}")
+//        maps.put("Authorization", "Bearer 142|ODzNOzZ1yhWkzEOob6URoJajOHVc7opOTpKQe8Wl")
         maps.put("Accept", "application/json")
         POSTMediasTask().uploadMediaWithHeaderBody(
             this@RequstLeaveActivity,
@@ -218,11 +221,14 @@ class RequstLeaveActivity : BaseActivity() {
             responseApi = object : ResponseApi {
                 override fun onSuccessCall(response: String?) {
                     toggleProgressDialog(show = false,this@RequstLeaveActivity,this@RequstLeaveActivity.resources.getString(R.string.loading))
-                    finish()
+                    showSuccessLeaveDialog()
                 }
 
                 override fun onErrorCall(error: VolleyError?) {
                     toggleProgressDialog(show = false,this@RequstLeaveActivity,this@RequstLeaveActivity.resources.getString(R.string.loading))
+                    showDialogOneButtonsCustom("Error", error?.message.toString(), "Ok") { dialog ->
+                        dialog.dismiss()
+                    }
                 }
             }, maps,
             startDate, endDate, typeModel?.id.toString()

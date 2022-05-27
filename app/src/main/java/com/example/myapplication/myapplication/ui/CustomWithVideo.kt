@@ -27,6 +27,7 @@ import com.example.myapplication.myapplication.base.LongTermManager
 import com.example.myapplication.myapplication.base.ResponseApi
 import com.example.myapplication.myapplication.data.BaseRequest.Companion.uploadVodApi
 import com.example.myapplication.myapplication.data.POSTMediasTask
+import com.example.myapplication.myapplication.models.FaceBundle
 import com.example.myapplication.myapplication.models.UserModel
 import com.example.myapplication.myapplication.ui.face2.FaceDetectionActivity
 import com.huawei.hms.mlsdk.livenessdetection.*
@@ -89,7 +90,9 @@ class CustomWithVideo : BaseActivity(), ResponseApi {
 
 
     fun recordVideo() {
-        ActivityCompat.startActivityForResult(this, FaceDetectionActivity.startActivity(this), VIDEO_CAPTURE,null)
+        ActivityCompat.startActivityForResult(this, FaceDetectionActivity.startActivity(this ,
+            FaceBundle(numberOfActions = 4)
+        ), VIDEO_CAPTURE,null)
     }
 
     override fun onActivityResult(
@@ -97,7 +100,7 @@ class CustomWithVideo : BaseActivity(), ResponseApi {
         resultCode: Int,
         intent: Intent?
     ) {
-        val filePath  = (intent?.extras?.get("result") as File).absoluteFile.path
+        val filePath  = (intent?.extras?.get("result") as String)
         if (requestCode == VIDEO_CAPTURE) {
             if (resultCode == Activity.RESULT_OK) {
                 toggleProgressDialog(show = true,this,this.resources.getString(R.string.loading))
@@ -323,8 +326,9 @@ class CustomWithVideo : BaseActivity(), ResponseApi {
 
     override fun onErrorCall(error: VolleyError?) {
         toggleProgressDialog(show = false,this,this.resources.getString(R.string.loading))
-
-        print("")
+        showDialogOneButtonsCustom("Error", error?.message.toString(), "Ok") { dialog ->
+            dialog.dismiss()
+        }
     }
 
 }

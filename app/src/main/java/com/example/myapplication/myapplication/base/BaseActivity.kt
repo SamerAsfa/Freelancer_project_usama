@@ -3,6 +3,8 @@ package com.example.myapplication.myapplication.base
 import android.app.Activity
 import android.app.Dialog
 import android.app.ProgressDialog
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +15,7 @@ import com.example.myapplication.myapplication.R
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.android.synthetic.main.bottom_sheet_dialog.*
 import kotlinx.android.synthetic.main.dialog_msg.*
+import kotlinx.android.synthetic.main.dialog_success.*
 import kotlinx.android.synthetic.main.upload_items_dialog.*
 import kotlinx.android.synthetic.main.upload_items_dialog.typeNameEditText
 import kotlinx.android.synthetic.main.upload_items_dialog.userNameTextView
@@ -44,6 +47,19 @@ abstract class BaseActivity :
         }
         bottomSheetDialog.show()
     }
+
+    fun showSuccessLeaveDialog() {
+        val dialogAndroidAppCus = Dialog(this)
+        dialogAndroidAppCus.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT));
+        dialogAndroidAppCus.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialogAndroidAppCus.setContentView(R.layout.success_leave_dialog)
+        dialogAndroidAppCus.publicDialog.setOnClickListener {
+            dialogAndroidAppCus.dismiss()
+        }
+        dialogAndroidAppCus.setCancelable(true)
+        dialogAndroidAppCus.show()
+    }
+
 
     fun showAlertDialogCustomText(uploadImageView: () -> Unit, confirmButton: (String) -> Unit) {
         val dialogAndroidAppCus = Dialog(this)

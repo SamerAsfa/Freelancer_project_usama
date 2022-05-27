@@ -77,7 +77,9 @@ class MyLeavesActivity : BaseActivity() {
                 }
 
                 override fun onErrorCall(error: VolleyError?) {
-                    print("")
+                    showDialogOneButtonsCustom("Error", error?.message.toString(), "Ok") { dialog ->
+                        dialog.dismiss()
+                    }
                 }
             }
         )

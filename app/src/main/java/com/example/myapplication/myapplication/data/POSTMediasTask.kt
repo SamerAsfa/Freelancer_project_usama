@@ -201,6 +201,7 @@ class POSTMediasTask {
         }
         val maps: MutableMap<String, String> = HashMap()
         maps.put("Authorization", "Bearer ${userModel.token}")
+//        maps.put("Authorization", "Bearer 142|ODzNOzZ1yhWkzEOob6URoJajOHVc7opOTpKQe8Wl")
         maps.put("Accept", "application/json")
         maps.put("Content-Type", "application/x-www-form-urlencoded")
         sr.headers = maps

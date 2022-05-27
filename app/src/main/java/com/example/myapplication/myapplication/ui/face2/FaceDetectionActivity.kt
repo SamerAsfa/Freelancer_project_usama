@@ -24,6 +24,7 @@ import androidx.core.app.ActivityCompat
 import com.ctech.bitmp4.Encoder
 import com.ctech.bitmp4.MP4Encoder
 import com.example.myapplication.myapplication.R
+import com.example.myapplication.myapplication.models.FaceBundle
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.face.FaceDetection
 import com.google.mlkit.vision.face.FaceDetector
@@ -40,9 +41,11 @@ import org.jcodec.common.model.Rational
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import java.io.OutputStream
 import java.lang.System.out
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.collections.LinkedHashMap
 
 
 class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
@@ -62,6 +65,7 @@ class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
     val lockCases: ArrayList<Boolean> = ArrayList()
     val arrayOfImages: ArrayList<Bitmap> = ArrayList()
     val arrayOfImagesFinalImages: ArrayList<Bitmap> = ArrayList()
+    val linkedImageArray: LinkedHashMap<String,Bitmap> = LinkedHashMap()
     val hashOfSet: HashMap<Int, Int> = HashMap()
     var smileLock: Boolean = true
     var leftEyeLock: Boolean = true
@@ -71,6 +75,7 @@ class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
     var statePublic: Boolean = false
     var dialog: ProgressDialog? = null
     var file: File? = null
+    var faceBundle: FaceBundle? = null
 
     ///
     var stringValues: StringBuilder = StringBuilder()
@@ -87,8 +92,12 @@ class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
     )
 
     companion object {
-        fun startActivity(context: Context): Intent {
-            return Intent(context, FaceDetectionActivity::class.java)
+        val FACE_BUNDLE = "faceBundle"
+        val RESULT = "result"
+        fun startActivity(context: Context, faceBundle: FaceBundle): Intent {
+            val intent = Intent(context, FaceDetectionActivity::class.java)
+            intent.putExtra(FACE_BUNDLE, faceBundle)
+            return intent
         }
     }
 
@@ -96,10 +105,19 @@ class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_face_detection)
-
-        creteRootPath()
+        getFaceBundleExtra()
         createRandomIndex()
         callCameraPermission()
+    }
+
+
+    fun getFaceBundleExtra() {
+        try {
+            faceBundle = intent.getParcelableExtra<FaceBundle>(FACE_BUNDLE)
+            actionsToCheck = faceBundle?.numberOfActions!!
+        } catch (ex: Exception) {
+            ex.message
+        }
     }
 
 
@@ -138,10 +156,16 @@ class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
                 showDialog()
                 container.removeAllViews()
             }
-            convertImagesToVideo()
+            if (faceBundle?.uploadAsImage == true) {
+                bitmapToFile(arrayOfImagesFinalImages[0])
+                endIntent()
+            } else {
+                convertImagesToVideo()
+            }
+
         }
     }
-
+//452145
 
     override fun onDestroy() {
         super.onDestroy()
@@ -158,17 +182,29 @@ class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
     }
 
     fun getFinalImageArray() {
-        for (i in 1..4) {
-            arrayOfImagesFinalImages.add(arrayOfImages[i])
+        linkedImageArray.values.forEach{ bitmap ->
+            arrayOfImagesFinalImages.add(bitmap)
         }
+
+        if(arrayOfImages.size>12) {
+            for (i in 9..11) {
+                arrayOfImagesFinalImages.add(arrayOfImages[i])
+            }
+        }
+
+//        arrayOfImagesFinalImages.addAll(arrayOfImages)
     }
 
     fun creteRootPath(): File? {
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                file =  File(getApplicationContext().getExternalFilesDir("").toString() + File.separator + "UsamaSd.mp4")
+                file = File(
+                    getApplicationContext().getExternalFilesDir("")
+                        .toString() + File.separator + "UsamaSd.mp4"
+                )
             } else {
-                file = File(Environment.getExternalStorageDirectory().absolutePath.toString() + File.separator + "UsamaSd.mp4")
+                file =
+                    File(Environment.getExternalStorageDirectory().absolutePath.toString() + File.separator + "UsamaSd.mp4")
             }
             if (file?.exists() == true) {
                 file?.mkdirs()
@@ -180,25 +216,51 @@ class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
         return file
     }
 
+    fun bitmapToFile(bitmap: Bitmap): File? {
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                file = File(
+                    getApplicationContext().getExternalFilesDir("")
+                        .toString() + File.separator + "UsamaImage.jpg"
+                )
+            } else {
+                file =
+                    File(Environment.getExternalStorageDirectory().absolutePath.toString() + File.separator + "UsamaImage.jpg")
+            }
+            if (file!!.exists()) {
+                file!!.mkdirs()
+            }
+            val stream: OutputStream = FileOutputStream(file)
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+            stream.flush()
+            stream.close()
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        return file?.absoluteFile
+    }
 
     fun convertImagesToVideo() {
         try {
             val output = creteRootPath()
             val enc =
-                AWTSequenceEncoder.createWithFps(NIOUtils.writableChannel(output), Rational.R(2, 1))
+                AWTSequenceEncoder.createWithFps(NIOUtils.writableChannel(output), Rational.R(7, 2))
             for (bitmap in arrayOfImagesFinalImages) {
                 enc.encodeNativeFrame(fromBitmaps(bitmap))
             }
             enc.finish()
         } finally {
-            NIOUtils.closeQuietly(out);/////storage/emulated/0/UsamaSd.mp4
+            NIOUtils.closeQuietly(out);
         }
         endIntent()
     }
 
     fun endIntent() {
         val returnIntent = Intent()
-        returnIntent.putExtra("result", file?.absoluteFile)
+        returnIntent.putExtra(RESULT, file?.absoluteFile.toString())
+        returnIntent.putExtra(FACE_BUNDLE, faceBundle)
         setResult(RESULT_OK, returnIntent)
         finish()
     }
@@ -231,56 +293,10 @@ class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
         }
     }
 
-    fun addImagesToVideo() {
-        try {
-//            val downloarDir = getExternalFilesDir(null)
-            val exportedFile = creteRootPath()
-            encoder = MP4Encoder()
-            encoder.setFrameDelay(50)
-            encoder.setOutputFilePath(exportedFile?.path)
-        } catch (ex: Exception) {
-            ex.stackTrace
-        }
-    }
-
-    private fun startExport() {
-        encoder.setOutputSize(100, 200)
-        encoder.startEncode()
-        exportDisposable = Observable.interval(30, TimeUnit.MILLISECONDS)
-            .map {
-                arrayOfImagesFinalImages
-            }
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe {
-                encoder.addFrame(it[0])
-
-            }
-        Handler().postDelayed({
-            stopExport()
-        }, 400)
-    }
-
-    private fun createBitmapFromView(v: View): Bitmap {
-        val bitmap = Bitmap.createBitmap(
-            v.width,
-            v.height,
-            Bitmap.Config.ARGB_8888
-        )
-
-        val c = Canvas(bitmap)
-        v.draw(c)
-        return bitmap
-    }
-
-    private fun stopExport() {
-        encoder.stopEncode()
-        exportDisposable.dispose()
-    }
 
     private fun isAllChecked(): Boolean {
         return currentIndex == arrayOfIndex.size
     }
-
 
     private fun getActionIndex(): Int {
         return arrayOfIndex[currentIndex]
@@ -422,7 +438,6 @@ class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
     }
 
     fun getCameraInstance(): Camera? {
-
         try {
             if (getFrontCameraId() == -1) {
                 camera = Camera.open()
@@ -496,6 +511,7 @@ class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
     override fun showStreamingImagesBitmap(bitmap: Bitmap) {
         imageBitmap = bitmap
         arrayOfImages.add(bitmap)
+        linkedImageArray.put(drStateTextView.text.toString(),bitmap)
     }
 
     var state = false
@@ -511,16 +527,8 @@ class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
                         leftEyeOpenProb = faces[0].leftEyeOpenProbability!!
                         leftHeadAngleY = faces[0].headEulerAngleY
                         rightHeadAngleY = faces[0].headEulerAngleY
-//                    for (face in faces) {
-//                        smileProb = face.smilingProbability
-//                        rightEyeOpenProb = face.rightEyeOpenProbability
-//                        leftEyeOpenProb = face.leftEyeOpenProbability
-//                        leftHeadAngleY = face.headEulerAngleY
-//                        rightHeadAngleY = face.headEulerAngleY
-//                    }
                     }
                 }
-
         } catch (ex: Exception) {
             ex.message
         }

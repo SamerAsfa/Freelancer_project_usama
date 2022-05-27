@@ -127,23 +127,6 @@ class PunchCamDetectionActivity : BaseActivity(), ResponseApi {
         return file?.absoluteFile
     }
 
-//
-//    private fun bitmapToFile(bitmap:Bitmap): String {
-//        val wrapper = ContextWrapper(applicationContext)
-//        var file = wrapper.getDir("Images",Context.MODE_PRIVATE)
-//        file = File(file,"${UUID.randomUUID()}.jpg")
-//        try{
-//            val stream: OutputStream = FileOutputStream(file)
-//            bitmap.compress(Bitmap.CompressFormat.JPEG,100,stream)
-//            stream.flush()
-//            stream.close()
-//        }catch (e: IOException){
-//            e.printStackTrace()
-//        }
-//
-//        // Return the saved bitmap uri
-//        return file.absolutePath
-//    }
 
     fun getIn() {
         val intent = intent
@@ -252,8 +235,7 @@ class PunchCamDetectionActivity : BaseActivity(), ResponseApi {
                 userModel.token,
                 user?.inSide,
                 user?.out,
-                userModel.location,
-                user?.actionModel
+                userModel.location
             )
             LongTermManager.getInstance().userModel = mainUserModel
             val value = Intent()
@@ -268,7 +250,11 @@ class PunchCamDetectionActivity : BaseActivity(), ResponseApi {
             this@PunchCamDetectionActivity,
             this@PunchCamDetectionActivity.resources.getString(R.string.loading)
         )
-        finish()
+        showDialogOneButtonsCustom("Error", error?.message.toString(), "Ok") { dialog ->
+            finish()
+            dialog.dismiss()
+        }
+
     }
 
 }

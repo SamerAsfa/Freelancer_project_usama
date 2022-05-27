@@ -1,5 +1,6 @@
 package com.example.myapplication.myapplication.data
 
+import java.text.DateFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -8,7 +9,7 @@ class DateUtils {
 
     fun getTime(timeStamp: Long): String {
         val sdf = SimpleDateFormat("hh:mm", Locale.CANADA)
-        val netDate = Date(timeStamp)
+        val netDate = Date(timeStamp * 1000L)
         return sdf.format(netDate)
     }
 
@@ -31,7 +32,7 @@ class DateUtils {
     }
 
 
-    fun addOneMonth(amount : Int): Date {
+    fun addOneMonth(amount: Int): Date {
         val cal = Calendar.getInstance();
         cal.add(Calendar.MONTH, amount);
         return cal.time;
@@ -41,6 +42,34 @@ class DateUtils {
         try {
             val format1 = SimpleDateFormat("yyyy-MM-dd", Locale.CANADA)
             val format = SimpleDateFormat("dd\nMMM", Locale.CANADA)
+            val c = Calendar.getInstance()
+            c.time = format1.parse(date)
+            return format.format(c.time)
+        } catch (e: ParseException) {
+            e.printStackTrace()
+        }
+        return null
+    }
+
+    fun TMonthformat(date: String?): String? {
+        try {
+            var format1 =  SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss.000000'Z'", Locale.CANADA)
+            val format = SimpleDateFormat("MM", Locale.CANADA)
+            val c = Calendar.getInstance()
+            c.time = format1.parse(date)
+            return format.format(c.time)
+        } catch (e: ParseException) {
+            e.printStackTrace()
+        }
+        return null
+    }
+
+
+
+    fun Tformat(date: String?): String? {
+        try {
+            var format1 =  SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss.000000'Z'", Locale.CANADA)
+            val format = SimpleDateFormat("MMM - hh:mm", Locale.CANADA)
             val c = Calendar.getInstance()
             c.time = format1.parse(date)
             return format.format(c.time)
@@ -127,6 +156,7 @@ class DateUtils {
         }
         return null
     }
+
     fun getLeaveForaAdapterFromTimeStamp(date: String?): String? {
         try {
             val format1 = SimpleDateFormat("yyyy-MM-dd hh:mm", Locale.CANADA)
@@ -139,7 +169,6 @@ class DateUtils {
         }
         return null
     }
-
 
 
 }

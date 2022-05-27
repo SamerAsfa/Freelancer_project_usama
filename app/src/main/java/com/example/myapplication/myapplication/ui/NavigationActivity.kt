@@ -54,7 +54,6 @@ class NavigationActivity : BaseActivity() {
 
     }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_navigation)
@@ -100,7 +99,9 @@ class NavigationActivity : BaseActivity() {
 
                     override fun onErrorCall(error: VolleyError?) {
                         toggleProgressDialog(show = false,this@NavigationActivity,this@NavigationActivity.resources.getString(R.string.loading))
-                        print("")
+                        showDialogOneButtonsCustom("Error", error?.message.toString(), "Ok") { dialog ->
+                            dialog.dismiss()
+                        }
                     }
                 }
             )
