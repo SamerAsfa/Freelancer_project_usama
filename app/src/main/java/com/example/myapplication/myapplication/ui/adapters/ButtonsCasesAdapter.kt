@@ -53,7 +53,7 @@ class ButtonsCasesAdapter(
                     viewHolderPunchIn.scerculerImageView.setBackgroundResource(R.drawable.ic_punch_in_big_button)
                     viewHolderPunchIn.scerculerImageView.isEnabled = true
                 } else {
-                    viewHolderPunchIn.scerculerImageView.setBackgroundResource(R.drawable.ic_ellipse)
+                    viewHolderPunchIn.scerculerImageView.setBackgroundResource(R.drawable.ic_gray_button)
                     viewHolderPunchIn.scerculerImageView.isEnabled = false
                 }
                 viewHolderPunchIn.textStateTextView.text =
@@ -65,7 +65,7 @@ class ButtonsCasesAdapter(
                     viewHolderPunchIn.scerculerImageView.setBackgroundResource(R.drawable.ic_punch_out_big_button)
                     viewHolderPunchIn.scerculerImageView.isEnabled = true
                 } else {
-                    viewHolderPunchIn.scerculerImageView.setBackgroundResource(R.drawable.ic_ellipse)
+                    viewHolderPunchIn.scerculerImageView.setBackgroundResource(R.drawable.ic_gray_button)
                     viewHolderPunchIn.scerculerImageView.isEnabled = false
                 }
                 viewHolderPunchIn.textStateTextView.text =
@@ -77,7 +77,7 @@ class ButtonsCasesAdapter(
                     viewHolderPunchIn.scerculerImageView.setBackgroundResource(R.drawable.ic_break_big_button)
                     viewHolderPunchIn.scerculerImageView.isEnabled = true
                 } else {
-                    viewHolderPunchIn.scerculerImageView.setBackgroundResource(R.drawable.ic_ellipse)
+                    viewHolderPunchIn.scerculerImageView.setBackgroundResource(R.drawable.ic_gray_button)
                     viewHolderPunchIn.scerculerImageView.isEnabled = false
                 }
                 viewHolderPunchIn.textStateTextView.text =
@@ -89,7 +89,7 @@ class ButtonsCasesAdapter(
                     viewHolderPunchIn.scerculerImageView.setBackgroundResource(R.drawable.ic_break_big_button)
                     viewHolderPunchIn.scerculerImageView.isEnabled = true
                 } else {
-                    viewHolderPunchIn.scerculerImageView.setBackgroundResource(R.drawable.ic_ellipse)
+                    viewHolderPunchIn.scerculerImageView.setBackgroundResource(R.drawable.ic_gray_button)
                     viewHolderPunchIn.scerculerImageView.isEnabled = false
                 }
                 viewHolderPunchIn.textStateTextView.text =
@@ -101,7 +101,7 @@ class ButtonsCasesAdapter(
                     viewHolderPunchIn.scerculerImageView.setBackgroundResource(R.drawable.ic_leave_big_button)
                     viewHolderPunchIn.scerculerImageView.isEnabled = true
                 } else {
-                    viewHolderPunchIn.scerculerImageView.setBackgroundResource(R.drawable.ic_ellipse)
+                    viewHolderPunchIn.scerculerImageView.setBackgroundResource(R.drawable.ic_gray_button)
                     viewHolderPunchIn.scerculerImageView.isEnabled = false
                 }
                 viewHolderPunchIn.textStateTextView.text =
@@ -113,7 +113,7 @@ class ButtonsCasesAdapter(
                     viewHolderPunchIn.scerculerImageView.setBackgroundResource(R.drawable.ic_leave_big_button)
                     viewHolderPunchIn.scerculerImageView.isEnabled = true
                 } else {
-                    viewHolderPunchIn.scerculerImageView.setBackgroundResource(R.drawable.ic_ellipse)
+                    viewHolderPunchIn.scerculerImageView.setBackgroundResource(R.drawable.ic_gray_button)
                     viewHolderPunchIn.scerculerImageView.isEnabled = false
                 }
                 viewHolderPunchIn.textStateTextView.text =
@@ -139,7 +139,7 @@ class ButtonsCasesAdapter(
                     viewHolderPunchIn.scerculerImageView.setBackgroundResource(R.drawable.ic_punch_in_small_button)
                     viewHolderPunchIn.scerculerImageView.isEnabled = true
                 } else {
-                    viewHolderPunchIn.scerculerImageView.setBackgroundResource(R.drawable.ic_ellipse)
+                    viewHolderPunchIn.scerculerImageView.setBackgroundResource(R.drawable.ic_gray_button)
                     viewHolderPunchIn.scerculerImageView.isEnabled = false
                 }
                 viewHolderPunchIn.textStateTextView.text =
@@ -151,7 +151,7 @@ class ButtonsCasesAdapter(
                     viewHolderPunchIn.scerculerImageView.setBackgroundResource(R.drawable.ic_punch_out_small_button)
                     viewHolderPunchIn.scerculerImageView.isEnabled = true
                 } else {
-                    viewHolderPunchIn.scerculerImageView.setBackgroundResource(R.drawable.ic_ellipse)
+                    viewHolderPunchIn.scerculerImageView.setBackgroundResource(R.drawable.ic_gray_button)
                     viewHolderPunchIn.scerculerImageView.isEnabled = false
                 }
                 viewHolderPunchIn.textStateTextView.text =
@@ -163,7 +163,7 @@ class ButtonsCasesAdapter(
                     viewHolderPunchIn.scerculerImageView.setBackgroundResource(R.drawable.ic_break_small_button)
                     viewHolderPunchIn.scerculerImageView.isEnabled = true
                 } else {
-                    viewHolderPunchIn.scerculerImageView.setBackgroundResource(R.drawable.ic_ellipse)
+                    viewHolderPunchIn.scerculerImageView.setBackgroundResource(R.drawable.ic_gray_button)
                     viewHolderPunchIn.scerculerImageView.isEnabled = false
                 }
                 viewHolderPunchIn.textStateTextView.text =
@@ -175,7 +175,7 @@ class ButtonsCasesAdapter(
                     viewHolderPunchIn.scerculerImageView.setBackgroundResource(R.drawable.ic_break_small_button)
                     viewHolderPunchIn.scerculerImageView.isEnabled = true
                 } else {
-                    viewHolderPunchIn.scerculerImageView.setBackgroundResource(R.drawable.ic_ellipse)
+                    viewHolderPunchIn.scerculerImageView.setBackgroundResource(R.drawable.ic_gray_button)
                     viewHolderPunchIn.scerculerImageView.isEnabled = false
                 }
                 viewHolderPunchIn.textStateTextView.text =
@@ -187,7 +187,7 @@ class ButtonsCasesAdapter(
                     viewHolderPunchIn.scerculerImageView.setBackgroundResource(R.drawable.ic_leave_small_button)
                     viewHolderPunchIn.scerculerImageView.isEnabled = true
                 } else {
-                    viewHolderPunchIn.scerculerImageView.setBackgroundResource(R.drawable.ic_ellipse)
+                    viewHolderPunchIn.scerculerImageView.setBackgroundResource(R.drawable.ic_gray_button)
                     viewHolderPunchIn.scerculerImageView.isEnabled = false
                 }
                 viewHolderPunchIn.textStateTextView.text =
@@ -199,7 +199,7 @@ class ButtonsCasesAdapter(
                     viewHolderPunchIn.scerculerImageView.setBackgroundResource(R.drawable.ic_leave_small_button)
                     viewHolderPunchIn.scerculerImageView.isEnabled = true
                 } else {
-                    viewHolderPunchIn.scerculerImageView.setBackgroundResource(R.drawable.ic_ellipse)
+                    viewHolderPunchIn.scerculerImageView.setBackgroundResource(R.drawable.ic_gray_button)
                     viewHolderPunchIn.scerculerImageView.isEnabled = false
                 }
                 viewHolderPunchIn.textStateTextView.text =

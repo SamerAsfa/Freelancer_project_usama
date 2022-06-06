@@ -4,13 +4,10 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.content.pm.ApplicationInfo
-import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.os.Looper
 import android.provider.Settings
@@ -35,7 +32,8 @@ import com.example.myapplication.myapplication.data.AppUtils.getTextBody
 import com.example.myapplication.myapplication.data.AppUtils.getTextRes
 import com.example.myapplication.myapplication.data.BaseRequest.Companion.BREAKInApi
 import com.example.myapplication.myapplication.data.BaseRequest.Companion.BREAKOutApi
-import com.example.myapplication.myapplication.data.BaseRequest.Companion.LEAVEApi
+import com.example.myapplication.myapplication.data.BaseRequest.Companion.LEAVEINApi
+import com.example.myapplication.myapplication.data.BaseRequest.Companion.LEAVEOutApi
 import com.example.myapplication.myapplication.data.BaseRequest.Companion.PINApi
 import com.example.myapplication.myapplication.data.BaseRequest.Companion.POUTApi
 import com.example.myapplication.myapplication.data.DateUtils
@@ -63,7 +61,7 @@ class HomeFragment : BaseFragment() {
     val PERMISSION_ID = 42
     var userModel: UserModel? = null
 
-    //    lateinit var mFusedLocationClient: FusedLocationProviderClient
+        lateinit var mFusedLocationClient: FusedLocationProviderClient
     protected var mainView: View? = null
     var location: Location? = null
     var apiInterface: APIInterface? = null
@@ -132,15 +130,39 @@ class HomeFragment : BaseFragment() {
     @SuppressLint("MissingPermission")
     fun startGetLocation() {
         Looper.myLooper()?.let {
-            getFusedLocationProviderClient(requireActivity()).requestLocationUpdates(
-                mLocationRequest!!, object : LocationCallback() {
-                    override fun onLocationResult(locationResult: LocationResult) {
-                        myLocation(locationResult.lastLocation)
-                    }
-                },
+            mFusedLocationClient = getFusedLocationProviderClient(requireActivity())
+            mFusedLocationClient.requestLocationUpdates(
+                mLocationRequest!!,locationUpdate,
                 it
             )
         }
+    }
+
+
+    var locationUpdate = object : LocationCallback() {
+        override fun onLocationResult(locationResult: LocationResult) {
+            myLocation(locationResult.lastLocation)
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        stopUsingGPS()
+    }
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        stopUsingGPS()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        stopUsingGPS()
+    }
+
+    fun stopUsingGPS() {
+        mFusedLocationClient.removeLocationUpdates(locationUpdate)
     }
 
     override fun onCreateView(
@@ -406,8 +428,10 @@ class HomeFragment : BaseFragment() {
             return BREAKInApi
         } else if (state == ButtonState.BREAK_OUT) {
             return BREAKOutApi
+        } else if (state == ButtonState.LEAVE_IN) {
+            return LEAVEINApi
         } else {
-            return LEAVEApi
+            return LEAVEOutApi
         }
     }
 
@@ -525,7 +549,7 @@ class HomeFragment : BaseFragment() {
             }
 //        mainView?.locationNameTextView?.text = distanceText(location.latitude, location.longitude, 31.962333, 35.811096, 5)
             mainView?.timeTextView?.text = DateFormat.format("hh:mm", Date())
-            mainView?.dateTextView?.text = DateFormat.format("EEEE,MMMyy", Date())
+            mainView?.dateTextView?.text = DateUtils().getDateHome(System.currentTimeMillis())
         }
     }
 

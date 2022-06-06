@@ -45,14 +45,15 @@ class POSTMediasTask {
         val queue = Volley.newRequestQueue(context)
         queue.add(multiPartRequestWithParams)
     }
-/////data/user/0/com.test.face.usama/app_Images/92c6fabf-c582-4be4-bd84-12bda5bb18b2.jpg
+
+    /////data/user/0/com.test.face.usama/app_Images/92c6fabf-c582-4be4-bd84-12bda5bb18b2.jpg
     //    /storage/emulated/0/DCIM/Camera/VID_20220402_113309.mp4
     fun uploadMediaWithHeader(
-    context: Activity?,
-    url: String?,
-    filePath: String,
-    responseApi: ResponseApi,
-    header: MutableMap<String, String>
+        context: Activity?,
+        url: String?,
+        filePath: String,
+        responseApi: ResponseApi,
+        header: MutableMap<String, String>
     ) {
         val multiPartRequestWithParams = SimpleMultiPartRequest(
             Request.Method.POST, url,
@@ -101,7 +102,9 @@ class POSTMediasTask {
             }
         )
         multiPartRequestWithParams.headers = header
-        multiPartRequestWithParams.addFile("attachment", filePath)
+        if (filePath != null) {
+            multiPartRequestWithParams.addFile("attachment", filePath)
+        }
         multiPartRequestWithParams.addStringParam("start_date", startDate)
         multiPartRequestWithParams.addStringParam("end_date", end_date)
         multiPartRequestWithParams.addStringParam("type_id", type_id)

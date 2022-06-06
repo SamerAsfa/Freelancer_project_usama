@@ -64,9 +64,9 @@ class RequstLeaveActivity : BaseActivity() {
                         leaveDateTextView.text = String.format(
                             Locale.CANADA,
                             "%s,%s%s",
-                            DateUtils().dayDate(datePicker.dayOfMonth + 1),
+                            DateUtils().dayDate(datePicker.dayOfMonth),
                             DateUtils().monthDate(datePicker.month + 1),
-                            DateUtils().yearDate(datePicker.year),
+                            datePicker.dayOfMonth
                         )
                     }, calendar[Calendar.YEAR], calendar[Calendar.MONTH],
                     calendar[Calendar.DATE]
@@ -76,7 +76,10 @@ class RequstLeaveActivity : BaseActivity() {
                 ex.message
             }
         }
-
+//        showSuccessLeaveDialog { dialog ->
+//            dialog.dismiss()
+//            NavigationActivity().clearAndStart(this@RequstLeaveActivity)
+//        }
         fromSelectTextView.setOnClickListener {
             try {
                 val calendar = Calendar.getInstance()
@@ -139,7 +142,11 @@ class RequstLeaveActivity : BaseActivity() {
                     }
 
                     override fun onErrorCall(error: VolleyError?) {
-                        showDialogOneButtonsCustom("Error", error?.message.toString(), "Ok") { dialog ->
+                        showDialogOneButtonsCustom(
+                            "Error",
+                            error?.message.toString(),
+                            "Ok"
+                        ) { dialog ->
                             dialog.dismiss()
                         }
                     }
@@ -157,17 +164,9 @@ class RequstLeaveActivity : BaseActivity() {
                 if (fromDate != null) {
                     if (toDate != null) {
                         if (typeModel != null) {
-                            if (filePath != null) {
-                                val fromTime = getDate(fromDate!!)
-                                val toTime = getDate(toDate!!)
-                                requstLeave(fromTime, toTime)
-                            } else {
-                                Toast.makeText(
-                                    this@RequstLeaveActivity,
-                                    "Select leave Type",
-                                    Toast.LENGTH_LONG
-                                ).show()
-                            }
+                            val fromTime = getDate(fromDate!!)
+                            val toTime = getDate(toDate!!)
+                            requstLeave(fromTime, toTime)
                         } else {
                             Toast.makeText(
                                 this@RequstLeaveActivity,
@@ -200,19 +199,18 @@ class RequstLeaveActivity : BaseActivity() {
         return String.format(
             Locale.CANADA,
             "%s-%s-%s %s:%s",
-            DateUtils().yearDateApi(leaveDate?.year),
+            leaveDate?.dayOfMonth,
             DateUtils().monthDateApi(leaveDate?.month?.plus(1)),
-            DateUtils().dayDateApi(leaveDate?.dayOfMonth?.plus(1)),
+            DateUtils().dayDateApi(leaveDate?.dayOfMonth),
             timePicker.hour,
             timePicker.minute,
         )
     }
 
     fun requstLeave(startDate: String, endDate: String) {
-        toggleProgressDialog(show = true,this,this.resources.getString(R.string.loading))
+        toggleProgressDialog(show = true, this, this.resources.getString(R.string.loading))
         var maps: MutableMap<String, String> = HashMap()
         maps.put("Authorization", "Bearer ${userModel?.token}")
-//        maps.put("Authorization", "Bearer 142|ODzNOzZ1yhWkzEOob6URoJajOHVc7opOTpKQe8Wl")
         maps.put("Accept", "application/json")
         POSTMediasTask().uploadMediaWithHeaderBody(
             this@RequstLeaveActivity,
@@ -220,12 +218,23 @@ class RequstLeaveActivity : BaseActivity() {
             filePath,
             responseApi = object : ResponseApi {
                 override fun onSuccessCall(response: String?) {
-                    toggleProgressDialog(show = false,this@RequstLeaveActivity,this@RequstLeaveActivity.resources.getString(R.string.loading))
-                    showSuccessLeaveDialog()
+                    toggleProgressDialog(
+                        show = false,
+                        this@RequstLeaveActivity,
+                        this@RequstLeaveActivity.resources.getString(R.string.loading)
+                    )
+                    showSuccessLeaveDialog { dialog ->
+                        dialog.dismiss()
+                        NavigationActivity().clearAndStart(this@RequstLeaveActivity)
+                    }
                 }
 
                 override fun onErrorCall(error: VolleyError?) {
-                    toggleProgressDialog(show = false,this@RequstLeaveActivity,this@RequstLeaveActivity.resources.getString(R.string.loading))
+                    toggleProgressDialog(
+                        show = false,
+                        this@RequstLeaveActivity,
+                        this@RequstLeaveActivity.resources.getString(R.string.loading)
+                    )
                     showDialogOneButtonsCustom("Error", error?.message.toString(), "Ok") { dialog ->
                         dialog.dismiss()
                     }

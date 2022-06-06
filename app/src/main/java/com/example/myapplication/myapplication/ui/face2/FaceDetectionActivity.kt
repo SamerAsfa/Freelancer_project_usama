@@ -10,27 +10,21 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.graphics.Canvas
 import android.hardware.Camera
 import android.hardware.Camera.CameraInfo
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
-import android.os.Handler
 import android.util.Log
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.ctech.bitmp4.Encoder
-import com.ctech.bitmp4.MP4Encoder
 import com.example.myapplication.myapplication.R
 import com.example.myapplication.myapplication.models.FaceBundle
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.face.FaceDetection
 import com.google.mlkit.vision.face.FaceDetector
 import com.google.mlkit.vision.face.FaceDetectorOptions
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_face_detection.*
 import org.jcodec.api.awt.AWTSequenceEncoder
@@ -40,12 +34,11 @@ import org.jcodec.common.model.Picture
 import org.jcodec.common.model.Rational
 import java.io.File
 import java.io.FileOutputStream
-import java.io.IOException
 import java.io.OutputStream
 import java.lang.System.out
 import java.util.*
-import java.util.concurrent.TimeUnit
-import kotlin.collections.LinkedHashMap
+import java.util.concurrent.ThreadLocalRandom
+import kotlin.collections.ArrayList
 
 
 class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
@@ -65,7 +58,7 @@ class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
     val lockCases: ArrayList<Boolean> = ArrayList()
     val arrayOfImages: ArrayList<Bitmap> = ArrayList()
     val arrayOfImagesFinalImages: ArrayList<Bitmap> = ArrayList()
-    val linkedImageArray: LinkedHashMap<String,Bitmap> = LinkedHashMap()
+    val linkedImageArray: LinkedHashMap<String, Bitmap> = LinkedHashMap()
     val hashOfSet: HashMap<Int, Int> = HashMap()
     var smileLock: Boolean = true
     var leftEyeLock: Boolean = true
@@ -83,13 +76,7 @@ class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
     private lateinit var exportDisposable: Disposable
     private lateinit var encoder: Encoder
     var camera: Camera? = null
-    val arrayOfTextActions = arrayOf(
-        "Keep Smiling",
-        "Keep Left Eye Closed",
-        "Keep Right Eye Closed",
-        "Keep Your Face on Left",
-        "Keep Your Face on Right"
-    )
+    var arrayOfTextActions = ArrayList<String>()
 
     companion object {
         val FACE_BUNDLE = "faceBundle"
@@ -105,9 +92,20 @@ class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_face_detection)
+        sorter()
         getFaceBundleExtra()
         createRandomIndex()
         callCameraPermission()
+    }
+
+
+    fun sorter() {
+        arrayOfTextActions.add("Keep Smiling")
+        arrayOfTextActions.add("Keep Left Eye Closed")
+        arrayOfTextActions.add("Keep Right Eye Closed")
+        arrayOfTextActions.add("Keep Your Face on Left")
+        arrayOfTextActions.add("Keep Your Face on Right")
+        arrayOfTextActions.shuffle();
     }
 
 
@@ -182,17 +180,16 @@ class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
     }
 
     fun getFinalImageArray() {
-        linkedImageArray.values.forEach{ bitmap ->
+        linkedImageArray.values.forEach { bitmap ->
             arrayOfImagesFinalImages.add(bitmap)
         }
 
-        if(arrayOfImages.size>12) {
+        if (arrayOfImages.size > 12) {
             for (i in 9..11) {
                 arrayOfImagesFinalImages.add(arrayOfImages[i])
             }
         }
 
-//        arrayOfImagesFinalImages.addAll(arrayOfImages)
     }
 
     fun creteRootPath(): File? {
@@ -271,32 +268,11 @@ class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
         return dst
     }
 
-    fun fromBitmap(src: Bitmap, dst: Picture) {
-        val dstData: ByteArray? = dst.getPlaneData(0)
-        val packed = IntArray(src.width * src.height)
-        src.getPixels(packed, 0, src.width, 0, 0, src.width, src.height)
-        var i = 0
-        var srcOff = 0
-        var dstOff = 0
-        while (i < src.height) {
-            var j = 0
-            while (j < src.width) {
-                val rgb = packed[srcOff]
-                dstData?.set(dstOff, (rgb shr 16 and 0xff).toByte())
-                dstData?.set(dstOff + 1, (rgb shr 8 and 0xff).toByte())
-                dstData?.set(dstOff + 2, (rgb and 0xff).toByte())
-                j++
-                srcOff++
-                dstOff += 3
-            }
-            i++
-        }
-    }
-
 
     private fun isAllChecked(): Boolean {
         return currentIndex == arrayOfIndex.size
     }
+
 
     private fun getActionIndex(): Int {
         return arrayOfIndex[currentIndex]
@@ -327,30 +303,30 @@ class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
     var leftHeadAngleY = 0f
     var rightHeadAngleY = 0f
     fun checkCases() {
-        if (getActionIndex() == ActionsType.SMILING.ordinal) {
+        if (getActionByName(getActionIndex()) == ActionsType.SMILING.ordinal) {
             smileLock()
             if (smileProb > smileThrushHold) {
                 smileOpen()
             }
-        } else if (getActionIndex() == ActionsType.LEFT_EYE_CLOSED.ordinal) {
+        } else if (getActionByName(getActionIndex()) == ActionsType.LEFT_EYE_CLOSED.ordinal) {
             leftEyeLock()
             if (rightEyeOpenProb <= closeLeftEyeThrushHold) {
                 leftEyeOpen()
             }
-        } else if (getActionIndex() == ActionsType.RIGHT_EYE_CLOSED.ordinal) {
+        } else if (getActionByName(getActionIndex()) == ActionsType.RIGHT_EYE_CLOSED.ordinal) {
             rightEyeLock()
             if (leftEyeOpenProb <= closeRightEyeThrushHold) {
                 rightEyeOpen()
             }
         } else
-            if (getActionIndex() == ActionsType.HEAD_LEFT.ordinal) {
+            if (getActionByName(getActionIndex()) == ActionsType.HEAD_LEFT.ordinal) {
                 turnFaceToLeftLock()
                 if (leftHeadAngleY != 0f) {
                     if (leftHeadAngleY >= leftHeadThrushHold) {
                         turnFaceToLeftOpen()
                     }
                 }
-            } else if (getActionIndex() == ActionsType.HEAD_RIGHT.ordinal) {
+            } else if (getActionByName(getActionIndex()) == ActionsType.HEAD_RIGHT.ordinal) {
                 turnFaceToRightLock()
                 if (rightHeadAngleY != 0f) {
                     if (rightHeadAngleY <= rightHeadThrushHold) {
@@ -364,6 +340,21 @@ class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
         Log.d("HEAD_LEFT", "HEAD_LEFT${leftHeadAngleY}")
         Log.d("HEAD_RIGHT", "HEAD_RIGHT${rightHeadAngleY}")
     }
+
+    fun getActionByName(index : Int) : Int{
+        if(arrayOfTextActions.get(index)=="Keep Smiling"){
+            return 0
+        }else if(arrayOfTextActions.get(index)=="Keep Left Eye Closed"){
+            return 1
+        }else if(arrayOfTextActions.get(index)=="Keep Right Eye Closed"){
+            return 2
+        }else if(arrayOfTextActions.get(index)=="Keep Your Face on Left"){
+            return 3
+        }else {
+            return 4
+        }
+    }
+
 
     fun increase() {
         currentIndex += 1
@@ -511,7 +502,7 @@ class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
     override fun showStreamingImagesBitmap(bitmap: Bitmap) {
         imageBitmap = bitmap
         arrayOfImages.add(bitmap)
-        linkedImageArray.put(drStateTextView.text.toString(),bitmap)
+        linkedImageArray.put(drStateTextView.text.toString(), bitmap)
     }
 
     var state = false

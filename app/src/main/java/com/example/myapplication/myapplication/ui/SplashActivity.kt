@@ -10,6 +10,7 @@ import androidx.core.app.ActivityCompat
 import com.example.myapplication.myapplication.R
 import com.example.myapplication.myapplication.base.BaseActivity
 import com.example.myapplication.myapplication.base.LongTermManager
+import com.example.myapplication.myapplication.models.FaceBundle
 import com.example.myapplication.myapplication.ui.face2.FaceDetectionActivity
 
 
@@ -37,7 +38,9 @@ class SplashActivity : BaseActivity() {
                 val i = Intent(this@SplashActivity, StartActivity::class.java)
                 startActivity(i)
                 finish()
-//                ActivityCompat.startActivityForResult(this, FaceDetectionActivity.startActivity(this), 44,null)
+//                ActivityCompat.startActivityForResult(this, FaceDetectionActivity.startActivity(this,
+//                    FaceBundle(numberOfActions = 4)
+//                ), 44,null)
 
             }
         }, 2000)

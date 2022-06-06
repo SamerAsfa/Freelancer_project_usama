@@ -16,6 +16,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.android.synthetic.main.bottom_sheet_dialog.*
 import kotlinx.android.synthetic.main.dialog_msg.*
 import kotlinx.android.synthetic.main.dialog_success.*
+import kotlinx.android.synthetic.main.dialog_success.publicDialog
+import kotlinx.android.synthetic.main.success_leave_dialog.*
 import kotlinx.android.synthetic.main.upload_items_dialog.*
 import kotlinx.android.synthetic.main.upload_items_dialog.typeNameEditText
 import kotlinx.android.synthetic.main.upload_items_dialog.userNameTextView
@@ -48,13 +50,16 @@ abstract class BaseActivity :
         bottomSheetDialog.show()
     }
 
-    fun showSuccessLeaveDialog() {
+    fun showSuccessLeaveDialog(onClick: (Dialog) -> Unit) {
         val dialogAndroidAppCus = Dialog(this)
         dialogAndroidAppCus.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT));
         dialogAndroidAppCus.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialogAndroidAppCus.setContentView(R.layout.success_leave_dialog)
         dialogAndroidAppCus.publicDialog.setOnClickListener {
-            dialogAndroidAppCus.dismiss()
+            onClick.invoke(dialogAndroidAppCus)
+        }
+        dialogAndroidAppCus.okTextView.setOnClickListener {
+            onClick.invoke(dialogAndroidAppCus)
         }
         dialogAndroidAppCus.setCancelable(true)
         dialogAndroidAppCus.show()

@@ -17,7 +17,7 @@ import kotlinx.coroutines.NonDisposableHandle.parent
 import java.util.*
 import kotlin.collections.ArrayList
 
-class NotificationAdapter(private val arrayList: ArrayList<NotificationModel?>?) :
+class NotificationAdapter(private val arrayList: java.util.ArrayList<NotificationModel>?) :
     RecyclerView.Adapter<NotificationAdapter.ViewHolder>() {
 
 
@@ -39,8 +39,8 @@ class NotificationAdapter(private val arrayList: ArrayList<NotificationModel?>?)
         holder.dateTextView.text = String.format(
             Locale.CANADA,
             "%sth %s",
-            DateUtils().TMonthformat(arrayList?.get(holder.adapterPosition)?.created_at),
-            DateUtils().Tformat(arrayList?.get(holder.adapterPosition)?.created_at)
+            DateUtils().TMonthformatUtc(arrayList?.get(holder.adapterPosition)?.created_at),
+            DateUtils().TTimeformatUtc(arrayList?.get(holder.adapterPosition)?.created_at)
         )
         holder.stateTextView.text = arrayList?.get(holder.adapterPosition)?.not_type
         val userModel = LongTermManager.getInstance().userModel

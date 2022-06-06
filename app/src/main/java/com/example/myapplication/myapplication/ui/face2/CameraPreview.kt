@@ -38,7 +38,7 @@ class CameraPreview(context: Context?, camera: Camera, imageBitmapListener: Imag
                     val image = YuvImage(_data, format, w, h, null)
                     val out = ByteArrayOutputStream()
                     val area = Rect(0, 0, w, h)
-                    image.compressToJpeg(area, 50, out)
+                    image.compressToJpeg(area, 90, out)
                     val bm = BitmapFactory.decodeByteArray(out.toByteArray(), 0, out.size())
                     rotate(bm, w, h)?.let {
                         mmageBitmapListener?.showStreamingImagesBitmap(it)

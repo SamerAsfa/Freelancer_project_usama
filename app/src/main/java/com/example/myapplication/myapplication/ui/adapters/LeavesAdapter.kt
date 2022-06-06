@@ -8,8 +8,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.myapplication.R
 import com.example.myapplication.myapplication.data.DateUtils
 import com.example.myapplication.myapplication.models.HistoryModel
+import java.util.ArrayList
 
-class LeavesAdapter(private val arrayList: ArrayList<HistoryModel?>?) :
+class LeavesAdapter(private val arrayList: ArrayList<HistoryModel>?) :
     RecyclerView.Adapter<LeavesAdapter.ViewHolder>() {
 
 

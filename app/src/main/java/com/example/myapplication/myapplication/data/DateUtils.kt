@@ -1,8 +1,11 @@
 package com.example.myapplication.myapplication.data
 
-import java.text.DateFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 class DateUtils {
@@ -21,6 +24,12 @@ class DateUtils {
 
     fun getDateFromTimeStampNotification(timeStamp: Long): String {
         val sdf = SimpleDateFormat("yyyy-MM-dd hh:mm", Locale.CANADA)
+        val netDate = Date(timeStamp)
+        return sdf.format(netDate)
+    }
+
+    fun getDateHome(timeStamp: Long): String {
+        val sdf = SimpleDateFormat("EEEE,MMMyy", Locale.CANADA)
         val netDate = Date(timeStamp)
         return sdf.format(netDate)
     }
@@ -45,6 +54,20 @@ class DateUtils {
             val c = Calendar.getInstance()
             c.time = format1.parse(date)
             return format.format(c.time)
+        } catch (e: ParseException) {
+            e.printStackTrace()
+        }
+        return null
+    }
+
+    fun TMonthformatUtc(dateString: String?): String? {
+        try {
+            val zonedFormat = SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss.000000'Z'", Locale.CANADA)
+            val yourDesiredFormat = SimpleDateFormat("MM", Locale.CANADA)
+            var dateStringToReturn = ""
+            val date  = zonedFormat.parse(dateString)
+            dateStringToReturn = yourDesiredFormat.format(date)
+            return dateStringToReturn
         } catch (e: ParseException) {
             e.printStackTrace()
         }
@@ -78,6 +101,22 @@ class DateUtils {
         }
         return null
     }
+
+
+    fun TTimeformatUtc(dateString: String?): String? {
+        try {
+            val zonedFormat = SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss.000000'Z'", Locale.CANADA)
+            val yourDesiredFormat = SimpleDateFormat("MMM - hh:mm", Locale.CANADA)
+            var dateStringToReturn = ""
+            val date  = zonedFormat.parse(dateString)
+            dateStringToReturn = yourDesiredFormat.format(date)
+            return dateStringToReturn
+        } catch (e: ParseException) {
+            e.printStackTrace()
+        }
+        return null
+    }
+
 
     fun monthDate(date: Int?): String? {
         try {
@@ -131,6 +170,18 @@ class DateUtils {
         return null
     }
 
+    fun dayDateDay(date: Int?): String? {
+        try {
+            val format1 = SimpleDateFormat("dd", Locale.CANADA)
+            val format = SimpleDateFormat("dd", Locale.CANADA)
+            val c = Calendar.getInstance()
+            c.time = format1.parse(date.toString())
+            return format.format(c.time)
+        } catch (e: ParseException) {
+            e.printStackTrace()
+        }
+        return null
+    }
     fun dayDate(date: Int?): String? {
         try {
             val format1 = SimpleDateFormat("dd", Locale.CANADA)

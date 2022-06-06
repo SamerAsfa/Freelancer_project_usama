@@ -27,18 +27,36 @@
         android:id="@+id/stateNameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
         android:text="@string/leaves_request_sent"
         android:textColor="@color/black"
         android:textSize="25sp"
         android:textStyle="bold"
-        android:layout_marginBottom="50dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginStart="75dp"
+        android:layout_marginEnd="75dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/punchImageView" />
+
+    <TextView
+        android:id="@+id/okTextView"
+        android:layout_width="0dp"
+        android:padding="20dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="45dp"
+        android:text="Ok"
+        android:gravity="center"
+        android:background="@drawable/confirm_button_shape"
+        android:textColor="@color/white"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="20dp"
         android:layout_marginStart="75dp"
         android:layout_marginEnd="75dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/punchImageView" />
+        app:layout_constraintTop_toBottomOf="@id/stateNameTextView" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
