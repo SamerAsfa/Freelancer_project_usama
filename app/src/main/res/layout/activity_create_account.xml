@@ -75,7 +75,7 @@
                 android:background="@drawable/shape_type_name"
                 android:gravity="center"
                 android:hint="Organization ID"
-                android:inputType="text"
+                android:inputType="number"
                 android:padding="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
