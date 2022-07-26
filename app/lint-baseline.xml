@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="6" by="lint 7.1.2" type="baseline" client="gradle" dependencies="false" name="AGP (7.1.2)" variant="fatal" version="7.1.2">
+
+    <issue
+        id="DuplicateIds"
+        message="Duplicate id `@+id/punchOutTextView`, already defined earlier in this layout"
+        errorLine1="                        android:id=&quot;@+id/punchOutTextView&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_home.xml"
+            line="381"
+            column="25"/>
+        <location
+            file="src/main/res/layout/fragment_home.xml"
+            line="338"
+            column="25"
+            message="Duplicate id `@+id/punchOutTextView` originally defined here"/>
+    </issue>
+
+</issues>

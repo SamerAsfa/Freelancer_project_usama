@@ -9,4 +9,13 @@
     <color name="gray">#F6F3F3</color>
     <color name="white">#FFFFFFFF</color>
     <color name="grayDark">#A5A5A5</color>
+    <color name="read">#E30E0E</color>
+    <color name="gray_dive">#707070</color>
+    <color name="blus">#2F55AB</color>
+    <color name="blus_bl">#2f55ab</color>
+    <color name="green">#067209</color>
+    <color name="purple">#8A56AC</color>
+    <color name="whits">#EBEDED</color>
+    <color name="control_background">#cc4285f4</color>
+
 </resources>
