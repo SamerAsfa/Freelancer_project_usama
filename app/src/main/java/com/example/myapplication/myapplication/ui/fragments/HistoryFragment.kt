@@ -4,20 +4,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.volley.error.VolleyError
 import com.example.myapplication.myapplication.R
+import com.example.myapplication.myapplication.base.BaseFragment
 import com.example.myapplication.myapplication.base.ResponseApi
-import com.example.myapplication.myapplication.data.BaseRequest
-import com.example.myapplication.myapplication.data.DateUtils
-import com.example.myapplication.myapplication.data.POSTMediasTask
+import com.example.myapplication.myapplication.data.*
+import com.example.myapplication.myapplication.data.APIClient
 import com.example.myapplication.myapplication.models.HistoryModel
 import com.example.myapplication.myapplication.ui.adapters.HistoryAdapter
 import kotlinx.android.synthetic.main.fragment_history.view.*
 import java.util.*
 
-class HistoryFragment : Fragment(R.layout.fragment_history) {
+class HistoryFragment : BaseFragment() {
 
     companion object {
         val fragmentName : String = "HistoryFragment"
@@ -28,13 +27,20 @@ class HistoryFragment : Fragment(R.layout.fragment_history) {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        print("")
-    }
-
     protected var mainView: View? = null
     var currentIndex: Int = 0
+    var apiInterface: APIInterface? = null
+
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        try {
+            apiInterface = APIClient.client?.create(APIInterface::class.java)
+        } catch (ex: Exception) {
+            ex.message
+        }
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -72,28 +78,27 @@ class HistoryFragment : Fragment(R.layout.fragment_history) {
     }
 
     private fun getMonth(monthYear: String) {
-        POSTMediasTask().get(
-            requireActivity(),
-            BaseRequest.punchHistoryApi,
-            "/${monthYear}",
-            object : ResponseApi {
-                override fun onSuccessCall(response: String?) {
-                    val arrayHistory: ArrayList<HistoryModel?>? = response?.let {
-                        HistoryModel().parseArray(
-                            it
-                        )
-                    }
+        try {
+            val call = apiInterface?.getHistoryApi(monthYear)
+            call?.enqueue(object : retrofit2.Callback<ArrayList<HistoryModel>?> {
+                override fun onResponse(
+                    call: retrofit2.Call<ArrayList<HistoryModel>?>,
+                    response: retrofit2.Response<ArrayList<HistoryModel>?>
+                ) {
+                    val arrayHistory = response.body()
                     val scanMainAdapter = HistoryAdapter(arrayHistory)
                     mainView?.historyRecyclerView?.setHasFixedSize(true)
                     mainView?.historyRecyclerView?.setLayoutManager(LinearLayoutManager(context))
                     mainView?.historyRecyclerView?.adapter = scanMainAdapter
                 }
 
-                override fun onErrorCall(error: VolleyError?) {
-                    print("")
+                override fun onFailure(call: retrofit2.Call<ArrayList<HistoryModel>?>, t: Throwable) {
+                    call.cancel()
                 }
-            }
-        )
+            })
+        } catch (ex: Exception) {
+            ex.message
+        }
     }
 
 

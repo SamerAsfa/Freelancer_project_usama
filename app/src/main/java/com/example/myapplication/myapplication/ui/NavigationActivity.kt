@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import com.android.volley.error.VolleyError
 import com.example.myapplication.myapplication.HiltApplication
 import com.example.myapplication.myapplication.R
+import com.example.myapplication.myapplication.base.BaseActivity
 import com.example.myapplication.myapplication.base.LongTermManager
 import com.example.myapplication.myapplication.base.ResponseApi
 import com.example.myapplication.myapplication.data.BaseRequest
@@ -24,7 +25,7 @@ import kotlinx.android.synthetic.main.activity_create_account.*
 import kotlinx.android.synthetic.main.activity_navigation.*
 
 
-class NavigationActivity : AppCompatActivity() {
+class NavigationActivity : BaseActivity() {
 
 
     fun clearAndStart(context: Context) {
@@ -52,7 +53,6 @@ class NavigationActivity : AppCompatActivity() {
         })
 
     }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,17 +86,22 @@ class NavigationActivity : AppCompatActivity() {
     fun updateToken(){
         var maps: MutableMap<String, String> = HashMap()
         maps.put("fcm", LongTermManager.getInstance().notificationsToken)
-            POSTMediasTask().postWithHeader(
+        toggleProgressDialog(show = true,this,this.resources.getString(R.string.loading))
+        POSTMediasTask().postWithHeader(
                 this@NavigationActivity,
                 BaseRequest.updateTokenFcmApi,
                 maps,
                 responseApi = object : ResponseApi{
                     override fun onSuccessCall(response: String?) {
+                        toggleProgressDialog(show = false,this@NavigationActivity,this@NavigationActivity.resources.getString(R.string.loading))
                         print("")
                     }
 
                     override fun onErrorCall(error: VolleyError?) {
-                        print("")
+                        toggleProgressDialog(show = false,this@NavigationActivity,this@NavigationActivity.resources.getString(R.string.loading))
+                        showDialogOneButtonsCustom("Error", error?.message.toString(), "Ok") { dialog ->
+                            dialog.dismiss()
+                        }
                     }
                 }
             )

@@ -17,6 +17,7 @@ data class NotificationModel(
     val not_type: String? = null,
     val click_action: String? = null,
     val date: String? = null,
+    val created_at: String? = null,
 ) : Parcelable {
     @Throws(JSONException::class)
     fun parse(data: JSONObject): NotificationModel? {

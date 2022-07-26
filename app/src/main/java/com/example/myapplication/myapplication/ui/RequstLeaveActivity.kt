@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.error.VolleyError
 import com.example.myapplication.myapplication.R
+import com.example.myapplication.myapplication.base.BaseActivity
 import com.example.myapplication.myapplication.base.LongTermManager
 import com.example.myapplication.myapplication.base.ResponseApi
 import com.example.myapplication.myapplication.data.BaseRequest
@@ -40,7 +41,7 @@ import java.net.URISyntaxException
 import java.util.*
 
 
-class RequstLeaveActivity : AppCompatActivity() {
+class RequstLeaveActivity : BaseActivity() {
     var userModel: UserModel? = null
     var filePath: String? = null
     var leaveDate: DatePicker? = null
@@ -63,9 +64,9 @@ class RequstLeaveActivity : AppCompatActivity() {
                         leaveDateTextView.text = String.format(
                             Locale.CANADA,
                             "%s,%s%s",
-                            DateUtils().dayDate(datePicker.dayOfMonth + 1),
+                            DateUtils().dayDate(datePicker.dayOfMonth),
                             DateUtils().monthDate(datePicker.month + 1),
-                            DateUtils().yearDate(datePicker.year),
+                            datePicker.dayOfMonth
                         )
                     }, calendar[Calendar.YEAR], calendar[Calendar.MONTH],
                     calendar[Calendar.DATE]
@@ -75,7 +76,10 @@ class RequstLeaveActivity : AppCompatActivity() {
                 ex.message
             }
         }
-
+//        showSuccessLeaveDialog { dialog ->
+//            dialog.dismiss()
+//            NavigationActivity().clearAndStart(this@RequstLeaveActivity)
+//        }
         fromSelectTextView.setOnClickListener {
             try {
                 val calendar = Calendar.getInstance()
@@ -138,7 +142,13 @@ class RequstLeaveActivity : AppCompatActivity() {
                     }
 
                     override fun onErrorCall(error: VolleyError?) {
-                        print("")
+                        showDialogOneButtonsCustom(
+                            "Error",
+                            error?.message.toString(),
+                            "Ok"
+                        ) { dialog ->
+                            dialog.dismiss()
+                        }
                     }
                 }
             )
@@ -154,17 +164,9 @@ class RequstLeaveActivity : AppCompatActivity() {
                 if (fromDate != null) {
                     if (toDate != null) {
                         if (typeModel != null) {
-                            if (filePath != null) {
-                                val fromTime = getDate(fromDate!!)
-                                val toTime = getDate(toDate!!)
-                                requstLeave(fromTime, toTime)
-                            } else {
-                                Toast.makeText(
-                                    this@RequstLeaveActivity,
-                                    "Select leave Type",
-                                    Toast.LENGTH_LONG
-                                ).show()
-                            }
+                            val fromTime = getDate(fromDate!!)
+                            val toTime = getDate(toDate!!)
+                            requstLeave(fromTime, toTime)
                         } else {
                             Toast.makeText(
                                 this@RequstLeaveActivity,
@@ -197,15 +199,16 @@ class RequstLeaveActivity : AppCompatActivity() {
         return String.format(
             Locale.CANADA,
             "%s-%s-%s %s:%s",
-            DateUtils().yearDateApi(leaveDate?.year),
+            leaveDate?.dayOfMonth,
             DateUtils().monthDateApi(leaveDate?.month?.plus(1)),
-            DateUtils().dayDateApi(leaveDate?.dayOfMonth?.plus(1)),
+            DateUtils().dayDateApi(leaveDate?.dayOfMonth),
             timePicker.hour,
             timePicker.minute,
         )
     }
 
     fun requstLeave(startDate: String, endDate: String) {
+        toggleProgressDialog(show = true, this, this.resources.getString(R.string.loading))
         var maps: MutableMap<String, String> = HashMap()
         maps.put("Authorization", "Bearer ${userModel?.token}")
         maps.put("Accept", "application/json")
@@ -215,11 +218,26 @@ class RequstLeaveActivity : AppCompatActivity() {
             filePath,
             responseApi = object : ResponseApi {
                 override fun onSuccessCall(response: String?) {
-                    finish()
+                    toggleProgressDialog(
+                        show = false,
+                        this@RequstLeaveActivity,
+                        this@RequstLeaveActivity.resources.getString(R.string.loading)
+                    )
+                    showSuccessLeaveDialog { dialog ->
+                        dialog.dismiss()
+                        NavigationActivity().clearAndStart(this@RequstLeaveActivity)
+                    }
                 }
 
                 override fun onErrorCall(error: VolleyError?) {
-
+                    toggleProgressDialog(
+                        show = false,
+                        this@RequstLeaveActivity,
+                        this@RequstLeaveActivity.resources.getString(R.string.loading)
+                    )
+                    showDialogOneButtonsCustom("Error", error?.message.toString(), "Ok") { dialog ->
+                        dialog.dismiss()
+                    }
                 }
             }, maps,
             startDate, endDate, typeModel?.id.toString()

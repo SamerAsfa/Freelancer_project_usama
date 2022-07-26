@@ -22,9 +22,6 @@ data class UserModel(
     val inSide: String? = null,
     val out: String? = null,
     val location: LocationModel? = null,
-    @SerializedName("action")
-    @Expose
-    val actionModel: ArrayList<ActionModel?>? = ArrayList(),
 ) : Parcelable {
 
 

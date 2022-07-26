@@ -8,7 +8,10 @@
     <color name="black">#FF000000</color>
     <color name="gray">#F6F3F3</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="milk">#F6F8F9</color>
     <color name="grayDark">#A5A5A5</color>
+    <color name="grayLight">#EAEAEA</color>
+    <color name="blue_project">#2B509A</color>
     <color name="read">#E30E0E</color>
     <color name="gray_dive">#707070</color>
     <color name="blus">#2F55AB</color>

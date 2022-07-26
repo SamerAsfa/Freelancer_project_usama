@@ -10,11 +10,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.myapplication.myapplication.R
 import com.example.myapplication.myapplication.base.LongTermManager
+import com.example.myapplication.myapplication.data.DateUtils
 import com.example.myapplication.myapplication.models.NotificationModel
 import kotlinx.android.synthetic.main.fragment_home.view.*
 import kotlinx.coroutines.NonDisposableHandle.parent
+import java.util.*
+import kotlin.collections.ArrayList
 
-class NotificationAdapter(private val arrayList: ArrayList<NotificationModel?>?) :
+class NotificationAdapter(private val arrayList: java.util.ArrayList<NotificationModel>?) :
     RecyclerView.Adapter<NotificationAdapter.ViewHolder>() {
 
 
@@ -33,7 +36,12 @@ class NotificationAdapter(private val arrayList: ArrayList<NotificationModel?>?)
         position: Int
     ) {
         holder.msgTextView.text = arrayList?.get(holder.adapterPosition)?.title
-        holder.dateTextView.text = arrayList?.get(holder.adapterPosition)?.date
+        holder.dateTextView.text = String.format(
+            Locale.CANADA,
+            "%sth %s",
+            DateUtils().TMonthformatUtc(arrayList?.get(holder.adapterPosition)?.created_at),
+            DateUtils().TTimeformatUtc(arrayList?.get(holder.adapterPosition)?.created_at)
+        )
         holder.stateTextView.text = arrayList?.get(holder.adapterPosition)?.not_type
         val userModel = LongTermManager.getInstance().userModel
         if (!userModel?.profile_photo_path?.trim()?.isBlank()!!) {

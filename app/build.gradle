@@ -5,7 +5,7 @@ plugins {
     id 'kotlin-kapt'
     id 'kotlin-android-extensions'
 //    id 'dagger.hilt.android.plugin'
-    id 'com.huawei.agconnect'
+//    id 'com.huawei.agconnect'
 
 }
 
@@ -14,8 +14,8 @@ android {
     buildToolsVersion '31'
 
     defaultConfig {
-        applicationId "com.test.face.usama"
-        minSdkVersion 19
+        applicationId "com.attendious.hr.android"
+        minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
@@ -88,8 +88,8 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2"
     implementation 'com.google.android.material:material:1.5.0'
     implementation 'com.squareup.moshi:moshi:1.12.0'
-    implementation 'com.google.mlkit:face-detection:16.1.4'
-    implementation 'com.google.android.gms:play-services-mlkit-face-detection:17.0.0'
+//    implementation 'com.google.mlkit:face-detection:16.1.4'
+//    implementation 'com.google.android.gms:play-services-mlkit-face-detection:17.0.0'
     implementation "com.github.bumptech.glide:glide:$glideVersion"
     implementation 'com.google.firebase:firebase-storage:19.1.0'
     implementation 'com.google.firebase:firebase-messaging-ktx:23.0.2'
@@ -100,20 +100,40 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore-ktx'
     implementation 'androidx.multidex:multidex:2.0.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
-    implementation 'com.huawei.agconnect:agconnect-core:1.5.0.300'
-    implementation 'com.huawei.hms:ml-computer-vision-livenessdetection:2.2.0.300'
+//    implementation 'com.huawei.agconnect:agconnect-core:1.5.0.300'
+//    implementation 'com.huawei.hms:ml-computer-vision-livenessdetection:2.2.0.300'
     implementation("com.squareup.okhttp3:okhttp:4.7.2")
     implementation 'dev.dworks.libs:volleyplus:0.1.4'
     implementation 'com.google.android.gms:play-services-location:19.0.1'
     implementation 'com.skyfishjy.ripplebackground:library:1.0.1'
     implementation 'com.google.firebase:firebase-bom:29.3.1'
     implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.mlkit:face-detection:16.1.5'
+    implementation 'com.google.android.gms:play-services-mlkit-face-detection:17.0.1'
+    configurations.all {
+        resolutionStrategy.force 'com.google.code.findbugs:jsr305:3.0.2'
+    }
+    implementation 'com.github.dbof10:Bitmp4:0.1.1'
+    implementation 'org.jcodec:jcodec:0.2.3'
+    implementation 'org.jcodec:jcodec-android:0.2.3'
 //    implementation 'com.google.mlkit:face-detection:16.1.5'
 //    implementation 'com.google.android.gms:play-services-mlkit-face-detection:17.0.1'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
+    implementation 'org.jcodec:jcodec:0.2.5'
+    implementation 'org.jcodec:jcodec-android:0.2.5'
+    implementation 'org.jcodec:jcodec-javase:0.2.5'
+    implementation ('com.squareup.retrofit2:retrofit:2.9.0'){
+        exclude module: 'okhttp'
+    }
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.4.1'
+//    implementation 'com.squareup.okhttp3:okhttps:3.4.1'
+//    implementation 'com.writingminds:FFmpegAndroid:0.3.2'
+//    implementation 'com.github.israel-fl:bitmap2video:2.0.0'
 
 //    implementation 'com.google.firebase:firebase-ml-vision:23.0.0'
-    implementation 'com.google.android.gms:play-services-vision:20.0.0'
+//    implementation 'com.google.android.gms:play-services-vision:20.0.0'
 
-    implementation 'com.google.firebase:firebase-ml-vision:24.0.3'
-    implementation 'com.google.firebase:firebase-ml-vision-barcode-model:16.1.1'
+//    implementation 'com.google.firebase:firebase-ml-vision:24.0.3'
+//    implementation 'com.google.firebase:firebase-ml-vision-barcode-model:16.1.1'
 }

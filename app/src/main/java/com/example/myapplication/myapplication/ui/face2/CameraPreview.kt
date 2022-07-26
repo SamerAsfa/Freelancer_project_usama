@@ -30,16 +30,20 @@ class CameraPreview(context: Context?, camera: Camera, imageBitmapListener: Imag
             mCamera.setPreviewDisplay(holder)
             mCamera.startPreview()
             mCamera.setPreviewCallback(PreviewCallback { _data, _camera ->
-                val params = _camera.parameters
-                val w = params.previewSize.width
-                val h = params.previewSize.height
-                val format = params.previewFormat
-                val image = YuvImage(_data, format, w, h, null)
-                val out = ByteArrayOutputStream()
-                val area = Rect(0, 0, w, h)
-                image.compressToJpeg(area, 50, out)
-                val bm = BitmapFactory.decodeByteArray(out.toByteArray(), 0, out.size())
-                rotate(bm,w,h)?.let { mmageBitmapListener?.showStreamingImagesBitmap(it) }
+                if (_camera != null) {
+                    val params = _camera.parameters
+                    val w = params.previewSize.width
+                    val h = params.previewSize.height
+                    val format = params.previewFormat
+                    val image = YuvImage(_data, format, w, h, null)
+                    val out = ByteArrayOutputStream()
+                    val area = Rect(0, 0, w, h)
+                    image.compressToJpeg(area, 90, out)
+                    val bm = BitmapFactory.decodeByteArray(out.toByteArray(), 0, out.size())
+                    rotate(bm, w, h)?.let {
+                        mmageBitmapListener?.showStreamingImagesBitmap(it)
+                    }
+                }
             })
         } catch (e: IOException) {
             print("")
@@ -69,7 +73,7 @@ class CameraPreview(context: Context?, camera: Camera, imageBitmapListener: Imag
 
     override fun surfaceChanged(holder: SurfaceHolder, format: Int, w: Int, h: Int) {
         // If your preview can change or rotate, take care of those events here.
-        // Make sure to stop the preview before resizing or reformatting it.
+        // Make sure to stop the preview before re∂ç`SMILINGsizing or reformatting it.
         if (mHolder.surface == null) {
             // preview surface does not exist
             return

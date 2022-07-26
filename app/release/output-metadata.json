@@ -4,7 +4,7 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.test.face.usama",
+  "applicationId": "com.attendious.hr.android",
   "variantName": "release",
   "elements": [
     {

@@ -8,9 +8,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.myapplication.R
 import com.example.myapplication.myapplication.data.DateUtils
 import com.example.myapplication.myapplication.models.HistoryModel
+import java.util.ArrayList
 
 
-class HistoryAdapter(private val arrayList: ArrayList<HistoryModel?>?) :
+class HistoryAdapter(private val arrayList: ArrayList<HistoryModel>?) :
     RecyclerView.Adapter<HistoryAdapter.ViewHolder>() {
 
 
@@ -30,14 +31,29 @@ class HistoryAdapter(private val arrayList: ArrayList<HistoryModel?>?) :
     ) {
         holder.titleDateTextView.text =
             DateUtils().getDateForaAdapterFromTimeStamp(arrayList?.get(holder.adapterPosition)?.date)
-        holder.titleInTextView.text = arrayList?.get(holder.adapterPosition)?.pin
-        holder.titleOutTextView.text = arrayList?.get(holder.adapterPosition)?.pout
+
+        if (!arrayList?.get(holder.adapterPosition)?.pin.isNullOrBlank()) {
+            holder.titleInTextView.text =
+                arrayList?.get(holder.adapterPosition)?.pin?.toLong()?.let {
+                    DateUtils().getTime(
+                        it
+                    )
+                }
+        }
+        if (!arrayList?.get(holder.adapterPosition)?.pout.isNullOrBlank()) {
+            holder.titleOutTextView.text =
+                arrayList?.get(holder.adapterPosition)?.pout?.toLong()?.let {
+                    DateUtils().getTime(
+                        it
+                    )
+                }
+        }
         val hours = arrayList?.get(holder.adapterPosition)?.breaks?.div(60)
         val minutes = arrayList?.get(holder.adapterPosition)?.breaks?.rem(60)
         val time = String.format("%d:%02d", hours, minutes)
-        if(arrayList?.get(holder.adapterPosition)?.breaks==0){
+        if (arrayList?.get(holder.adapterPosition)?.breaks == 0) {
             holder.titleBreakTextView.text = "--:--"
-        }else{
+        } else {
             holder.titleBreakTextView.text = time
         }
     }

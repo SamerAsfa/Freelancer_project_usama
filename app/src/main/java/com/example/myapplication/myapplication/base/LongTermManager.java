@@ -20,6 +20,7 @@ public class LongTermManager {
     private UserModel userModel;
     private String notificationsToken = "";
     private ArrayList<NotificationModel> notificationModelArrayList;
+    private String deviceLanguage;
 
     public static synchronized LongTermManager getInstance() {
         if (mInstance == null) {
@@ -37,6 +38,7 @@ public class LongTermManager {
     public void setContext(Context mContext) {
         mSharedPreference = new SharedPreferencesManger();
         notificationsToken = mSharedPreference.GetStringPreferences("notificationsToken", "");
+        deviceLanguage = mSharedPreference.GetStringPreferences("deviceLanguage", "En");
 
         try {
             userModel = gson.fromJson(mSharedPreference.GetStringPreferences("userModel", ""), UserModel.class);
@@ -48,6 +50,19 @@ public class LongTermManager {
             Type collectionType = new TypeToken<Collection<NotificationModel>>() {
             }.getType();
             notificationModelArrayList = gson.fromJson(mSharedPreference.GetStringPreferences("notificationModelArrayList", ""), collectionType);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public String getDeviceLanguage() {
+        return deviceLanguage;
+    }
+
+    public void setDeviceLanguage(String deviceLanguage) {
+        this.deviceLanguage = deviceLanguage;
+        try {
+            mSharedPreference.SetStringPreferences("deviceLanguage", deviceLanguage);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

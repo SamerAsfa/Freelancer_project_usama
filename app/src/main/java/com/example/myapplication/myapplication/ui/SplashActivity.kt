@@ -6,11 +6,15 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import com.example.myapplication.myapplication.R
+import com.example.myapplication.myapplication.base.BaseActivity
 import com.example.myapplication.myapplication.base.LongTermManager
+import com.example.myapplication.myapplication.models.FaceBundle
+import com.example.myapplication.myapplication.ui.face2.FaceDetectionActivity
 
 
-class SplashActivity : AppCompatActivity() {
+class SplashActivity : BaseActivity() {
 
     fun clearAndStart(context: Context) {
         val intent = Intent(context, SplashActivity::class.java)
@@ -31,7 +35,7 @@ class SplashActivity : AppCompatActivity() {
                 startActivity(i)
                 finish()
             }else{
-                val i = Intent(this@SplashActivity, StartActivity::class.java)
+                val i = Intent(this@SplashActivity, WelcomeScreen::class.java)
                 startActivity(i)
                 finish()
             }

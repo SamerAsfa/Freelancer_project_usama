@@ -9,7 +9,6 @@ import android.location.Location
 import android.location.LocationManager
 import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
 import android.os.Looper
 import android.provider.Settings
 import android.text.format.DateFormat
@@ -17,26 +16,39 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.volley.error.VolleyError
 import com.bumptech.glide.Glide
 import com.example.myapplication.myapplication.R
+import com.example.myapplication.myapplication.base.BaseFragment
 import com.example.myapplication.myapplication.base.LongTermManager
 import com.example.myapplication.myapplication.base.ResponseApi
-import com.example.myapplication.myapplication.data.BaseRequest
-import com.example.myapplication.myapplication.data.BaseRequest.Companion.BREAKApi
-import com.example.myapplication.myapplication.data.BaseRequest.Companion.LEAVEApi
+import com.example.myapplication.myapplication.data.APIClient
+import com.example.myapplication.myapplication.data.APIInterface
+import com.example.myapplication.myapplication.data.AppUtils.actionToTake
+import com.example.myapplication.myapplication.data.AppUtils.getTextBody
+import com.example.myapplication.myapplication.data.AppUtils.getTextRes
+import com.example.myapplication.myapplication.data.BaseRequest.Companion.BREAKInApi
+import com.example.myapplication.myapplication.data.BaseRequest.Companion.BREAKOutApi
+import com.example.myapplication.myapplication.data.BaseRequest.Companion.LEAVEINApi
+import com.example.myapplication.myapplication.data.BaseRequest.Companion.LEAVEOutApi
 import com.example.myapplication.myapplication.data.BaseRequest.Companion.PINApi
 import com.example.myapplication.myapplication.data.BaseRequest.Companion.POUTApi
 import com.example.myapplication.myapplication.data.DateUtils
 import com.example.myapplication.myapplication.data.POSTMediasTask
+import com.example.myapplication.myapplication.models.ActionModel
+import com.example.myapplication.myapplication.models.FaceBundle
 import com.example.myapplication.myapplication.models.UserModel
-import com.example.myapplication.myapplication.ui.PunchCamDetectionActivity
+import com.example.myapplication.myapplication.ui.adapters.ButtonsCasesAdapter
+import com.example.myapplication.myapplication.ui.face2.FaceDetectionActivity
 import com.google.android.gms.location.*
+import com.google.android.gms.location.LocationServices.getFusedLocationProviderClient
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_home.view.*
 import java.util.*
+
 
 private val PERMISSIONS = arrayOf(
     Manifest.permission.CAMERA,
@@ -44,18 +56,22 @@ private val PERMISSIONS = arrayOf(
 )
 private val RC_CAMERA_AND_EXTERNAL_STORAGE_CUSTOM = 0x01 shl 9
 
-class HomeFragment : Fragment(R.layout.fragment_home) {
+class HomeFragment : BaseFragment() {
     var state: ButtonState = ButtonState.PUNCH_IN
     val PERMISSION_ID = 42
     var userModel: UserModel? = null
-    lateinit var mFusedLocationClient: FusedLocationProviderClient
+
+        lateinit var mFusedLocationClient: FusedLocationProviderClient
     protected var mainView: View? = null
     var location: Location? = null
+    var apiInterface: APIInterface? = null
+    var isInsideOrgnisation = false
+    var isFakeLocation = false
+    var showDialogOnce = false
+    private var mLocationRequest: LocationRequest? = null
 
     companion object {
-        val fragmentName : String = "HomeFragment"
-
-
+        val fragmentName: String = "HomeFragment"
         val homeFragment: HomeFragment? = null
         fun getInstance(): HomeFragment {
             return homeFragment ?: HomeFragment()
@@ -66,52 +82,110 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         userModel = LongTermManager.getInstance().userModel
-        mFusedLocationClient =
-            requireActivity().let { LocationServices.getFusedLocationProviderClient(it) }
+        startLocationUpdates()
+//        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
+        try {
+            apiInterface = APIClient.client?.create(APIInterface::class.java)
+        } catch (ex: Exception) {
+            ex.message
+        }
+//        mFusedLocationClient =
+//            requireActivity().let { LocationServices.getFusedLocationProviderClient(it) }
     }
 
+    @SuppressLint("MissingPermission")
+    protected fun startLocationUpdates() {
+
+        // Create the location request to start receiving updates
+        mLocationRequest = LocationRequest.create()
+        mLocationRequest?.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        mLocationRequest?.interval = 1
+        mLocationRequest?.fastestInterval = 1
+
+        // Create LocationSettingsRequest object using location request
+        val builder = LocationSettingsRequest.Builder()
+        builder.addLocationRequest(mLocationRequest!!)
+        val locationSettingsRequest = builder.build()
+
+        // Check whether location settings are satisfied
+        // https://developers.google.com/android/reference/com/google/android/gms/location/SettingsClient
+        val settingsClient = LocationServices.getSettingsClient(requireActivity())
+        settingsClient.checkLocationSettings(locationSettingsRequest)
+
+        // new Google API SDK v11 uses getFusedLocationProviderClient(this)
+
+        if (checkPermissions()) {
+            if (isLocationEnabled()) {
+                startGetLocation()
+            } else {
+                Toast.makeText(requireActivity(), "Turn on location", Toast.LENGTH_LONG).show()
+                val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                startActivity(intent)
+            }
+        } else {
+            requestPermissions()
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    fun startGetLocation() {
+        Looper.myLooper()?.let {
+            mFusedLocationClient = getFusedLocationProviderClient(requireActivity())
+            mFusedLocationClient.requestLocationUpdates(
+                mLocationRequest!!,locationUpdate,
+                it
+            )
+        }
+    }
+
+
+    var locationUpdate = object : LocationCallback() {
+        override fun onLocationResult(locationResult: LocationResult) {
+            myLocation(locationResult.lastLocation)
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        stopUsingGPS()
+    }
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        stopUsingGPS()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        stopUsingGPS()
+    }
+
+    fun stopUsingGPS() {
+        mFusedLocationClient.removeLocationUpdates(locationUpdate)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        getLastLocation()
         val view: View = inflater.inflate(R.layout.fragment_home, container, false)
         mainView = view
         getDashBoard()
-        callButtonRippleState(view)
         if (!userModel?.profile_photo_path?.trim()?.isBlank()!!) {
             Glide.with(view.context)
                 .load(userModel?.profile_photo_path).into(view.userImage)
-
         }
         listeners()
         view.userNameTextView?.text = userModel?.name
-        view.timeTextView?.text = DateFormat.format("hh:mm", Date())
-        view.dateTextView?.text = DateFormat.format("EEEE,MMMyy", Date())
         return view
     }
 
-    fun listeners() {
-        mainView?.punchIn?.setOnClickListener {
-            state = ButtonState.PUNCH_IN
-            loginBy()
-        }
-        mainView?.punchOut?.setOnClickListener {
-            state = ButtonState.PUNCH_OUT
-            loginBy()
-        }
-        mainView?.breaks?.setOnClickListener {
-            state = ButtonState.BREAK
-            loginBy()
-        }
-        mainView?.leave?.setOnClickListener {
-            state = ButtonState.LEAVE
-            loginBy()
-        }
-        mainView?.punchInImageView?.setOnClickListener {
 
+
+    fun listeners() {
+        mainView?.punchInImageView?.setOnClickListener {
             val intent = Intent(
                 Intent.ACTION_VIEW,
                 Uri.parse("http://maps.google.com/maps?saddr=${location?.latitude},${location?.longitude}&daddr=${location?.latitude},${location?.longitude}")
@@ -138,277 +212,348 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
         super.onActivityResult(requestCode, resultCode, intent)
-        if (requestCode == 44 && resultCode == 44) {
-            loginBy()
-            Toast.makeText(
-                requireContext(),
-                "Face is not recognized",
-                Toast.LENGTH_LONG
-            ).show()
-        } else {
-            mainView?.let { callButtonRippleState(it) }
+        if (requestCode == 44 && resultCode == AppCompatActivity.RESULT_OK) {
+            val fileExtra = intent?.getStringExtra(FaceDetectionActivity.RESULT)
+            val faceBundle =
+                intent?.getParcelableExtra<FaceBundle>(FaceDetectionActivity.FACE_BUNDLE)
+            faceBundle?.url?.let {
+                if (fileExtra != null) {
+                    uploadImage(it, fileExtra)
+                }
+            }
         }
     }
 
-    private fun startCustomActivity(url: String) {
-        val intent = Intent(requireContext(), PunchCamDetectionActivity::class.java)
-        intent.putExtra("urlPath", url)
-        this.startActivityForResult(intent, 44)
-    }
 
-
-    fun getDashBoard() {
-        POSTMediasTask().get(
+    fun uploadImage(url: String, filePath: String) {
+        toggleProgressDialog(
+            show = true,
             requireActivity(),
-            BaseRequest.dashboardApi,
-            "",
+            requireActivity().resources.getString(R.string.loading)
+        )
+        val maps: MutableMap<String, String> = HashMap()
+        maps.put("Authorization", "Bearer ${userModel?.token}")
+        maps.put("Accept", "application/json")
+        POSTMediasTask().uploadMediaWithHeader(
+            requireActivity(),
+            url,
+            filePath,
             object : ResponseApi {
                 override fun onSuccessCall(response: String?) {
-                    response?.let {
-                        val userModelObject = UserModel().parse(it)
-                        val userModel: UserModel = LongTermManager.getInstance().userModel
-                        val mainUserModel = UserModel(
-                            userModel.id,
-                            userModel.name,
-                            userModel.email,
-                            userModel.profile_photo_path,
-                            userModel.token,
-                            userModelObject?.inSide,
-                            userModelObject?.out,
-                            userModel.location,
-                            userModelObject?.actionModel
-                        )
-                        LongTermManager.getInstance().userModel = mainUserModel
-                        mainView?.let { callButtonRippleState(it) }
-                    }
+                    toggleProgressDialog(
+                        show = false,
+                        requireActivity(),
+                        requireContext().resources.getString(R.string.loading)
+                    )
+                    showSuccessDialog()
+                    getDashBoard()
                 }
 
                 override fun onErrorCall(error: VolleyError?) {
-                    print("")
+                    toggleProgressDialog(
+                        show = false,
+                        requireActivity(),
+                        requireContext().resources.getString(R.string.loading)
+                    )
+                    showDialogOneButtonsCustom("Error", error?.message.toString(), "Ok") { dialog ->
+                        dialog.dismiss()
+                    }
                 }
-            }
+            }, maps
         )
     }
 
 
-    private fun callButtonRippleState(view: View) {
+    private fun startCustomActivity(url: String) {
+        this.startActivityForResult(
+            FaceDetectionActivity.startActivity(
+                requireContext(),
+                FaceBundle(numberOfActions = 0, uploadAsImage = true, url = url)
+            ), 44
+        )
+    }
+
+
+    private fun getDashBoard() {
         try {
-            userModel = LongTermManager.getInstance().userModel
-            view.punchInSTextView.text = userModel?.inSide?.toLong()
-                ?.let { DateUtils().getTime(it) }
-            userModel?.out?.isBlank().let {
-                if (it == true) {
-                    view.punchOutSateTextView.text = "--:--"
-                } else {
-                    view.punchOutSateTextView.text = userModel?.out
+            val call = apiInterface?.getDashBoardApi()
+            call?.enqueue(object : retrofit2.Callback<ActionModel?> {
+                override fun onResponse(
+                    call: retrofit2.Call<ActionModel?>,
+                    response: retrofit2.Response<ActionModel?>
+                ) {
+                    val actionModel = response.body()
+                    setPINPOUTView(actionModel)
+                    addTopAdapter(actionModel as ActionModel)
+                    addBottomAdapter(actionModel as ActionModel)
                 }
-            }
-            requireActivity().runOnUiThread {
-                changeMainTo(ButtonState.DEFAULT)
-                userModel?.actionModel?.forEach {
-                    if (it?.name == "PIN") {
-                        view.punchIn.startRippleAnimation()
-                        if (it.diable == false) {
-                            view.punchInImage.setBackgroundResource(R.drawable.disro)
-                            view.punchIn.stopRippleAnimation()
-                        }
-                        view.punchInImage.isEnabled = !it.diable!!
-                        if (it.active == true) {
-                            view.punchIn.stopRippleAnimation()
-                            changeMainTo(ButtonState.PUNCH_IN)
-                            view.punchInImage?.setBackgroundResource(R.drawable.disro)
-                            view.punchInImage?.isEnabled = false
-                        }
-                    } else if (it?.name == "POUT") {
-                        view.punchOut.startRippleAnimation()
-                        if (it.diable == false) {
-                            view.punchOut.stopRippleAnimation()
-                            view.punchOutImage.setBackgroundResource(R.drawable.disro)
-                        }
-                        view.punchOutImage.isEnabled = !it.diable!!
-                        if (it.active == true) {
-                            view.punchOut.stopRippleAnimation()
-                            changeMainTo(ButtonState.PUNCH_OUT)
-                            view.punchOutImage?.setBackgroundResource(R.drawable.disro)
-                            view.punchOutImage?.isEnabled = false
-                        }
-                    } else if (it?.name == "BREAK") {
-                        view.breaks.startRippleAnimation()
-                        if (it.diable == false) {
-                            view.breaks.stopRippleAnimation()
-                            view.breakImage.setBackgroundResource(R.drawable.disro)
-                        }
-                        view.breakImage.isEnabled = !it.diable!!
-                        if (it.active == true) {
-                            view.breaks.stopRippleAnimation()
-                            changeMainTo(ButtonState.BREAK)
-                            view.breakImage?.setBackgroundResource(R.drawable.disro)
-                            view.breakImage?.isEnabled = false
-                        }
-                    } else if (it?.name == "LEAVE") {
-                        view.leave.startRippleAnimation()
-                        if (it.diable == false) {
-                            view.leave.stopRippleAnimation()
-                            view.leaveImage.setBackgroundResource(R.drawable.disro)
-                        }
-                        view.leaveImage.isEnabled = !it.diable!!
-                        if (it.active == true) {
-                            view.leave.stopRippleAnimation()
-                            changeMainTo(ButtonState.LEAVE)
-                            view.leaveImage?.setBackgroundResource(R.drawable.disro)
-                            view.leaveImage?.isEnabled = false
-                        }
-                    }
+
+                override fun onFailure(call: retrofit2.Call<ActionModel?>, t: Throwable) {
+                    call.cancel()
                 }
-            }
+            })
         } catch (ex: Exception) {
             ex.message
         }
     }
+
+
+    fun setPINPOUTView(actionModel: ActionModel?) {
+        actionModel?.out.toString().isBlank().let {
+            if (it) {
+                mainView?.punchInSTextView?.text = "--:--"
+            } else {
+                mainView?.punchInSTextView?.text = actionModel?.out?.let { it1 ->
+                    DateUtils().getTime(
+                        it1.toLong()
+                    )
+                }
+            }
+        }
+        actionModel?.inSide.toString().isBlank().let {
+            if (it) {
+                mainView?.punchOutSateTextView?.text = "--:--"
+            } else {
+                mainView?.punchOutSateTextView?.text = actionModel?.inSide?.let { it1 ->
+                    DateUtils().getTime(
+                        it1.toLong()
+                    )
+                }
+            }
+        }
+    }
+
+
+    fun addTopAdapter(actionModel: ActionModel) {
+        try {
+            val buttonsCasesAdapter = ButtonsCasesAdapter(
+                handleTopActionsArray(actionModel.action),
+                requireContext()
+            ) { actionModel ->
+                if (isInsideOrgnisation) {
+                    callDialogState(actionModel)
+                }
+            }
+            mainView?.topButtonsCaseRecyclerView?.setHasFixedSize(true)
+            val linearLayoutManager = LinearLayoutManager(context)
+            linearLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
+            mainView?.topButtonsCaseRecyclerView?.layoutManager = linearLayoutManager
+            mainView?.topButtonsCaseRecyclerView?.adapter = buttonsCasesAdapter
+        } catch (ex: Exception) {
+            ex.message
+        }
+    }
+
+
+    fun addBottomAdapter(actionModel: ActionModel) {
+        try {
+            val buttonsCasesAdapter = ButtonsCasesAdapter(
+                handleBottomActionsArray(actionModel.action),
+                requireContext()
+            ) { actionModel ->
+                if (isInsideOrgnisation) {
+                    callDialogState(actionModel)
+                }
+            }
+            mainView?.bottomButtonsCaseRecyclerView?.setHasFixedSize(true)
+            val linearLayoutManager = LinearLayoutManager(context)
+            linearLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
+            mainView?.bottomButtonsCaseRecyclerView?.layoutManager = linearLayoutManager
+            mainView?.bottomButtonsCaseRecyclerView?.adapter = buttonsCasesAdapter
+        } catch (ex: Exception) {
+            ex.message
+        }
+    }
+
+    fun callDialogState(actionModel: ActionModel?) {
+        if (actionModel != null) {
+            showDialogTowButtonsStateBunch(
+                title = requireContext().resources.getString(getTextRes(actionModel.key.toString())),
+                body = getTextBody(
+                    punchOut = requireContext().resources.getString(getTextRes(actionModel.key.toString())),
+                    timeIs = requireContext().resources.getString(R.string.time_is),
+                    doYouWantTo = requireContext().resources.getString(R.string.do_you_want),
+                    now = requireContext().resources.getString(R.string.now),
+                    time = DateFormat.format("hh:mm", Date()).toString()
+                ),
+                okButtonText = requireContext().resources.getString(R.string.yes),
+                canceButtonText = requireContext().resources.getString(R.string.nos),
+                actionModel = actionModel,
+                ok = { dialog, actionModel ->
+                    dialog.dismiss()
+                    actionAndRefresh(actionModel)
+                },
+                cancel = { dialog ->
+                    dialog.dismiss()
+                }
+            )
+        }
+    }
+
+
+    fun actionAndRefresh(actionModel: ActionModel?) {
+        state = actionToTake(actionModel)
+        loginBy()
+    }
+
+
+    fun handleTopActionsArray(actionArrayList: ArrayList<ActionModel>?): ArrayList<ActionModel> {
+        val topArrayList: ArrayList<ActionModel> = ArrayList()
+        actionArrayList?.forEach { actionModel ->
+            if (actionModel.active == true) {
+                actionModel.isLargeView = true
+                topArrayList.add(actionModel)
+            }
+        }
+        return topArrayList
+    }
+
+    fun handleBottomActionsArray(actionArrayList: ArrayList<ActionModel>?): ArrayList<ActionModel> {
+        val bottomArrayList: ArrayList<ActionModel> = ArrayList()
+        actionArrayList?.forEach { actionModel ->
+            if (actionModel.active != true) {
+                bottomArrayList.add(actionModel)
+            }
+        }
+        return bottomArrayList
+    }
+
 
     private fun getUrl(state: ButtonState): String {
         if (state == ButtonState.PUNCH_IN) {
             return PINApi
         } else if (state == ButtonState.PUNCH_OUT) {
             return POUTApi
-        } else if (state == ButtonState.BREAK) {
-            return BREAKApi
+        } else if (state == ButtonState.BREAK_IN ) {
+            return BREAKInApi
+        } else if (state == ButtonState.BREAK_OUT) {
+            return BREAKOutApi
+        } else if (state == ButtonState.LEAVE_IN) {
+            return LEAVEINApi
         } else {
-            return LEAVEApi
+            return LEAVEOutApi
         }
     }
-
-
-    fun changeMainTo(state: ButtonState) {
-        if (state == ButtonState.PUNCH_IN) {
-            mainView?.mainInRippleBackground?.startRippleAnimation()
-            mainView?.mainInRippleBackground?.visibility = View.VISIBLE
-            mainView?.mainOutRippleBackground?.visibility = View.INVISIBLE
-            mainView?.mainBreakRippleBackground?.visibility = View.INVISIBLE
-            mainView?.mainLeaveRippleBackground?.visibility = View.INVISIBLE
-        } else if (state == ButtonState.PUNCH_OUT) {
-            mainView?.mainOutRippleBackground?.startRippleAnimation()
-            mainView?.mainOutRippleBackground?.visibility = View.VISIBLE
-            mainView?.mainInRippleBackground?.visibility = View.INVISIBLE
-            mainView?.mainBreakRippleBackground?.visibility = View.INVISIBLE
-            mainView?.mainLeaveRippleBackground?.visibility = View.INVISIBLE
-        } else if (state == ButtonState.BREAK) {
-            mainView?.mainBreakRippleBackground?.startRippleAnimation()
-            mainView?.mainBreakRippleBackground?.visibility = View.VISIBLE
-            mainView?.mainInRippleBackground?.visibility = View.INVISIBLE
-            mainView?.mainOutRippleBackground?.visibility = View.INVISIBLE
-            mainView?.mainLeaveRippleBackground?.visibility = View.INVISIBLE
-        } else if (state == ButtonState.LEAVE) {
-            mainView?.mainLeaveRippleBackground?.startRippleAnimation()
-            mainView?.mainLeaveRippleBackground?.visibility = View.VISIBLE
-            mainView?.mainInRippleBackground?.visibility = View.INVISIBLE
-            mainView?.mainOutRippleBackground?.visibility = View.INVISIBLE
-            mainView?.mainBreakRippleBackground?.visibility = View.INVISIBLE
-        } else {
-            mainView?.mainLeaveRippleBackground?.stopRippleAnimation()
-            mainView?.mainInRippleBackground?.stopRippleAnimation()
-            mainView?.mainOutRippleBackground?.stopRippleAnimation()
-            mainView?.mainBreakRippleBackground?.stopRippleAnimation()
-            mainView?.mainLeaveRippleBackground?.visibility = View.INVISIBLE
-            mainView?.mainInRippleBackground?.visibility = View.INVISIBLE
-            mainView?.mainOutRippleBackground?.visibility = View.INVISIBLE
-            mainView?.mainBreakRippleBackground?.visibility = View.INVISIBLE
-        }
-    }
-
 
     enum class ButtonState {
         PUNCH_IN,
         PUNCH_OUT,
-        BREAK,
-        LEAVE,
-        DEFAULT,
+        BREAK_IN,
+        BREAK_OUT,
+        LEAVE_IN,
+        LEAVE_OUT,
+//        BREAK_IN,
+//        BREAK_IN,
+    }
+
+
+    val METERS_IN_MILE = 1609.344
+
+    fun milesToMeters(miles: Double): Double {
+        return miles * METERS_IN_MILE
+    }
+
+
+    private fun distance(
+        lat1: Double,
+        lon1: Double,
+        lat2: Double,
+        lon2: Double,
+        radius: Int
+    ): Boolean {
+        val theta = lon1 - lon2
+        var dist = (Math.sin(deg2rad(lat1))
+                * Math.sin(deg2rad(lat2))
+                + (Math.cos(deg2rad(lat1))
+                * Math.cos(deg2rad(lat2))
+                * Math.cos(deg2rad(theta))))
+        dist = Math.acos(dist)
+        dist = rad2deg(dist)
+        dist = dist * 60 * 1.1515
+        val inMeters = milesToMeters(dist)
+        return inMeters <= radius
+    }
+
+
+    private fun distanceText(
+        lat1: Double,
+        lon1: Double,
+        lat2: Double,
+        lon2: Double,
+        radius: Int
+    ): String {
+        val theta = lon1 - lon2
+        var dist = (Math.sin(deg2rad(lat1))
+                * Math.sin(deg2rad(lat2))
+                + (Math.cos(deg2rad(lat1))
+                * Math.cos(deg2rad(lat2))
+                * Math.cos(deg2rad(theta))))
+        dist = Math.acos(dist)
+        dist = rad2deg(dist)
+        dist = dist * 60 * 1.1515
+        val inMeters = milesToMeters(dist)
+        return "inMeters = ${inMeters} mils = ${dist} radius=${radius}}"
+    }
+
+    private fun deg2rad(deg: Double): Double {
+        return deg * Math.PI / 180.0
+    }
+
+    private fun rad2deg(rad: Double): Double {
+        return rad * 180.0 / Math.PI
+    }
+
+
+    fun isFake(): Boolean {
+        val extras = location?.isFromMockProvider()
+        return extras == true
     }
 
     fun myLocation(location: Location) {
         this.location = location
-        mainView?.locationNameTextView?.text = "x"
-        var lat = userModel?.location?.lat
-        var lon = userModel?.location?.lng
-        var radius = userModel?.location?.radius
-        var state = radius?.toDouble()?.let { isMarkerOutsideCircle(location, lat, lon, it) }
-        if (state == true) {
-            mainView?.locationNameTextView?.text = "You are out Side Organization"
-            context?.resources?.getColor(R.color.read)
-                ?.let { mainView?.locationNameTextView?.setTextColor(it) }
-        } else {
-            mainView?.locationNameTextView?.text = "You are in Side Organization"
-            context?.resources?.getColor(R.color.black)
-                ?.let { mainView?.locationNameTextView?.setTextColor(it) }
-        }
-    }
-
-    private fun isMarkerOutsideCircle(
-        centerLatLng: Location,
-        lat: String?,
-        logs: String?,
-        radius: Double
-    ): Boolean {
-        val distances = FloatArray(1)
-        lat?.toDouble()?.let { latitude ->
-            logs?.toDouble()?.let { longitude ->
-                Location.distanceBetween(
-                    centerLatLng.latitude,
-                    centerLatLng.longitude,
-                    latitude,
-                    longitude, distances
-                )
+        if (isFake()) {
+            isFakeLocation = true
+            if (!showDialogOnce) {
+                showDialogOnce = true
+                showDialogOneButtonsCustom(false, "Sorry You Are Using Fake Location", "Ok") {
+                    requireActivity().finish()
+                }
             }
         }
-        return radius < distances[0]
-    }
-
-
-    @SuppressLint("MissingPermission")
-    private fun getLastLocation() {
-        if (checkPermissions()) {
-            if (isLocationEnabled()) {
-                mFusedLocationClient.lastLocation.addOnCompleteListener(requireActivity()) { task ->
-                    requestNewLocationData()
+        if (!isFakeLocation) {
+            mainView?.locationNameTextView?.text = "x"
+            var lat = userModel?.location?.lat
+            var lon = userModel?.location?.lng
+            var radius = userModel?.location?.radius
+            isInsideOrgnisation = radius?.let { rad ->
+                lon?.toDouble()?.let { userLong ->
+                    lat?.toDouble()?.let { userLat ->
+                        distance(
+                            location.latitude, location.longitude, userLat, userLong,
+                            rad
+                        )
+                    }
                 }
+            } == true
+            if (!isInsideOrgnisation) {
+                mainView?.locationNameTextView?.text = "You are out Side Organization"
+                context?.resources?.getColor(R.color.read)
+                    ?.let { mainView?.locationNameTextView?.setTextColor(it) }
+                locationImage.background = requireContext().getDrawable(R.drawable.vector_location)
             } else {
-                Toast.makeText(requireActivity(), "Turn on location", Toast.LENGTH_LONG).show()
-                val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
-                startActivity(intent)
+                locationImage.background =
+                    requireContext().getDrawable(R.drawable.vector_black_location)
+                mainView?.locationNameTextView?.text = "You are in Side Organization"
+                context?.resources?.getColor(R.color.black)
+                    ?.let { mainView?.locationNameTextView?.setTextColor(it) }
             }
-        } else {
-            requestPermissions()
+//        mainView?.locationNameTextView?.text = distanceText(location.latitude, location.longitude, 31.962333, 35.811096, 5)
+            mainView?.timeTextView?.text = DateFormat.format("hh:mm", Date())
+            mainView?.dateTextView?.text = DateUtils().getDateHome(System.currentTimeMillis())
         }
     }
 
-    @SuppressLint("MissingPermission")
-    private fun requestNewLocationData() {
-        var mLocationRequest = LocationRequest()
-        mLocationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-        mLocationRequest.interval = 0
-        mLocationRequest.fastestInterval = 0
-        mLocationRequest.numUpdates = 1
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
-        val mainHandler = Handler(Looper.getMainLooper())
-        mainHandler.post(object : Runnable {
-            override fun run() {
-                Looper.myLooper()?.let {
-                    mFusedLocationClient.requestLocationUpdates(
-                        mLocationRequest, mLocationCallback,
-                        it
-                    )
-                }
-                mainHandler.postDelayed(this, 1000)
-            }
-        })
-    }
 
-    private val mLocationCallback = object : LocationCallback() {
-        override fun onLocationResult(locationResult: LocationResult) {
-            var mLastLocation: Location = locationResult.lastLocation
-            myLocation(mLastLocation)
-        }
-    }
 
     private fun isLocationEnabled(): Boolean {
         var locationManager: LocationManager =
@@ -437,14 +582,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
 
     private fun requestPermissions() {
-        ActivityCompat.requestPermissions(
-            requireActivity(),
-            arrayOf(
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ),
-            PERMISSION_ID
-        )
+        requestPermissions(arrayOf( Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION), PERMISSION_ID)
     }
 
 
@@ -453,13 +592,13 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         permissions: Array<String>,
         grantResults: IntArray
     ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == PERMISSION_ID) {
             if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                getLastLocation()
+                startGetLocation()
             }
         } else if (requestCode == RC_CAMERA_AND_EXTERNAL_STORAGE_CUSTOM && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             startCustomActivity(getUrl(state))
         }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 }

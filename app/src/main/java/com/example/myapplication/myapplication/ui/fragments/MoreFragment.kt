@@ -8,9 +8,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.example.myapplication.myapplication.R
+import com.example.myapplication.myapplication.base.BaseFragment
 import com.example.myapplication.myapplication.base.LongTermManager
 import com.example.myapplication.myapplication.models.UserModel
-import com.example.myapplication.myapplication.ui.CustomWithVideo
 import com.example.myapplication.myapplication.ui.MyLeavesActivity
 import com.example.myapplication.myapplication.ui.SplashActivity
 import kotlinx.android.synthetic.main.fragment_history.view.*
@@ -19,7 +19,7 @@ import kotlinx.android.synthetic.main.fragment_home.view.userImage
 import kotlinx.android.synthetic.main.fragment_more.view.*
 import java.util.*
 
-class MoreFragment : Fragment(R.layout.fragment_more) {
+class MoreFragment : BaseFragment() {
 
     protected var mainView: View? = null
     var userModel: UserModel? = null
