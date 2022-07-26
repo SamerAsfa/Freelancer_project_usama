@@ -51,6 +51,7 @@
         <activity android:name=".ui.MyLeavesActivity" />
         <activity android:name=".ui.RequstLeaveActivity" />
         <activity android:name=".ui.face2.FaceDetectionActivity" />
+        <activity android:name=".ui.WelcomeScreen" />
 
 
         <service

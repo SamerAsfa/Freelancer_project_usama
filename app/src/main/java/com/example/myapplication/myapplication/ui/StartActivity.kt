@@ -2,16 +2,14 @@ package com.example.myapplication.myapplication.ui
 
 import android.Manifest
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
-import android.R.attr.bitmap
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.android.volley.error.VolleyError
 import com.example.myapplication.myapplication.R
@@ -26,16 +24,9 @@ import com.example.myapplication.myapplication.ui.face2.FaceDetectionActivity
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.android.synthetic.main.login_with_face_activity.*
-import java.io.BufferedOutputStream
-import java.io.File
-import java.io.FileOutputStream
-import java.io.OutputStream
 
 
-//@SuppressLint("StaticFieldLeak")
-//private var mTextResult: TextView? = null
 @SuppressLint("StaticFieldLeak")
-//private var mImageResult: ImageView? = null
 private val PERMISSIONS = arrayOf(Manifest.permission.CAMERA, WRITE_EXTERNAL_STORAGE)
 private val RC_CAMERA_AND_EXTERNAL_STORAGE_CUSTOM = 0x01 shl 9
 
@@ -43,6 +34,24 @@ class StartActivity : BaseActivity() {
 
 
     val VIDEO_CAPTURE = 101
+
+    companion object  {
+        fun start(context: Context) {
+            val intent = Intent(context, StartActivity::class.java)
+            context.startActivity(intent)
+            (context as Activity).overridePendingTransition(0, 0)
+        }
+
+        fun clearAndStart(context: Context) {
+            val intent = Intent(context, StartActivity::class.java)
+            intent.flags =
+                Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            context.startActivity(intent)
+            (context as Activity).overridePendingTransition(0, 0)
+        }
+
+    }
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

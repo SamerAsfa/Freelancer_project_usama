@@ -35,13 +35,9 @@ class SplashActivity : BaseActivity() {
                 startActivity(i)
                 finish()
             }else{
-                val i = Intent(this@SplashActivity, StartActivity::class.java)
+                val i = Intent(this@SplashActivity, WelcomeScreen::class.java)
                 startActivity(i)
                 finish()
-//                ActivityCompat.startActivityForResult(this, FaceDetectionActivity.startActivity(this,
-//                    FaceBundle(numberOfActions = 4)
-//                ), 44,null)
-
             }
         }, 2000)
     }

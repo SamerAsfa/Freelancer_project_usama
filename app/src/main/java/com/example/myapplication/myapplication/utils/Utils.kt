@@ -1,9 +1,18 @@
 package com.example.myapplication.myapplication.utils
 
 import android.content.Context
-import android.provider.Settings
+import android.content.res.Configuration
+import java.util.*
 
-fun Context.getDeviceId() = Settings.Secure.getString(
-    contentResolver,
-    Settings.Secure.ANDROID_ID
-).orEmpty()
+object Utils {
+
+    fun changeLang(context: Context, lang: String?) {
+        val myLocale = Locale(lang)
+        Locale.setDefault(myLocale)
+        val config = Configuration()
+        config.locale = myLocale
+        context.resources.updateConfiguration(config, context.resources.displayMetrics)
+    }
+
+
+}
