@@ -10,23 +10,35 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO
+import android.text.TextUtils
+import android.util.Patterns
+import android.view.View
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
-import androidx.core.net.toUri
+import androidx.core.widget.doOnTextChanged
+import androidx.lifecycle.lifecycleScope
 import com.android.volley.error.VolleyError
 import com.example.myapplication.myapplication.R
 import com.example.myapplication.myapplication.base.BaseActivity
 import com.example.myapplication.myapplication.base.LongTermManager
 import com.example.myapplication.myapplication.base.ResponseApi
+import com.example.myapplication.myapplication.data.APIInterface
 import com.example.myapplication.myapplication.data.BaseRequest
-import com.example.myapplication.myapplication.data.BaseRequest.Companion.registerApi
 import com.example.myapplication.myapplication.data.POSTMediasTask
 import com.example.myapplication.myapplication.models.FaceBundle
+import com.example.myapplication.myapplication.models.OrganizationUserDetailsModel
 import com.example.myapplication.myapplication.models.UserModel
 import com.example.myapplication.myapplication.ui.face2.FaceDetectionActivity
 import com.example.myapplication.myapplication.utils.PathUtil
 import kotlinx.android.synthetic.main.activity_create_account.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 
 class CreateAccountActivity : BaseActivity(), ResponseApi {
@@ -41,53 +53,65 @@ class CreateAccountActivity : BaseActivity(), ResponseApi {
     fun String.equalsIgnoreCase(other: String) =
         (this as java.lang.String).equalsIgnoreCase(other)
 
+    var apiInterface: APIInterface? = null
+
+    private val _checkUserOrganizationStatus:MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val checkUserOrganizationStatus = _checkUserOrganizationStatus.asStateFlow()
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_account)
+
+        //initRetrofitApi()
+        initUIListener()
+        checkCustomerOrganizationByIdUIVisibilityStatus()
         createTextView.setOnClickListener {
             finish()
         }
-        startVideoRecording()
-        custom_btn.setOnClickListener {
-            if (emailEditText.text.toString().equalsIgnoreCase(reEmailEditText.text.toString())) {
-                if (passwordEditText.text.toString()
-                        .equalsIgnoreCase(retypePasswordEditText.text.toString())
-                ) {
-                    toggleProgressDialog(
-                        show = true,
-                        this,
-                        this.resources.getString(R.string.loading)
-                    )
-                    var maps: MutableMap<String, String> = HashMap()
-                    maps.put("name", nameEditText.text.toString())
-                    maps.put("email", emailEditText.text.toString())
-                    maps.put("password", passwordEditText.text.toString())
-                    maps.put("code", organizationEditText.text.toString())
-                    maps.put("mobile_number", numberPhoneEditText.text.toString())
-                    maps.put("fcm", LongTermManager.getInstance().notificationsToken)
-                    if (userModel == null) {
-                        POSTMediasTask().post(
-                            this@CreateAccountActivity,
-                            registerApi,
-                            maps,
-                            this@CreateAccountActivity
-                        )
-                    } else {
-                        recordVideo(userModel!!)
-                    }
-                } else {
-                    Toast.makeText(
-                        this, "Password is mismatch",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-            } else {
-                Toast.makeText(
-                    this, "Email is mismatch",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-        }
+      //  startVideoRecording()
+//        custom_btn.setOnClickListener {
+//            if (emailEditText.text.toString().equalsIgnoreCase(reEmailEditText.text.toString())) {
+//                if (passwordEditText.text.toString()
+//                        .equalsIgnoreCase(retypePasswordEditText.text.toString())
+//                ) {
+//                    toggleProgressDialog(
+//                        show = true,
+//                        this,
+//                        this.resources.getString(R.string.loading)
+//                    )
+//                    var maps: MutableMap<String, String> = HashMap()
+//                    maps.put("name", nameEditText.text.toString())
+//                    maps.put("email", emailEditText.text.toString())
+//                    maps.put("password", passwordEditText.text.toString())
+//                    maps.put("code", organizationEditText.text.toString())
+//                    maps.put("mobile_number", numberPhoneEditText.text.toString())
+//                    maps.put("fcm", LongTermManager.getInstance().notificationsToken)
+//                    if (userModel == null) {
+//                        POSTMediasTask().post(
+//                            this@CreateAccountActivity,
+//                            registerApi,
+//                            maps,
+//                            this@CreateAccountActivity
+//                        )
+//                    } else {
+//                        recordVideo(userModel!!)
+//                    }
+//                } else {
+//                    Toast.makeText(
+//                        this, "Password is mismatch",
+//                        Toast.LENGTH_LONG
+//                    ).show()
+//                }
+//            } else {
+//                Toast.makeText(
+//                    this, "Email is mismatch",
+//                    Toast.LENGTH_LONG
+//                ).show()
+//            }
+//        }
+
+
     }
 
     override fun onSuccessCall(response: String?) {
@@ -235,5 +259,95 @@ class CreateAccountActivity : BaseActivity(), ResponseApi {
         clipboard.setPrimaryClip(clip)
     }
 
+
+    private fun initUIListener(){
+        organizationEditText.doOnTextChanged { text, start, before, count ->
+            if(text.toString().length >=6){
+                checkUserByOrganizationCode(text.toString())
+            }
+        }
+
+
+        emailEditText.doOnTextChanged { text, start, before, count ->
+            isValidEmail(text) // return boolean status
+        }
+    }
+
+/*    private fun initRetrofitApi(){
+        try {
+            apiInterface = APIClient.client?.create(APIInterface::class.java)
+        } catch (ex: Exception) {
+            ex.message
+        }
+    }*/
+
+    private fun checkUserByOrganizationCode(userCode: String) {
+        try {
+
+            val url = "http://frapi.hr-jo.com/api/"//companyById/123456 //"http://api.icndb.com/"
+
+            val builder = Retrofit.Builder()
+                .baseUrl(url)
+                .addConverterFactory(GsonConverterFactory.create())
+
+            val retrofit = builder.build()
+
+            val client: APIInterface = retrofit.create(APIInterface::class.java)
+            val call: Call<OrganizationUserDetailsModel?>? = client.checkUserByUserCompanyId()
+
+            call?.enqueue(object : Callback<OrganizationUserDetailsModel?> {
+
+                override fun onResponse(
+                    call: Call<OrganizationUserDetailsModel?>,
+                    response: Response<OrganizationUserDetailsModel?>
+                ) {
+                    val result: OrganizationUserDetailsModel? = response.body()
+                    _checkUserOrganizationStatus.value = true
+                    setEmployeeNameOnUI(result?.name.toString())
+
+                    orgCodeCheckFailureMaterialCardView.visibility = View.GONE
+                    orgCodeCheckSuccessMaterialCardView.visibility = View.VISIBLE
+
+                }
+
+                override fun onFailure(call: Call<OrganizationUserDetailsModel?>, t: Throwable) {
+                    _checkUserOrganizationStatus.value = false
+
+                    orgCodeCheckFailureMaterialCardView.visibility = View.VISIBLE
+                    orgCodeCheckSuccessMaterialCardView.visibility = View.GONE
+                }
+            })
+
+        } catch (ex: Exception) {
+            ex.message
+        }
+    }
+
+    private fun checkCustomerOrganizationByIdUIVisibilityStatus(){
+        lifecycleScope.launchWhenCreated {
+            checkUserOrganizationStatus.collect { enableStatus ->
+
+                organizationEditText.isEnabled = !enableStatus
+                nameEditText.isEnabled = false
+                emailEditText.isEnabled = enableStatus
+                reEmailEditText.isEnabled = enableStatus
+                numberPhoneEditText.isEnabled = enableStatus
+                passwordEditText.isEnabled = enableStatus
+                retypePasswordEditText.isEnabled = enableStatus
+            }
+        }
+    }
+
+    private fun setEmployeeNameOnUI(name:String){
+        nameEditText.setText(name.toString())
+    }
+
+    fun isValidEmail(target: CharSequence?): Boolean {
+        return if (TextUtils.isEmpty(target)) {
+            false
+        } else {
+            Patterns.EMAIL_ADDRESS.matcher(target).matches()
+        }
+    }
 
 }

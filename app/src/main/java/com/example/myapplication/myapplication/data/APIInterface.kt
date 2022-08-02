@@ -1,5 +1,6 @@
 package com.example.myapplication.myapplication.data
 
+import com.example.myapplication.myapplication.data.BaseRequest.Companion.CHECK_USER_BY_COMPANY_ID
 import com.example.myapplication.myapplication.data.BaseRequest.Companion.dashboardApi
 import com.example.myapplication.myapplication.data.BaseRequest.Companion.leaveHistoryApi
 import com.example.myapplication.myapplication.data.BaseRequest.Companion.notificationsApi
@@ -7,6 +8,7 @@ import com.example.myapplication.myapplication.data.BaseRequest.Companion.punchH
 import com.example.myapplication.myapplication.models.ActionModel
 import com.example.myapplication.myapplication.models.HistoryModel
 import com.example.myapplication.myapplication.models.NotificationModel
+import com.example.myapplication.myapplication.models.OrganizationUserDetailsModel
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -25,6 +27,11 @@ interface APIInterface {
 
     @GET(notificationsApi)///@Path("id") int groupId
     fun getNotificationHistoryApi(): Call<ArrayList<NotificationModel>?>?
+
+    @GET(CHECK_USER_BY_COMPANY_ID)//@Path("id") id: String?
+    fun checkUserByUserCompanyId(): Call<OrganizationUserDetailsModel?>?
+
+
 
 //    @POST("/api/users")
 //    fun createUser(@Body user: User?): Call<User?>?

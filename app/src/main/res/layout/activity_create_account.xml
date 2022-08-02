@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="activity"
+            type="com.example.myapplication.myapplication.ui.CreateAccountActivity" />
+    </data>
+
+<androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
@@ -81,6 +89,51 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/createTextView" />
 
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/orgCodeCheckFailureMaterialCardView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:elevation="1dp"
+                android:visibility="gone"
+                app:cardCornerRadius="8dp"
+                app:layout_constraintEnd_toEndOf="@+id/organizationEditText"
+                app:layout_constraintStart_toStartOf="@+id/organizationEditText"
+                app:layout_constraintTop_toBottomOf="@+id/organizationEditText">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="30dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/org_not_found"
+                    android:textColor="#BC1A1A"
+                    android:textSize="12sp" />
+            </com.google.android.material.card.MaterialCardView>
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/orgCodeCheckSuccessMaterialCardView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:elevation="1dp"
+                android:visibility="gone"
+                app:cardCornerRadius="8dp"
+                app:layout_constraintEnd_toEndOf="@+id/organizationEditText"
+                app:layout_constraintStart_toStartOf="@+id/organizationEditText"
+                app:layout_constraintTop_toBottomOf="@+id/organizationEditText">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="30dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/vapeplus"
+                    android:textColor="#193566"
+                    android:textSize="12sp" />
+            </com.google.android.material.card.MaterialCardView>
+
             <EditText
                 android:id="@+id/nameEditText"
                 android:layout_width="match_parent"
@@ -136,6 +189,36 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/emailEditText" />
 
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="144dp"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="8dp">
+
+                <LinearLayout
+                    android:layout_margin="8dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/password_must_meet"
+                        android:textColor="#193566"
+                        android:textSize="8sp"/>
+
+                    <TextView
+                        android:drawableLeft="@drawable/ic_green_right"
+                        android:layout_marginTop="8dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/at_least_one_letter"
+                        android:textColor="#00B069"
+                        android:textSize="8sp"/>
+
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
             <EditText
                 android:id="@+id/numberPhoneEditText"
@@ -231,3 +314,5 @@
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

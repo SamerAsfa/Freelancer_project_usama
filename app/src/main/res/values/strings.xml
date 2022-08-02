@@ -40,4 +40,12 @@
     <string name="select_language">Select Language</string>
     <string name="english">English</string>
     <string name="arabic">Arabic</string>
+
+    <string name="org_not_found">Org. not Found!</string>
+    <string name="vapeplus">Vapeplus</string>
+    <string name="password_must_meet">Password must meet the following requirements:</string>
+    <string name="at_least_one_letter">At least one letter</string>
+    <string name="at_least_one_capital_letter">At least one capital letter</string>
+    <string name="at_least_one_number">At least one number</string>
+    <string name="be_at_least_characters">Be at least 8 characters</string>
 </resources>

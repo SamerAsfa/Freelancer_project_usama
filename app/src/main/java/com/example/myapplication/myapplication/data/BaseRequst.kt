@@ -21,5 +21,8 @@ class BaseRequest {
         val BREAKOutApi: String = "${baseUrl}punch/BREAKOUT"
         val LEAVEINApi: String = "${baseUrl}punch/LEAVEIN"
         val LEAVEOutApi: String = "${baseUrl}punch/LEAVEOUT"
+        const val CHECK_USER_BY_COMPANY_ID: String = "http://frapi.hr-jo.com/api/companyById/123456"
+
+
     }
 }
