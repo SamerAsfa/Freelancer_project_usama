@@ -10,8 +10,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.text.TextUtils
-import android.util.Patterns
 import android.view.View
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
@@ -39,6 +37,8 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 
 
 class CreateAccountActivity : BaseActivity(), ResponseApi {
@@ -55,7 +55,7 @@ class CreateAccountActivity : BaseActivity(), ResponseApi {
 
     var apiInterface: APIInterface? = null
 
-    private val _checkUserOrganizationStatus:MutableStateFlow<Boolean> = MutableStateFlow(false)
+    private val _checkUserOrganizationStatus: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val checkUserOrganizationStatus = _checkUserOrganizationStatus.asStateFlow()
 
 
@@ -69,7 +69,7 @@ class CreateAccountActivity : BaseActivity(), ResponseApi {
         createTextView.setOnClickListener {
             finish()
         }
-      //  startVideoRecording()
+        //  startVideoRecording()
 //        custom_btn.setOnClickListener {
 //            if (emailEditText.text.toString().equalsIgnoreCase(reEmailEditText.text.toString())) {
 //                if (passwordEditText.text.toString()
@@ -166,7 +166,7 @@ class CreateAccountActivity : BaseActivity(), ResponseApi {
     ) {
         if (requestCode == VIDEO_CAPTURE) {
             if (resultCode == Activity.RESULT_OK) {
-                if(!intent?.extras?.getString("result").isNullOrEmpty()){
+                if (!intent?.extras?.getString("result").isNullOrEmpty()) {
                     startVideoRecording()
                 }
             } else if (resultCode == Activity.RESULT_CANCELED) {
@@ -191,7 +191,7 @@ class CreateAccountActivity : BaseActivity(), ResponseApi {
         )
     }
 
-    fun uploadeVideo(filePath:String?) {
+    fun uploadeVideo(filePath: String?) {
         toggleProgressDialog(show = true, this, this.resources.getString(R.string.loading))
         var maps: MutableMap<String, String> = HashMap()
         maps.put("Authorization", "Bearer ${userModel?.token}")
@@ -260,16 +260,23 @@ class CreateAccountActivity : BaseActivity(), ResponseApi {
     }
 
 
-    private fun initUIListener(){
+    private fun initUIListener() {
         organizationEditText.doOnTextChanged { text, start, before, count ->
-            if(text.toString().length >=6){
+            if (text.toString().length >= 6) {
                 checkUserByOrganizationCode(text.toString())
             }
         }
 
 
-        emailEditText.doOnTextChanged { text, start, before, count ->
-            isValidEmail(text) // return boolean status
+        passwordEditText.doOnTextChanged { text, start, before, count ->
+
+            if (isValidPassword(text.toString())) {/// return boolean status
+                passwordRequirementPopupMaterialCardView.visibility = View.GONE
+            } else {
+                passwordRequirementPopupMaterialCardView.visibility = View.VISIBLE
+            }
+
+
         }
     }
 
@@ -323,7 +330,7 @@ class CreateAccountActivity : BaseActivity(), ResponseApi {
         }
     }
 
-    private fun checkCustomerOrganizationByIdUIVisibilityStatus(){
+    private fun checkCustomerOrganizationByIdUIVisibilityStatus() {
         lifecycleScope.launchWhenCreated {
             checkUserOrganizationStatus.collect { enableStatus ->
 
@@ -338,16 +345,18 @@ class CreateAccountActivity : BaseActivity(), ResponseApi {
         }
     }
 
-    private fun setEmployeeNameOnUI(name:String){
+    private fun setEmployeeNameOnUI(name: String) {
         nameEditText.setText(name.toString())
     }
 
-    fun isValidEmail(target: CharSequence?): Boolean {
-        return if (TextUtils.isEmpty(target)) {
-            false
-        } else {
-            Patterns.EMAIL_ADDRESS.matcher(target).matches()
-        }
+    fun isValidPassword(password: String?): Boolean {
+        val pattern: Pattern
+        val matcher: Matcher
+        val PASSWORD_PATTERN = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,}$"
+        pattern = Pattern.compile(PASSWORD_PATTERN)
+        matcher = pattern.matcher(password)
+        return matcher.matches()
     }
+
 
 }

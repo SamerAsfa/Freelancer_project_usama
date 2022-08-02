@@ -190,14 +190,19 @@
                 app:layout_constraintTop_toBottomOf="@id/emailEditText" />
 
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/passwordRequirementPopupMaterialCardView"
                 android:layout_width="144dp"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="8dp">
+                android:layout_marginTop="10dp"
+                android:visibility="gone"
+                app:cardCornerRadius="8dp"
+                app:layout_constraintStart_toStartOf="@+id/reEmailEditText"
+                app:layout_constraintTop_toTopOf="@+id/reEmailEditText">
 
                 <LinearLayout
-                    android:layout_margin="8dp"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_margin="8dp"
                     android:orientation="vertical">
 
                     <TextView
@@ -205,16 +210,61 @@
                         android:layout_height="wrap_content"
                         android:text="@string/password_must_meet"
                         android:textColor="#193566"
-                        android:textSize="8sp"/>
+                        android:textSize="8sp" />
 
                     <TextView
-                        android:drawableLeft="@drawable/ic_green_right"
-                        android:layout_marginTop="8dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:drawableLeft="@drawable/ic_green_right"
                         android:text="@string/at_least_one_letter"
                         android:textColor="#00B069"
-                        android:textSize="8sp"/>
+                        android:textSize="7sp" />
+
+                    <View
+                        android:layout_width="80dp"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="4dp"
+                        android:background="#DDE4F1" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:drawableLeft="@drawable/ic_red_close"
+                        android:text="@string/at_least_one_capital_letter"
+                        android:textColor="#BC1A1A"
+                        android:textSize="7sp" />
+
+                    <View
+                        android:layout_width="80dp"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="4dp"
+                        android:background="#DDE4F1" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:drawableLeft="@drawable/ic_green_right"
+                        android:text="@string/at_least_one_number"
+                        android:textColor="#00B069"
+                        android:textSize="7sp" />
+
+                    <View
+                        android:layout_width="80dp"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="4dp"
+                        android:background="#DDE4F1" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:drawableLeft="@drawable/ic_red_close"
+                        android:text="@string/be_at_least_characters"
+                        android:textColor="#BC1A1A"
+                        android:textSize="7sp" />
 
 
                 </LinearLayout>
