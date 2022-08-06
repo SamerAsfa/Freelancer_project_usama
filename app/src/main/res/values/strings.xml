@@ -48,4 +48,8 @@
     <string name="at_least_one_capital_letter">At least one capital letter</string>
     <string name="at_least_one_number">At least one number</string>
     <string name="be_at_least_characters">Be at least 8 characters</string>
+    <string name="password_matched">Matched Password</string>
+    <string name="password_not_matched">Not Matched Password</string>
+    <string name="password">Password</string>
+    <string name="retype_password">Retype-Password</string>
 </resources>

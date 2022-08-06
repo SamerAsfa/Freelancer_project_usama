@@ -10,6 +10,8 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.text.method.PasswordTransformationMethod
+import android.text.method.SingleLineTransformationMethod
 import android.view.View
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
@@ -268,16 +270,37 @@ class CreateAccountActivity : BaseActivity(), ResponseApi {
         }
 
 
-        passwordEditText.doOnTextChanged { text, start, before, count ->
+        password.doOnTextChanged { text, start, before, count ->
 
             if (isValidPassword(text.toString())) {/// return boolean status
                 passwordRequirementPopupMaterialCardView.visibility = View.GONE
             } else {
                 passwordRequirementPopupMaterialCardView.visibility = View.VISIBLE
             }
-
-
         }
+
+        confirmPassword.doOnTextChanged { text, start, before, count ->
+            val password = password.text
+
+            if (text.toString() == password.toString()) {
+                passwordMatchedTextView.visibility = View.VISIBLE
+                passwordNotMatchedTextView.visibility = View.GONE
+            } else {
+                passwordMatchedTextView.visibility = View.GONE
+                passwordNotMatchedTextView.visibility = View.VISIBLE
+            }
+        }
+
+        /*   password_toggle_imageView.setOnClickListener(View.OnClickListener {
+               if (et_input_pass.getTransformationMethod().getClass().getSimpleName()
+                       .equals("PasswordTransformationMethod")
+               ) {
+                   et_input_pass.setTransformationMethod(SingleLineTransformationMethod())
+               } else {
+                   et_input_pass.setTransformationMethod(PasswordTransformationMethod())
+               }
+               et_input_pass.setSelection(et_input_pass.getText().length())
+           })*/
     }
 
 /*    private fun initRetrofitApi(){
@@ -300,7 +323,7 @@ class CreateAccountActivity : BaseActivity(), ResponseApi {
             val retrofit = builder.build()
 
             val client: APIInterface = retrofit.create(APIInterface::class.java)
-            val call: Call<OrganizationUserDetailsModel?>? = client.checkUserByUserCompanyId()
+            val call: Call<OrganizationUserDetailsModel?>? = client.checkUserByUserCompanyId(userCode)
 
             call?.enqueue(object : Callback<OrganizationUserDetailsModel?> {
 
@@ -309,12 +332,19 @@ class CreateAccountActivity : BaseActivity(), ResponseApi {
                     response: Response<OrganizationUserDetailsModel?>
                 ) {
                     val result: OrganizationUserDetailsModel? = response.body()
-                    _checkUserOrganizationStatus.value = true
-                    setEmployeeNameOnUI(result?.name.toString())
+                    if(response.isSuccessful){
+                        _checkUserOrganizationStatus.value = true
+                        setEmployeeNameOnUI(result?.name.toString())
 
-                    orgCodeCheckFailureMaterialCardView.visibility = View.GONE
-                    orgCodeCheckSuccessMaterialCardView.visibility = View.VISIBLE
+                        orgCodeCheckFailureMaterialCardView.visibility = View.GONE
+                        orgCodeCheckSuccessMaterialCardView.visibility = View.VISIBLE
 
+                    }else{
+                        _checkUserOrganizationStatus.value = false
+
+                        orgCodeCheckFailureMaterialCardView.visibility = View.VISIBLE
+                        orgCodeCheckSuccessMaterialCardView.visibility = View.GONE
+                    }
                 }
 
                 override fun onFailure(call: Call<OrganizationUserDetailsModel?>, t: Throwable) {
@@ -339,8 +369,8 @@ class CreateAccountActivity : BaseActivity(), ResponseApi {
                 emailEditText.isEnabled = enableStatus
                 reEmailEditText.isEnabled = enableStatus
                 numberPhoneEditText.isEnabled = enableStatus
-                passwordEditText.isEnabled = enableStatus
-                retypePasswordEditText.isEnabled = enableStatus
+                passwordTextInputLayout.isEnabled = enableStatus
+                confirmPasswordTextInputLayout.isEnabled = enableStatus
             }
         }
     }

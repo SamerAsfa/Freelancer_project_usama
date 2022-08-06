@@ -28,8 +28,8 @@ interface APIInterface {
     @GET(notificationsApi)///@Path("id") int groupId
     fun getNotificationHistoryApi(): Call<ArrayList<NotificationModel>?>?
 
-    @GET(CHECK_USER_BY_COMPANY_ID)//@Path("id") id: String?
-    fun checkUserByUserCompanyId(): Call<OrganizationUserDetailsModel?>?
+    @GET("${CHECK_USER_BY_COMPANY_ID}{id}")//@Path("id") id: String?
+    fun checkUserByUserCompanyId(@Path("id") id: String?): Call<OrganizationUserDetailsModel?>?
 
 
 

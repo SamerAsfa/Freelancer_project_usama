@@ -289,7 +289,7 @@
                 app:layout_constraintTop_toBottomOf="@id/reEmailEditText" />
 
 
-            <EditText
+   <!--         <EditText
                 android:id="@+id/passwordEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -307,8 +307,38 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/numberPhoneEditText" />
 
+-->
 
-            <EditText
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/passwordTextInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/shape_type_name"
+                android:gravity="center"
+                android:imeOptions="actionNext"
+                android:maxLines="1"
+                android:padding="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/numberPhoneEditText"
+                app:passwordToggleEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:id="@+id/password"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:hint="@string/password"
+                    android:inputType="textPassword"
+                    android:ems="15"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+
+     <!--       <EditText
                 android:id="@+id/retypePasswordEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -325,7 +355,69 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/passwordEditText" />
+-->
 
+            <com.google.android.material.textfield.TextInputLayout
+                android:padding="10dp"
+                app:passwordToggleEnabled="true"
+                android:id="@+id/confirmPasswordTextInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:imeOptions="actionDone"
+                android:maxLines="1"
+                android:textSize="12sp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/shape_type_name"
+                android:gravity="center"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/passwordTextInputLayout">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:id="@+id/confirmPassword"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:hint="@string/retype_password"
+                    android:inputType="textPassword"
+                    />
+                <!--android:ems="15"-->
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+
+
+            <TextView
+                android:id="@+id/passwordMatchedTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:drawableRight="@drawable/ic_green_right"
+                android:text="@string/password_matched"
+                android:textColor="#00B069"
+                android:drawablePadding="8dp"
+                android:textSize="10sp"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="@+id/confirmPasswordTextInputLayout"
+                app:layout_constraintStart_toStartOf="@+id/confirmPasswordTextInputLayout"
+                app:layout_constraintTop_toBottomOf="@+id/confirmPasswordTextInputLayout" />
+
+            <TextView
+                android:id="@+id/passwordNotMatchedTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:drawableRight="@drawable/ic_red_close"
+                android:text="@string/password_not_matched"
+                android:textColor="#BC1A1A"
+                android:visibility="gone"
+                android:drawablePadding="8dp"
+                android:textSize="10sp"
+                app:layout_constraintEnd_toEndOf="@+id/confirmPasswordTextInputLayout"
+                app:layout_constraintStart_toStartOf="@+id/confirmPasswordTextInputLayout"
+                app:layout_constraintTop_toBottomOf="@+id/confirmPasswordTextInputLayout" />
 
             <Button
                 android:id="@+id/custom_btn"
@@ -339,7 +431,7 @@
                 android:textColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/retypePasswordEditText" />
+                app:layout_constraintTop_toBottomOf="@id/confirmPasswordTextInputLayout" />
 
 
             <TextView
