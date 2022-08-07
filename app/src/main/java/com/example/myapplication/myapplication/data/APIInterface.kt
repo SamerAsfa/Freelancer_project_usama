@@ -1,14 +1,13 @@
 package com.example.myapplication.myapplication.data
 
 import com.example.myapplication.myapplication.data.BaseRequest.Companion.CHECK_USER_BY_COMPANY_ID
+import com.example.myapplication.myapplication.data.BaseRequest.Companion.LOGIN_BY_EMAIL
 import com.example.myapplication.myapplication.data.BaseRequest.Companion.dashboardApi
 import com.example.myapplication.myapplication.data.BaseRequest.Companion.leaveHistoryApi
 import com.example.myapplication.myapplication.data.BaseRequest.Companion.notificationsApi
 import com.example.myapplication.myapplication.data.BaseRequest.Companion.punchHistoryApi
-import com.example.myapplication.myapplication.models.ActionModel
-import com.example.myapplication.myapplication.models.HistoryModel
-import com.example.myapplication.myapplication.models.NotificationModel
-import com.example.myapplication.myapplication.models.OrganizationUserDetailsModel
+import com.example.myapplication.myapplication.data.remote.dto.LoginByEmailBody
+import com.example.myapplication.myapplication.models.*
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -31,6 +30,21 @@ interface APIInterface {
     @GET("${CHECK_USER_BY_COMPANY_ID}{id}")//@Path("id") id: String?
     fun checkUserByUserCompanyId(@Path("id") id: String?): Call<OrganizationUserDetailsModel?>?
 
+   // @FormUrlEncoded
+    @POST(LOGIN_BY_EMAIL)
+    fun loginByEmail(
+       @Body loginByEmailBody:LoginByEmailBody): Call<UserModel?>?//@FormUrlEncoded
+
+
+/*    @POST(LOGIN_BY_EMAIL)
+    @FormUrlEncoded
+    fun loginByEmail(
+        @Field("email") email: String,
+        @Field("password") password: String,
+        @Field("device_id") device_id: Int,
+        @Field("fcm") fcm: Int,
+        @Field("lang") lang: String
+    ): Call<UserModel?>?*/
 
 
 //    @POST("/api/users")

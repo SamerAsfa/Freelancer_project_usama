@@ -3,12 +3,20 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/HP/StudioProjects/Freelancer_project_usama/app/src/main/res/drawable/approved_shape.xml" value="0.1" />
         <entry key="..\:/Users/HP/StudioProjects/Freelancer_project_usama/app/src/main/res/drawable/ic_green_right.xml" value="0.184" />
         <entry key="..\:/Users/HP/StudioProjects/Freelancer_project_usama/app/src/main/res/drawable/ic_new_red_close.xml" value="0.184" />
         <entry key="..\:/Users/HP/StudioProjects/Freelancer_project_usama/app/src/main/res/drawable/ic_red_close.xml" value="0.162" />
         <entry key="..\:/Users/HP/StudioProjects/Freelancer_project_usama/app/src/main/res/layout/activity_create_account.xml" value="0.1" />
+        <entry key="..\:/Users/HP/StudioProjects/Freelancer_project_usama/app/src/main/res/layout/activity_custom_detection.xml" value="0.1" />
+        <entry key="..\:/Users/HP/StudioProjects/Freelancer_project_usama/app/src/main/res/layout/activity_face_detection.xml" value="0.14130434782608695" />
+        <entry key="..\:/Users/HP/StudioProjects/Freelancer_project_usama/app/src/main/res/layout/activity_login_by_email.xml" value="0.1" />
+        <entry key="..\:/Users/HP/StudioProjects/Freelancer_project_usama/app/src/main/res/layout/activity_navigation.xml" value="0.17552083333333332" />
         <entry key="..\:/Users/HP/StudioProjects/Freelancer_project_usama/app/src/main/res/layout/activity_user_auth.xml" value="0.17552083333333332" />
         <entry key="..\:/Users/HP/StudioProjects/Freelancer_project_usama/app/src/main/res/layout/fragment_create_account.xml" value="0.22" />
+        <entry key="..\:/Users/HP/StudioProjects/Freelancer_project_usama/app/src/main/res/layout/fragment_notifications.xml" value="0.3333333333333333" />
+        <entry key="..\:/Users/HP/StudioProjects/Freelancer_project_usama/app/src/main/res/layout/login_with_face_activity.xml" value="0.11096014492753623" />
+        <entry key="..\:/Users/HP/StudioProjects/Freelancer_project_usama/app/src/main/res/layout/notification_item.xml" value="0.17552083333333332" />
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.146" />
         <entry key="app/src/main/res/drawable/approved_shape.xml" value="0.146" />
         <entry key="app/src/main/res/drawable/confirm_button_shape.xml" value="0.146" />

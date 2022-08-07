@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.Activity
 import android.content.ClipData
 import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -24,6 +25,7 @@ import com.example.myapplication.myapplication.base.LongTermManager
 import com.example.myapplication.myapplication.base.ResponseApi
 import com.example.myapplication.myapplication.data.APIInterface
 import com.example.myapplication.myapplication.data.BaseRequest
+import com.example.myapplication.myapplication.data.BaseRequest.Companion.registerApi
 import com.example.myapplication.myapplication.data.POSTMediasTask
 import com.example.myapplication.myapplication.models.FaceBundle
 import com.example.myapplication.myapplication.models.OrganizationUserDetailsModel
@@ -60,6 +62,13 @@ class CreateAccountActivity : BaseActivity(), ResponseApi {
     private val _checkUserOrganizationStatus: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val checkUserOrganizationStatus = _checkUserOrganizationStatus.asStateFlow()
 
+    companion object {
+        fun startActivity(context: Context): Intent {
+            val intent = Intent(context, CreateAccountActivity::class.java)
+            return intent
+        }
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,47 +80,48 @@ class CreateAccountActivity : BaseActivity(), ResponseApi {
         createTextView.setOnClickListener {
             finish()
         }
-        //  startVideoRecording()
-//        custom_btn.setOnClickListener {
-//            if (emailEditText.text.toString().equalsIgnoreCase(reEmailEditText.text.toString())) {
-//                if (passwordEditText.text.toString()
-//                        .equalsIgnoreCase(retypePasswordEditText.text.toString())
-//                ) {
-//                    toggleProgressDialog(
-//                        show = true,
-//                        this,
-//                        this.resources.getString(R.string.loading)
-//                    )
-//                    var maps: MutableMap<String, String> = HashMap()
-//                    maps.put("name", nameEditText.text.toString())
-//                    maps.put("email", emailEditText.text.toString())
-//                    maps.put("password", passwordEditText.text.toString())
-//                    maps.put("code", organizationEditText.text.toString())
-//                    maps.put("mobile_number", numberPhoneEditText.text.toString())
-//                    maps.put("fcm", LongTermManager.getInstance().notificationsToken)
-//                    if (userModel == null) {
-//                        POSTMediasTask().post(
-//                            this@CreateAccountActivity,
-//                            registerApi,
-//                            maps,
-//                            this@CreateAccountActivity
-//                        )
-//                    } else {
-//                        recordVideo(userModel!!)
-//                    }
-//                } else {
-//                    Toast.makeText(
-//                        this, "Password is mismatch",
-//                        Toast.LENGTH_LONG
-//                    ).show()
-//                }
-//            } else {
-//                Toast.makeText(
-//                    this, "Email is mismatch",
-//                    Toast.LENGTH_LONG
-//                ).show()
-//            }
-//        }
+          startVideoRecording()
+
+        custom_btn.setOnClickListener {
+            if (emailEditText.text.toString().equalsIgnoreCase(reEmailEditText.text.toString())) {
+                if (password.text.toString()
+                        .equalsIgnoreCase(confirmPassword.text.toString())
+                ) {
+                    toggleProgressDialog(
+                        show = true,
+                        this,
+                        this.resources.getString(R.string.loading)
+                    )
+                    var maps: MutableMap<String, String> = HashMap()
+                    maps.put("name", nameEditText.text.toString())
+                    maps.put("email", emailEditText.text.toString())
+                    maps.put("password", password.text.toString())
+                    maps.put("code", organizationEditText.text.toString())
+                    maps.put("mobile_number", numberPhoneEditText.text.toString())
+                    maps.put("fcm", LongTermManager.getInstance().notificationsToken)
+                    if (userModel == null) {
+                        POSTMediasTask().post(
+                            this@CreateAccountActivity,
+                            registerApi,
+                            maps,
+                            this@CreateAccountActivity
+                        )
+                    } else {
+                        recordVideo(userModel!!)
+                    }
+                } else {
+                    Toast.makeText(
+                        this, "Password is mismatch",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            } else {
+                Toast.makeText(
+                    this, "Email is mismatch",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
 
 
     }
@@ -291,16 +301,6 @@ class CreateAccountActivity : BaseActivity(), ResponseApi {
             }
         }
 
-        /*   password_toggle_imageView.setOnClickListener(View.OnClickListener {
-               if (et_input_pass.getTransformationMethod().getClass().getSimpleName()
-                       .equals("PasswordTransformationMethod")
-               ) {
-                   et_input_pass.setTransformationMethod(SingleLineTransformationMethod())
-               } else {
-                   et_input_pass.setTransformationMethod(PasswordTransformationMethod())
-               }
-               et_input_pass.setSelection(et_input_pass.getText().length())
-           })*/
     }
 
 /*    private fun initRetrofitApi(){

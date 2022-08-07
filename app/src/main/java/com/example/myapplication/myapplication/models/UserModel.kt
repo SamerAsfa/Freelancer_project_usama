@@ -12,17 +12,77 @@ import org.json.JSONException
 
 @Parcelize
 data class UserModel(
-    val id: Int? = 0,
-    val name: String? = null,
-    val email: String? = null,
-    val profile_photo_path: String? = null,
-    val token: String? = null,
+    @SerializedName("id")
+    @Expose
+    var id: String? = null,
+
+    @SerializedName("name")
+    @Expose
+    var name: String? = null,
+
+    @SerializedName("email")
+    @Expose
+    var email: String? = null,
+
+    @SerializedName("profile_photo_path")
+    @Expose
+    var profile_photo_path: String? = null,
+
+    @SerializedName("token")
+    @Expose
+    var token: String? = null,
+
+    @SerializedName("team")
+    @Expose
+    var team: String? = null,
+
+    @SerializedName("role")
+    @Expose
+    var role: String? = null,
+
+
     @SerializedName("in")
     @Expose
-    val inSide: String? = null,
-    val out: String? = null,
-    val location: LocationModel? = null,
-) : Parcelable {
+    var inSide: String? = null,
+
+    @SerializedName("out")
+    @Expose
+    var out: String? = null,
+
+    @SerializedName("action")
+    @Expose
+    var action: List<ActionInsideUserModel>? = null,
+
+    @SerializedName("lang")
+    @Expose
+    var lang: String? = null,
+
+    @SerializedName("device_id")
+    @Expose
+    var device_id: String? = null,
+
+    @SerializedName("mobile_number")
+    @Expose
+    var mobile_number: String? = null,
+
+    @SerializedName("company_code")
+    @Expose
+    var company_code: String? = null,
+
+    @SerializedName("location")
+    @Expose
+    var location: LocationModel? = null,
+
+    @SerializedName("status")
+    @Expose
+    var status: Int? = null,
+
+    @SerializedName("anti_spoof")
+    @Expose
+    var anti_spoof: Boolean = false,
+
+
+    ) : Parcelable {
 
 
 

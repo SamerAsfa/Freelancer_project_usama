@@ -530,7 +530,7 @@ class HomeFragment : BaseFragment() {
                     lat?.toDouble()?.let { userLat ->
                         distance(
                             location.latitude, location.longitude, userLat, userLong,
-                            rad
+                            rad.toInt()
                         )
                     }
                 }

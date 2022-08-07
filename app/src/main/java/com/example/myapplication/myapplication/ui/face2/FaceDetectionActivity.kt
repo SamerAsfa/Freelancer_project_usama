@@ -16,11 +16,13 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.ctech.bitmp4.Encoder
 import com.example.myapplication.myapplication.R
 import com.example.myapplication.myapplication.models.FaceBundle
+import com.example.myapplication.myapplication.ui.LoginByEmailActivity
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.face.FaceDetection
 import com.google.mlkit.vision.face.FaceDetector
@@ -96,6 +98,7 @@ class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
         getFaceBundleExtra()
         createRandomIndex()
         callCameraPermission()
+        initUiListener()
     }
 
 
@@ -117,7 +120,6 @@ class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
             ex.message
         }
     }
-
 
     private fun createRandomIndex() {
         val numbers = listOf(0..actionsToCheck).random().shuffled()
@@ -536,4 +538,13 @@ class FaceDetectionActivity : AppCompatActivity(), ImageBitmapListener {
         HEAD_LEFT, HEAD_RIGHT
     }
 
+    private fun initUiListener(){
+        loginWithEmailButton.setOnClickListener {
+            startLoginInByEmail()
+        }
+    }
+
+    private fun startLoginInByEmail(){
+        startActivity(Intent(this ,LoginByEmailActivity::class.java))
+    }
 }
