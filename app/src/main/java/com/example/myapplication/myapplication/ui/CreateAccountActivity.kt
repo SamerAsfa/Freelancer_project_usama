@@ -123,7 +123,6 @@ class CreateAccountActivity : BaseActivity(), ResponseApi {
             }
         }
 
-
     }
 
     override fun onSuccessCall(response: String?) {

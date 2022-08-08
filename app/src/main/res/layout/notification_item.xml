@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -37,12 +38,11 @@
 
     <TextView
         android:id="@+id/dateTextView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_width="16dp"
+        android:layout_height="11dp"
         android:layout_gravity="center"
         android:layout_marginStart="15dp"
         android:layout_marginTop="10dp"
-        android:layout_marginEnd="15dp"
         android:gravity="center"
         android:text="Date"
         android:textColor="@color/gray_dive"
@@ -56,14 +56,14 @@
         android:id="@+id/stateTextView"
         android:layout_width="100dp"
         android:layout_height="45dp"
-        android:layout_marginEnd="55dp"
+        android:layout_marginEnd="32dp"
         android:background="@drawable/approved_shape"
         android:gravity="center"
         android:padding="5dp"
         android:text="Send"
         android:textColor="@color/white"
         android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/notificationSettingsImageButton"
         app:layout_constraintTop_toBottomOf="@id/msgTextView" />
 
 

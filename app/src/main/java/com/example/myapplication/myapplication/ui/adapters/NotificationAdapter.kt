@@ -1,6 +1,8 @@
 package com.example.myapplication.myapplication.ui.adapters
 
 
+import android.content.Context
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.myapplication.myapplication.R
 import com.example.myapplication.myapplication.base.LongTermManager
+import com.example.myapplication.myapplication.common.UserNoteType
 import com.example.myapplication.myapplication.data.DateUtils
 import com.example.myapplication.myapplication.models.NotificationModel
 import kotlinx.android.synthetic.main.fragment_home.view.*
@@ -17,7 +20,9 @@ import kotlinx.coroutines.NonDisposableHandle.parent
 import java.util.*
 import kotlin.collections.ArrayList
 
-class NotificationAdapter(private val arrayList: java.util.ArrayList<NotificationModel>?) :
+class NotificationAdapter(
+    private val arrayList: java.util.ArrayList<NotificationModel>?
+) :
     RecyclerView.Adapter<NotificationAdapter.ViewHolder>() {
 
 
@@ -42,7 +47,31 @@ class NotificationAdapter(private val arrayList: java.util.ArrayList<Notificatio
             DateUtils().TMonthformatUtc(arrayList?.get(holder.adapterPosition)?.created_at),
             DateUtils().TTimeformatUtc(arrayList?.get(holder.adapterPosition)?.created_at)
         )
-        holder.stateTextView.text = arrayList?.get(holder.adapterPosition)?.not_type
+/*        when(arrayList?.get(holder.adapterPosition)?.not_type){
+            UserNoteType.PUNCH ->{}
+
+            UserNoteType.LEAVE_REQUEST ->{}
+
+            UserNoteType.LEAVE_APPROVED ->{
+
+               *//* holder.stateTextView.apply {
+                    text =context.getString(R.string.approved)
+                    setTextColor( Color.parseColor("#00D865"))
+                    textSize =14f
+                    background =null
+                }*//*
+
+
+            }
+            UserNoteType.LEAVE_REJECT ->{}
+            UserNoteType.REVERIFY_ACCOUNT ->{}
+            UserNoteType.APPROVED_ACCOUNT ->{}
+            UserNoteType.DISABLED_ACCOUNT ->{}
+        }*/
+
+
+
+
         val userModel = LongTermManager.getInstance().userModel
         if (!userModel?.profile_photo_path?.trim()?.isBlank()!!) {
 //            Glide.with()

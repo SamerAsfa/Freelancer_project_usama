@@ -61,7 +61,7 @@ class HomeFragment : BaseFragment() {
     val PERMISSION_ID = 42
     var userModel: UserModel? = null
 
-        lateinit var mFusedLocationClient: FusedLocationProviderClient
+//new samer commit     lateinit var mFusedLocationClient: FusedLocationProviderClient
     protected var mainView: View? = null
     var location: Location? = null
     var apiInterface: APIInterface? = null
@@ -129,13 +129,15 @@ class HomeFragment : BaseFragment() {
 
     @SuppressLint("MissingPermission")
     fun startGetLocation() {
-        Looper.myLooper()?.let {
+
+        // new samer commit
+     /*   Looper.myLooper()?.let {
             mFusedLocationClient = getFusedLocationProviderClient(requireActivity())
             mFusedLocationClient.requestLocationUpdates(
                 mLocationRequest!!,locationUpdate,
                 it
             )
-        }
+        }*/
     }
 
 
@@ -162,7 +164,7 @@ class HomeFragment : BaseFragment() {
     }
 
     fun stopUsingGPS() {
-        mFusedLocationClient.removeLocationUpdates(locationUpdate)
+      // new samer commit   mFusedLocationClient.removeLocationUpdates(locationUpdate)
     }
 
     override fun onCreateView(
