@@ -14,9 +14,11 @@ import com.example.myapplication.myapplication.data.APIClient
 import com.example.myapplication.myapplication.data.APIInterface
 import com.example.myapplication.myapplication.data.BaseRequest
 import com.example.myapplication.myapplication.data.POSTMediasTask
+import com.example.myapplication.myapplication.domain.model.GetAllNotificationsResponse
 import com.example.myapplication.myapplication.models.NotificationModel
 import com.example.myapplication.myapplication.models.UserModel
 import com.example.myapplication.myapplication.ui.adapters.NotificationAdapter
+import kotlinx.android.synthetic.main.fragment_notifications.*
 import kotlinx.android.synthetic.main.fragment_notifications.view.*
 import java.util.*
 
@@ -48,6 +50,7 @@ class NotificationsFragment : BaseFragment() {
         val view: View = inflater.inflate(R.layout.fragment_notifications, container, false)
         mainView = view
         getHistoryApi()
+        initUIListener()
         return view
     }
 
@@ -55,14 +58,14 @@ class NotificationsFragment : BaseFragment() {
     fun getHistoryApi() {
         try {
             val call = apiInterface?.getNotificationHistoryApi()
-            call?.enqueue(object : retrofit2.Callback<ArrayList<NotificationModel>?> {
+            call?.enqueue(object : retrofit2.Callback<GetAllNotificationsResponse?> {
                 override fun onResponse(
-                    call: retrofit2.Call<ArrayList<NotificationModel>?>,
-                    response: retrofit2.Response<ArrayList<NotificationModel>?>
+                    call: retrofit2.Call<GetAllNotificationsResponse?>?,
+                    response: retrofit2.Response<GetAllNotificationsResponse?>?
                 ) {
-                    val arrayHistory = response.body()
-                    if (arrayHistory?.size!! > 0) {
-                        val scanMainAdapter = NotificationAdapter(arrayHistory)
+                    val arrayHistory = response?.body()
+                    if (arrayHistory?.notifications?.size!! > 0) {
+                        val scanMainAdapter = NotificationAdapter(arrayHistory.notifications as ArrayList<NotificationModel>, requireContext())
                         mainView?.notificationRecyclerView?.setHasFixedSize(true)
                         mainView?.notificationRecyclerView?.layoutManager =
                             LinearLayoutManager(requireContext())
@@ -71,10 +74,10 @@ class NotificationsFragment : BaseFragment() {
                 }
 
                 override fun onFailure(
-                    call: retrofit2.Call<ArrayList<NotificationModel>?>,
+                    call: retrofit2.Call<GetAllNotificationsResponse?>?,
                     t: Throwable
                 ) {
-                    call.cancel()
+                    call?.cancel()
                 }
             })
         } catch (ex: Exception) {
@@ -82,5 +85,36 @@ class NotificationsFragment : BaseFragment() {
         }
     }
 
+    private fun initUIListener(){
+
+    /*    clearAllTextView.setOnClickListener {
+            val userId:String = userModel?.id.toString()
+            deleteAllNotification(userId)
+        }*/
+    }
+
+    private fun deleteAllNotification(id:String){
+        try {
+            val call = apiInterface?.deleteAllNotification(id)
+            call?.enqueue(object : retrofit2.Callback<Any?> {
+                override fun onResponse(
+                    call: retrofit2.Call<Any?>?,
+                    response: retrofit2.Response<Any?>?
+                ) {
+                    val responseBody = response?.body()
+
+                }
+
+                override fun onFailure(
+                    call: retrofit2.Call<Any?>?,
+                    t: Throwable
+                ) {
+                    call?.cancel()
+                }
+            })
+        } catch (ex: Exception) {
+            ex.message
+        }
+    }
 
 }

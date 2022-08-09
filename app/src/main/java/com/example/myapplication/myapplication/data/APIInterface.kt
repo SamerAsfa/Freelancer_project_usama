@@ -1,12 +1,14 @@
 package com.example.myapplication.myapplication.data
 
 import com.example.myapplication.myapplication.data.BaseRequest.Companion.CHECK_USER_BY_COMPANY_ID
+import com.example.myapplication.myapplication.data.BaseRequest.Companion.DELETE_ALL_NOTIFICATION
 import com.example.myapplication.myapplication.data.BaseRequest.Companion.LOGIN_BY_EMAIL
 import com.example.myapplication.myapplication.data.BaseRequest.Companion.dashboardApi
 import com.example.myapplication.myapplication.data.BaseRequest.Companion.leaveHistoryApi
 import com.example.myapplication.myapplication.data.BaseRequest.Companion.notificationsApi
 import com.example.myapplication.myapplication.data.BaseRequest.Companion.punchHistoryApi
 import com.example.myapplication.myapplication.data.remote.dto.LoginByEmailBody
+import com.example.myapplication.myapplication.domain.model.GetAllNotificationsResponse
 import com.example.myapplication.myapplication.models.*
 import retrofit2.Call
 import retrofit2.http.*
@@ -25,7 +27,7 @@ interface APIInterface {
 
 
     @GET(notificationsApi)///@Path("id") int groupId
-    fun getNotificationHistoryApi(): Call<ArrayList<NotificationModel>?>?
+    fun getNotificationHistoryApi(): Call<GetAllNotificationsResponse?>?
 
     @GET("${CHECK_USER_BY_COMPANY_ID}{id}")//@Path("id") id: String?
     fun checkUserByUserCompanyId(@Path("id") id: String?): Call<OrganizationUserDetailsModel?>?
@@ -35,6 +37,8 @@ interface APIInterface {
     fun loginByEmail(
        @Body loginByEmailBody:LoginByEmailBody): Call<UserModel?>?//@FormUrlEncoded
 
+    @DELETE("${DELETE_ALL_NOTIFICATION}{id}")
+    fun deleteAllNotification(id:String):Call<Any?>?
 
 /*    @POST(LOGIN_BY_EMAIL)
     @FormUrlEncoded

@@ -3,25 +3,21 @@ package com.example.myapplication.myapplication.ui.adapters
 
 import android.content.Context
 import android.graphics.Color
+import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.myapplication.myapplication.R
 import com.example.myapplication.myapplication.base.LongTermManager
 import com.example.myapplication.myapplication.common.UserNoteType
-import com.example.myapplication.myapplication.data.DateUtils
 import com.example.myapplication.myapplication.models.NotificationModel
-import kotlinx.android.synthetic.main.fragment_home.view.*
-import kotlinx.coroutines.NonDisposableHandle.parent
-import java.util.*
-import kotlin.collections.ArrayList
 
 class NotificationAdapter(
-    private val arrayList: java.util.ArrayList<NotificationModel>?
+    private val arrayList: java.util.ArrayList<NotificationModel>?,
+    private val context:Context
 ) :
     RecyclerView.Adapter<NotificationAdapter.ViewHolder>() {
 
@@ -40,36 +36,87 @@ class NotificationAdapter(
         holder: ViewHolder,
         position: Int
     ) {
-        holder.msgTextView.text = arrayList?.get(holder.adapterPosition)?.title
-        holder.dateTextView.text = String.format(
-            Locale.CANADA,
-            "%sth %s",
-            DateUtils().TMonthformatUtc(arrayList?.get(holder.adapterPosition)?.created_at),
-            DateUtils().TTimeformatUtc(arrayList?.get(holder.adapterPosition)?.created_at)
-        )
-/*        when(arrayList?.get(holder.adapterPosition)?.not_type){
+        val position = holder.adapterPosition
+
+
+        holder.dateTextView.text =
+            arrayList?.get(position)?.updated_at?.indexOf('T')
+                ?.let { lastPositionToSubString ->
+                    arrayList[position].updated_at?.substring(0 , lastPositionToSubString)
+                }
+
+
+        /* holder.dateTextView.text = String.format(
+             Locale.CANADA,
+             "%sth %s",
+             DateUtils().TMonthformatUtc(arrayList?.get(holder.adapterPosition)?.created_at),
+             DateUtils().TTimeformatUtc(arrayList?.get(holder.adapterPosition)?.created_at)
+         )*/
+
+        when(arrayList?.get(holder.adapterPosition)?.not_type){
+
             UserNoteType.PUNCH ->{}
 
-            UserNoteType.LEAVE_REQUEST ->{}
+            UserNoteType.LEAVE_REQUEST ->{
+
+                holder.msgTextView.text = "Applied for Leave Request."
+
+                holder.stateTextView.apply {
+                    text =context.getString(R.string.approval_pending)
+                    setTextColor( Color.parseColor("#FFFFFF"))
+                    textSize =8f
+                    background =context.getDrawable(R.drawable.approved_pending)
+                }
+            }
 
             UserNoteType.LEAVE_APPROVED ->{
 
-               *//* holder.stateTextView.apply {
+                holder.msgTextView.text = " HR Approved Your Registration Request."
+
+                holder.stateTextView.apply {
                     text =context.getString(R.string.approved)
                     setTextColor( Color.parseColor("#00D865"))
                     textSize =14f
                     background =null
-                }*//*
-
-
+                }
             }
-            UserNoteType.LEAVE_REJECT ->{}
-            UserNoteType.REVERIFY_ACCOUNT ->{}
+
+            UserNoteType.LEAVE_REJECT ->{
+
+                holder.msgTextView.text = "Applied for Leave Request"
+
+                holder.stateTextView.apply {
+                    text =context.getString(R.string.rejected)
+                    setTextColor( Color.parseColor("#FF0000"))
+                    textSize =14f
+                    background =null
+                }
+            }
+
+            UserNoteType.REVERIFY_ACCOUNT ->{
+
+                holder.msgTextView.text = "Your Registration Request needs Re-Verify."
+
+                holder.stateTextView.apply {
+                    text =context.getString(R.string.approved)
+                    setTextColor( Color.parseColor("#FFFFFF"))
+                    textSize =8f
+                    background =context.getDrawable(R.drawable.re_verify)
+                }
+            }
+
             UserNoteType.APPROVED_ACCOUNT ->{}
-            UserNoteType.DISABLED_ACCOUNT ->{}
-        }*/
 
+            UserNoteType.DISABLED_ACCOUNT ->{
 
+                val disabled = getColoredSpanned("Disabled", "#EC1119")
+
+                holder.msgTextView.setText(Html.fromHtml("Your Account has been Disabled "+" "+disabled +" by HR manager."))
+               // holder.msgTextView.text = context.getString(R.string.account_disabled)//"Your Account has been Disabled by HR manager."
+                holder.stateTextView.visibility =View.INVISIBLE
+            }
+
+        }
 
 
         val userModel = LongTermManager.getInstance().userModel
@@ -97,4 +144,7 @@ class NotificationAdapter(
         }
     }
 
+    private fun getColoredSpanned(text: String, color: String): String? {
+        return "<font color=$color>$text</font>"
+    }
 }

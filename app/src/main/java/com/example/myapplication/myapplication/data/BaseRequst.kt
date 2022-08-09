@@ -22,6 +22,7 @@ class BaseRequest {
         val LEAVEINApi: String = "${baseUrl}punch/LEAVEIN"
         val LEAVEOutApi: String = "${baseUrl}punch/LEAVEOUT"
         const val CHECK_USER_BY_COMPANY_ID: String = "http://frapi.hr-jo.com/api/companyById/"//123456
+        const val DELETE_ALL_NOTIFICATION: String = "http://frapi.hr-jo.com/api/notification/"
         const val LOGIN_BY_EMAIL: String = "tokenByEmail"
 
 

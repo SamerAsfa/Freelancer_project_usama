@@ -67,4 +67,7 @@
 
 
     <string name="approved">Approved</string>
+    <string name="approval_pending">APPROVAL PENDING</string>
+    <string name="rejected">Rejected</string>
+    <string name="account_disabled">Your Account has been Disabled by HR manager.</string>
 </resources>
