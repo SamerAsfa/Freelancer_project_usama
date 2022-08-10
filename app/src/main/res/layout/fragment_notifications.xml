@@ -44,7 +44,7 @@
         app:layout_constraintEnd_toEndOf="@+id/myLeaveTextView"
         app:layout_constraintTop_toTopOf="@+id/myLeaveTextView" />
 
-    <LinearLayout
+   <!-- <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -77,6 +77,118 @@
             android:layout_height="wrap_content"/>
 
     </LinearLayout>
+-->
+
+  <androidx.constraintlayout.widget.ConstraintLayout
+      android:id="@+id/roleConstraintLayout"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="60dp"
+      android:gravity="center"
+      android:orientation="horizontal"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/myLeaveTextView">
+
+      <com.google.android.material.card.MaterialCardView
+          android:id="@+id/unreadMyNotificationMaterialCardView"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="12dp"
+          android:backgroundTint="#E21616"
+          app:cardCornerRadius="50dp"
+          app:layout_constraintEnd_toEndOf="@+id/myNotificationTextView"
+          app:layout_constraintStart_toStartOf="@+id/myNotificationTextView"
+          app:layout_constraintTop_toTopOf="parent">
+
+          <TextView
+              android:id="@+id/unreadMyNotificationTextView"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:background="@android:color/transparent"
+              android:gravity="center"
+              android:textSize="11sp"
+              android:layout_margin="3dp"
+              android:text="10"
+              android:textColor="@color/white" />
+      </com.google.android.material.card.MaterialCardView>
+
+      <TextView
+          android:id="@+id/myNotificationTextView"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="8dp"
+          android:text="@string/my_notifications"
+          android:textColor="#202124"
+          android:textSize="13sp"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintHorizontal_bias="0.3"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@+id/unreadMyNotificationMaterialCardView" />
+
+      <View
+          android:id="@+id/notificationUnderlineView"
+          android:layout_width="200dp"
+          android:layout_height="1dp"
+          android:layout_marginStart="32dp"
+          android:layout_marginTop="8dp"
+          android:background="@color/black"
+          app:layout_constraintEnd_toEndOf="@+id/myNotificationTextView"
+          app:layout_constraintStart_toStartOf="@+id/myNotificationTextView"
+          app:layout_constraintTop_toBottomOf="@+id/myNotificationTextView" />
+
+
+      <com.google.android.material.card.MaterialCardView
+          android:id="@+id/unreadMyTeamNotificationMaterialCardView"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="12dp"
+          android:backgroundTint="#E21616"
+          app:cardCornerRadius="50dp"
+          app:layout_constraintEnd_toEndOf="@+id/myTeamNotificationTextView"
+          app:layout_constraintStart_toStartOf="@+id/myTeamNotificationTextView"
+          app:layout_constraintTop_toTopOf="parent">
+
+          <TextView
+              android:id="@+id/unreadMyTeamNotificationTextView"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_margin="3dp"
+              android:background="@android:color/transparent"
+              android:gravity="center"
+              android:text="10"
+              android:textColor="@color/white"
+              android:textSize="11sp" />
+      </com.google.android.material.card.MaterialCardView>
+
+      <TextView
+          android:id="@+id/myTeamNotificationTextView"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="8dp"
+          android:layout_marginEnd="32dp"
+          android:text="@string/my_team_notifications"
+          android:textColor="#708792"
+          android:textSize="13sp"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintHorizontal_bias="0.76"
+          app:layout_constraintStart_toEndOf="@+id/myNotificationTextView"
+          app:layout_constraintTop_toBottomOf="@+id/unreadMyTeamNotificationMaterialCardView" />
+
+      <View
+          android:id="@+id/teamNotificationUnderlineView"
+          android:layout_width="170dp"
+          android:layout_height="1dp"
+          android:layout_marginTop="8dp"
+          android:layout_marginEnd="32dp"
+          android:background="#708792"
+          app:layout_constraintEnd_toEndOf="@+id/myTeamNotificationTextView"
+          app:layout_constraintHorizontal_bias="0.0"
+          app:layout_constraintStart_toStartOf="@+id/myTeamNotificationTextView"
+          app:layout_constraintTop_toBottomOf="@+id/myTeamNotificationTextView" />
+
+  </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/notificationRecyclerView"
@@ -87,6 +199,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+        app:layout_constraintTop_toBottomOf="@+id/roleConstraintLayout"
         app:layout_constraintVertical_bias="0.0" />
 </androidx.constraintlayout.widget.ConstraintLayout>

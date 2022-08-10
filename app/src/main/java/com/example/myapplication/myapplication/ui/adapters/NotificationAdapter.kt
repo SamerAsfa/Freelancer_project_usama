@@ -144,6 +144,10 @@ class NotificationAdapter(
         }
     }
 
+    fun clearData(){
+        arrayList?.clear()
+        notifyDataSetChanged()
+    }
     private fun getColoredSpanned(text: String, color: String): String? {
         return "<font color=$color>$text</font>"
     }

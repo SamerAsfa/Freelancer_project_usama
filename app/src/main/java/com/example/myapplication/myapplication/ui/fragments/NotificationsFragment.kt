@@ -1,19 +1,17 @@
 package com.example.myapplication.myapplication.ui.fragments
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.android.volley.error.VolleyError
 import com.example.myapplication.myapplication.R
 import com.example.myapplication.myapplication.base.BaseFragment
 import com.example.myapplication.myapplication.base.LongTermManager
-import com.example.myapplication.myapplication.base.ResponseApi
 import com.example.myapplication.myapplication.data.APIClient
 import com.example.myapplication.myapplication.data.APIInterface
-import com.example.myapplication.myapplication.data.BaseRequest
-import com.example.myapplication.myapplication.data.POSTMediasTask
 import com.example.myapplication.myapplication.domain.model.GetAllNotificationsResponse
 import com.example.myapplication.myapplication.models.NotificationModel
 import com.example.myapplication.myapplication.models.UserModel
@@ -26,6 +24,8 @@ class NotificationsFragment : BaseFragment() {
     protected var mainView: View? = null
     var userModel: UserModel? = null
     var apiInterface: APIInterface? = null
+
+    lateinit var myNotificationAdapter :NotificationAdapter
 
     companion object {
         val fragmentName: String = "NotificationsFragment"
@@ -40,6 +40,7 @@ class NotificationsFragment : BaseFragment() {
         super.onCreate(savedInstanceState)
         userModel = LongTermManager.getInstance().userModel
         apiInterface = APIClient.client?.create(APIInterface::class.java)
+
     }
 
     override fun onCreateView(
@@ -49,13 +50,17 @@ class NotificationsFragment : BaseFragment() {
     ): View {
         val view: View = inflater.inflate(R.layout.fragment_notifications, container, false)
         mainView = view
-        getHistoryApi()
-        initUIListener()
+
+        fillUIData()
+        handelUIVisibility(view)
+        getMyNotificationApi()
+        getMyTeamNotificationApi()
+        initUIListener(view)
         return view
     }
 
 
-    fun getHistoryApi() {
+    fun getMyNotificationApi() {
         try {
             val call = apiInterface?.getNotificationHistoryApi()
             call?.enqueue(object : retrofit2.Callback<GetAllNotificationsResponse?> {
@@ -64,12 +69,13 @@ class NotificationsFragment : BaseFragment() {
                     response: retrofit2.Response<GetAllNotificationsResponse?>?
                 ) {
                     val arrayHistory = response?.body()
+                    unreadMyNotificationTextView.text = response?.body()?.unread.toString()
                     if (arrayHistory?.notifications?.size!! > 0) {
-                        val scanMainAdapter = NotificationAdapter(arrayHistory.notifications as ArrayList<NotificationModel>, requireContext())
+                         myNotificationAdapter = NotificationAdapter(arrayHistory.notifications as ArrayList<NotificationModel>, requireContext())
                         mainView?.notificationRecyclerView?.setHasFixedSize(true)
                         mainView?.notificationRecyclerView?.layoutManager =
                             LinearLayoutManager(requireContext())
-                        mainView?.notificationRecyclerView?.adapter = scanMainAdapter
+                        mainView?.notificationRecyclerView?.adapter = myNotificationAdapter
                     }
                 }
 
@@ -85,12 +91,61 @@ class NotificationsFragment : BaseFragment() {
         }
     }
 
-    private fun initUIListener(){
+    fun getMyTeamNotificationApi() {
+        try {
+            val call = apiInterface?.getMyTeamNotifications()
+            call?.enqueue(object : retrofit2.Callback<GetAllNotificationsResponse?> {
+                override fun onResponse(
+                    call: retrofit2.Call<GetAllNotificationsResponse?>?,
+                    response: retrofit2.Response<GetAllNotificationsResponse?>?
+                ) {
+                    val arrayHistory = response?.body()
+                    unreadMyTeamNotificationTextView.text = response?.body()?.unread.toString()
+                  /*  if (arrayHistory?.notifications?.size!! > 0) {
+                         myNotificationAdapter = NotificationAdapter(arrayHistory.notifications as ArrayList<NotificationModel>, requireContext())
+                        mainView?.notificationRecyclerView?.setHasFixedSize(true)
+                        mainView?.notificationRecyclerView?.layoutManager =
+                            LinearLayoutManager(requireContext())
+                        mainView?.notificationRecyclerView?.adapter = myNotificationAdapter
+                    }*/
+                }
 
-    /*    clearAllTextView.setOnClickListener {
+                override fun onFailure(
+                    call: retrofit2.Call<GetAllNotificationsResponse?>?,
+                    t: Throwable
+                ) {
+                    call?.cancel()
+                }
+            })
+        } catch (ex: Exception) {
+            ex.message
+        }
+    }
+
+    private fun initUIListener(view: View){
+
+        view.clearAllTextView.setOnClickListener {
             val userId:String = userModel?.id.toString()
             deleteAllNotification(userId)
-        }*/
+        }
+
+        view.myNotificationTextView.setOnClickListener {
+            view.myNotificationTextView.setTextColor(Color.parseColor("#000000"))
+            view.notificationUnderlineView.setBackgroundColor(Color.parseColor("#000000"))
+
+            view.myTeamNotificationTextView.setTextColor(Color.parseColor("#708792"))
+            view.teamNotificationUnderlineView.setBackgroundColor(Color.parseColor("#708792"))
+        }
+
+
+        view.myTeamNotificationTextView.setOnClickListener {
+            view.myTeamNotificationTextView.setTextColor(Color.parseColor("#000000"))
+            view.teamNotificationUnderlineView.setBackgroundColor(Color.parseColor("#000000"))
+
+            view.myNotificationTextView.setTextColor(Color.parseColor("#708792"))
+            view.notificationUnderlineView.setBackgroundColor(Color.parseColor("#708792"))
+        }
+
     }
 
     private fun deleteAllNotification(id:String){
@@ -102,7 +157,12 @@ class NotificationsFragment : BaseFragment() {
                     response: retrofit2.Response<Any?>?
                 ) {
                     val responseBody = response?.body()
-
+                    if(response?.isSuccessful == true){
+                        Toast.makeText(requireContext() ,"Successfully Deleted notifications" ,Toast.LENGTH_LONG).show()
+                        myNotificationAdapter.clearData()
+                    }else{
+                        Toast.makeText(requireContext() ,"Not Deleted Pleas try again" ,Toast.LENGTH_LONG).show()
+                    }
                 }
 
                 override fun onFailure(
@@ -117,4 +177,15 @@ class NotificationsFragment : BaseFragment() {
         }
     }
 
+    private fun handelUIVisibility(view: View){
+
+        if(!userModel?.role.toString().contains("teamLead" , ignoreCase = true)) {
+            view.roleConstraintLayout.visibility = View.GONE
+        }
+
+    }
+
+    private fun fillUIData(){
+     //   unreadMyNotificationTextView.text = unReadNotification.toString()
+    }
 }

@@ -2,6 +2,7 @@ package com.example.myapplication.myapplication.data
 
 import com.example.myapplication.myapplication.data.BaseRequest.Companion.CHECK_USER_BY_COMPANY_ID
 import com.example.myapplication.myapplication.data.BaseRequest.Companion.DELETE_ALL_NOTIFICATION
+import com.example.myapplication.myapplication.data.BaseRequest.Companion.GET_MY_TEAM_NOTIFICATIONS
 import com.example.myapplication.myapplication.data.BaseRequest.Companion.LOGIN_BY_EMAIL
 import com.example.myapplication.myapplication.data.BaseRequest.Companion.dashboardApi
 import com.example.myapplication.myapplication.data.BaseRequest.Companion.leaveHistoryApi
@@ -39,6 +40,11 @@ interface APIInterface {
 
     @DELETE("${DELETE_ALL_NOTIFICATION}{id}")
     fun deleteAllNotification(id:String):Call<Any?>?
+
+
+    @GET(GET_MY_TEAM_NOTIFICATIONS)
+    fun getMyTeamNotifications(): Call<GetAllNotificationsResponse?>?
+
 
 /*    @POST(LOGIN_BY_EMAIL)
     @FormUrlEncoded

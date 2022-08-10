@@ -61,7 +61,7 @@ class HomeFragment : BaseFragment() {
     val PERMISSION_ID = 42
     var userModel: UserModel? = null
 
-//new samer commit     lateinit var mFusedLocationClient: FusedLocationProviderClient
+   lateinit var mFusedLocationClient: FusedLocationProviderClient
     protected var mainView: View? = null
     var location: Location? = null
     var apiInterface: APIInterface? = null
@@ -130,14 +130,14 @@ class HomeFragment : BaseFragment() {
     @SuppressLint("MissingPermission")
     fun startGetLocation() {
 
-        // new samer commit
-     /*   Looper.myLooper()?.let {
+
+        Looper.myLooper()?.let {
             mFusedLocationClient = getFusedLocationProviderClient(requireActivity())
             mFusedLocationClient.requestLocationUpdates(
                 mLocationRequest!!,locationUpdate,
                 it
             )
-        }*/
+        }
     }
 
 
@@ -164,7 +164,7 @@ class HomeFragment : BaseFragment() {
     }
 
     fun stopUsingGPS() {
-      // new samer commit   mFusedLocationClient.removeLocationUpdates(locationUpdate)
+       mFusedLocationClient.removeLocationUpdates(locationUpdate)
     }
 
     override fun onCreateView(
@@ -285,7 +285,9 @@ class HomeFragment : BaseFragment() {
                     response: retrofit2.Response<ActionModel?>
                 ) {
                     val actionModel = response.body()
-                    setPINPOUTView(actionModel)
+
+                    // new commit by samer
+                  //  setPINPOUTView(actionModel)
                     addTopAdapter(actionModel as ActionModel)
                     addBottomAdapter(actionModel as ActionModel)
                 }
@@ -300,7 +302,9 @@ class HomeFragment : BaseFragment() {
     }
 
 
-    fun setPINPOUTView(actionModel: ActionModel?) {
+    // new commit by samer
+
+/*    fun setPINPOUTView(actionModel: ActionModel?) {
         actionModel?.out.toString().isBlank().let {
             if (it) {
                 mainView?.punchInSTextView?.text = "--:--"
@@ -323,7 +327,7 @@ class HomeFragment : BaseFragment() {
                 }
             }
         }
-    }
+    }*/
 
 
     fun addTopAdapter(actionModel: ActionModel) {
