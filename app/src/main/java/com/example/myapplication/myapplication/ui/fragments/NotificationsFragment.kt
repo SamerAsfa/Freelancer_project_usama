@@ -15,6 +15,7 @@ import com.example.myapplication.myapplication.data.APIInterface
 import com.example.myapplication.myapplication.domain.model.GetAllNotificationsResponse
 import com.example.myapplication.myapplication.models.NotificationModel
 import com.example.myapplication.myapplication.models.UserModel
+import com.example.myapplication.myapplication.ui.adapters.MyTeamNotificationAdapter
 import com.example.myapplication.myapplication.ui.adapters.NotificationAdapter
 import kotlinx.android.synthetic.main.fragment_notifications.*
 import kotlinx.android.synthetic.main.fragment_notifications.view.*
@@ -26,6 +27,7 @@ class NotificationsFragment : BaseFragment() {
     var apiInterface: APIInterface? = null
 
     lateinit var myNotificationAdapter :NotificationAdapter
+    lateinit var myTeamNotificationAdapter :MyTeamNotificationAdapter
 
     companion object {
         val fragmentName: String = "NotificationsFragment"
@@ -101,13 +103,13 @@ class NotificationsFragment : BaseFragment() {
                 ) {
                     val arrayHistory = response?.body()
                     unreadMyTeamNotificationTextView.text = response?.body()?.unread.toString()
-                  /*  if (arrayHistory?.notifications?.size!! > 0) {
-                         myNotificationAdapter = NotificationAdapter(arrayHistory.notifications as ArrayList<NotificationModel>, requireContext())
-                        mainView?.notificationRecyclerView?.setHasFixedSize(true)
-                        mainView?.notificationRecyclerView?.layoutManager =
+                    if (arrayHistory?.notifications?.size!! > 0) {
+                         myTeamNotificationAdapter = MyTeamNotificationAdapter(arrayHistory.notifications as ArrayList<NotificationModel>, requireContext())
+                        mainView?.myTeamNotificationRecyclerView?.setHasFixedSize(true)
+                        mainView?.myTeamNotificationRecyclerView?.layoutManager =
                             LinearLayoutManager(requireContext())
-                        mainView?.notificationRecyclerView?.adapter = myNotificationAdapter
-                    }*/
+                        mainView?.myTeamNotificationRecyclerView?.adapter = myTeamNotificationAdapter
+                    }
                 }
 
                 override fun onFailure(
@@ -135,6 +137,9 @@ class NotificationsFragment : BaseFragment() {
 
             view.myTeamNotificationTextView.setTextColor(Color.parseColor("#708792"))
             view.teamNotificationUnderlineView.setBackgroundColor(Color.parseColor("#708792"))
+
+            view.notificationRecyclerView.visibility =View.VISIBLE
+            view.myTeamNotificationRecyclerView.visibility =View.GONE
         }
 
 
@@ -144,6 +149,9 @@ class NotificationsFragment : BaseFragment() {
 
             view.myNotificationTextView.setTextColor(Color.parseColor("#708792"))
             view.notificationUnderlineView.setBackgroundColor(Color.parseColor("#708792"))
+
+            view.notificationRecyclerView.visibility =View.GONE
+            view.myTeamNotificationRecyclerView.visibility =View.VISIBLE
         }
 
     }
