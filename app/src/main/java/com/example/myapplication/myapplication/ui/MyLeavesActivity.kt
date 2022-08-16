@@ -23,10 +23,11 @@ class MyLeavesActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_my_leaves)
-        leaveRequestButton.setOnClickListener {
+        // new commit from samer
+       /* leaveRequestButton.setOnClickListener {
             val intent = Intent(this, RequstLeaveActivity::class.java)
             startActivity(intent)
-        }
+        }*/
 
         vectorRightImageView.setOnClickListener {
             increaseMonth()
