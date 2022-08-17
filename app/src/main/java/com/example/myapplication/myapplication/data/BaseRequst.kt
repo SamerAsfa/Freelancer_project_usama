@@ -11,6 +11,7 @@ class BaseRequest {
         const val dashboardApi: String = "dashboard"
         const val punchHistoryApi: String = "punchHistory/"
         const val leaveHistoryApi: String = "leave/"
+        const val myTeamLeaveHistoryApi: String = "myTeam/leave/"
         const val notificationsApi: String = "notifications/"
         val leaveApi: String = "${baseUrl}leave"
         val leaveTypeApi: String = "${baseUrl}leaveType"

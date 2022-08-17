@@ -10,7 +10,7 @@ import kotlinx.android.parcel.Parcelize
 import org.json.JSONException
 
 @Parcelize
-data class HistoryModel(
+data class MyLeaveHistoryModel(
     val date: String? = null,
     val pin: String? = null,
     val pout: String? = null,
@@ -24,10 +24,10 @@ data class HistoryModel(
     val breaks: Int? = 0,
 ) : Parcelable {
     @Throws(JSONException::class)
-    fun parseArray(data: String): ArrayList<HistoryModel?>? {
+    fun parseArray(data: String): ArrayList<MyLeaveHistoryModel?>? {
         val gson: Gson = GsonBuilder().create()
         val listType = object :
-            TypeToken<List<HistoryModel?>?>() {}.type
+            TypeToken<List<MyLeaveHistoryModel?>?>() {}.type
         return gson.fromJson(data.toString(), listType)
     }
 }

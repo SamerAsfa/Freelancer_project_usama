@@ -5,13 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.android.volley.error.VolleyError
 import com.example.myapplication.myapplication.R
 import com.example.myapplication.myapplication.base.BaseFragment
-import com.example.myapplication.myapplication.base.ResponseApi
 import com.example.myapplication.myapplication.data.*
 import com.example.myapplication.myapplication.data.APIClient
-import com.example.myapplication.myapplication.models.HistoryModel
+import com.example.myapplication.myapplication.models.MyLeaveHistoryModel
 import com.example.myapplication.myapplication.ui.adapters.HistoryAdapter
 import kotlinx.android.synthetic.main.fragment_history.view.*
 import java.util.*
@@ -80,19 +78,19 @@ class HistoryFragment : BaseFragment() {
     private fun getMonth(monthYear: String) {
         try {
             val call = apiInterface?.getHistoryApi(monthYear)
-            call?.enqueue(object : retrofit2.Callback<ArrayList<HistoryModel>?> {
+            call?.enqueue(object : retrofit2.Callback<ArrayList<MyLeaveHistoryModel>?> {
                 override fun onResponse(
-                    call: retrofit2.Call<ArrayList<HistoryModel>?>,
-                    response: retrofit2.Response<ArrayList<HistoryModel>?>
+                    call: retrofit2.Call<ArrayList<MyLeaveHistoryModel>?>,
+                    response: retrofit2.Response<ArrayList<MyLeaveHistoryModel>?>
                 ) {
                     val arrayHistory = response.body()
                     val scanMainAdapter = HistoryAdapter(arrayHistory)
-                    mainView?.historyRecyclerView?.setHasFixedSize(true)
-                    mainView?.historyRecyclerView?.setLayoutManager(LinearLayoutManager(context))
-                    mainView?.historyRecyclerView?.adapter = scanMainAdapter
+                    mainView?.myLeaveHistoryRecyclerView?.setHasFixedSize(true)
+                    mainView?.myLeaveHistoryRecyclerView?.setLayoutManager(LinearLayoutManager(context))
+                    mainView?.myLeaveHistoryRecyclerView?.adapter = scanMainAdapter
                 }
 
-                override fun onFailure(call: retrofit2.Call<ArrayList<HistoryModel>?>, t: Throwable) {
+                override fun onFailure(call: retrofit2.Call<ArrayList<MyLeaveHistoryModel>?>, t: Throwable) {
                     call.cancel()
                 }
             })

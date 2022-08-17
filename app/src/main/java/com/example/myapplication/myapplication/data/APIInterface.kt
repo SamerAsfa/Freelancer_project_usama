@@ -6,6 +6,7 @@ import com.example.myapplication.myapplication.data.BaseRequest.Companion.GET_MY
 import com.example.myapplication.myapplication.data.BaseRequest.Companion.LOGIN_BY_EMAIL
 import com.example.myapplication.myapplication.data.BaseRequest.Companion.dashboardApi
 import com.example.myapplication.myapplication.data.BaseRequest.Companion.leaveHistoryApi
+import com.example.myapplication.myapplication.data.BaseRequest.Companion.myTeamLeaveHistoryApi
 import com.example.myapplication.myapplication.data.BaseRequest.Companion.notificationsApi
 import com.example.myapplication.myapplication.data.BaseRequest.Companion.punchHistoryApi
 import com.example.myapplication.myapplication.data.remote.dto.LoginByEmailBody
@@ -20,11 +21,14 @@ interface APIInterface {
     fun getDashBoardApi(): Call<ActionModel?>?
 
     @GET("${punchHistoryApi}{monthYear}")///@Path("id") int groupId
-    fun getHistoryApi(@Path("monthYear") monthYear: String?): Call<ArrayList<HistoryModel>?>?
+    fun getHistoryApi(@Path("monthYear") monthYear: String?): Call<ArrayList<MyLeaveHistoryModel>?>?
 
 
     @GET("${leaveHistoryApi}{monthYear}")///@Path("id") int groupId
-    fun getLeaveHistoryApi(@Path("monthYear") monthYear: String?): Call<ArrayList<HistoryModel>?>?
+    fun getLeaveHistoryApi(@Path("monthYear") monthYear: String?): Call<ArrayList<MyLeaveHistoryModel>?>?
+
+    @GET("${myTeamLeaveHistoryApi}{monthYear}")///@Path("id") int groupId
+    fun getMyTeamLeaveHistoryApi(@Path("monthYear") monthYear: String?): Call<ArrayList<MyTeamLeaveHistoryModel>?>?
 
 
     @GET(notificationsApi)///@Path("id") int groupId

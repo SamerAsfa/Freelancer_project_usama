@@ -10,9 +10,8 @@ import com.example.myapplication.myapplication.data.DateUtils
 import com.example.myapplication.myapplication.models.MyLeaveHistoryModel
 import java.util.ArrayList
 
-
-class HistoryAdapter(private val arrayList: ArrayList<MyLeaveHistoryModel>?) :
-    RecyclerView.Adapter<HistoryAdapter.ViewHolder>() {
+class MyLeavesHistoryAdapter(private val arrayList: ArrayList<MyLeaveHistoryModel>?) :
+    RecyclerView.Adapter<MyLeavesHistoryAdapter.ViewHolder>() {
 
 
     override fun onCreateViewHolder(
@@ -30,32 +29,10 @@ class HistoryAdapter(private val arrayList: ArrayList<MyLeaveHistoryModel>?) :
         position: Int
     ) {
         holder.titleDateTextView.text =
-            DateUtils().getDateForaAdapterFromTimeStamp(arrayList?.get(holder.adapterPosition)?.date)
-
-        if (!arrayList?.get(holder.adapterPosition)?.pin.isNullOrBlank()) {
-            holder.titleInTextView.text =
-                arrayList?.get(holder.adapterPosition)?.pin?.toLong()?.let {
-                    DateUtils().getTime(
-                        it
-                    )
-                }
-        }
-        if (!arrayList?.get(holder.adapterPosition)?.pout.isNullOrBlank()) {
-            holder.titleOutTextView.text =
-                arrayList?.get(holder.adapterPosition)?.pout?.toLong()?.let {
-                    DateUtils().getTime(
-                        it
-                    )
-                }
-        }
-        val hours = arrayList?.get(holder.adapterPosition)?.breaks?.div(60)
-        val minutes = arrayList?.get(holder.adapterPosition)?.breaks?.rem(60)
-        val time = String.format("%d:%02d", hours, minutes)
-        if (arrayList?.get(holder.adapterPosition)?.breaks == 0) {
-            holder.titleBreakTextView.text = "--:--"
-        } else {
-            holder.titleBreakTextView.text = time
-        }
+            DateUtils().getDateForaAdapterFromTimeStamp(arrayList?.get(holder.adapterPosition)?.start_date)
+        holder.titleInTextView.text =  DateUtils().getLeaveForaAdapterFromTimeStamp(arrayList?.get(holder.adapterPosition)?.start_date)
+        holder.titleOutTextView.text =  DateUtils().getLeaveForaAdapterFromTimeStamp(arrayList?.get(holder.adapterPosition)?.end_date)
+        holder.titleBreakTextView.text = arrayList?.get(holder.adapterPosition)?.status
     }
 
     override fun getItemCount(): Int {

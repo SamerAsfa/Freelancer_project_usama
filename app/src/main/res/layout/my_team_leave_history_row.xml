@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+
+    <TextView
+        android:id="@+id/myTeamLeaveTitleDateTextView"
+        android:layout_width="30dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="15dp"
+        android:background="@drawable/bg_grays"
+        android:gravity="center"
+        android:text="Date"
+        android:textColor="@color/black"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@id/myTeamLeaveVectorLeftImageView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/myTeamLeaveTitleInTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="5dp"
+        android:gravity="center"
+        android:text="Punch In"
+        android:textColor="@color/blus_bl"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toStartOf="@id/myTeamLeaveVectorRightImageView"
+        app:layout_constraintStart_toEndOf="@id/myTeamLeaveVectorLeftImageView"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/myTeamLeaveVectorLeftImageView"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="5dp"
+        android:background="@drawable/vector_arrow_left"
+        app:layout_constraintEnd_toStartOf="@id/myTeamLeaveTitleInTextView"
+        app:layout_constraintStart_toEndOf="@id/myTeamLeaveTitleDateTextView"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <TextView
+        android:id="@+id/myTeamLeaveTitleOutTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="15dp"
+        android:gravity="center"
+        android:text="        "
+        android:textColor="@color/green"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toStartOf="@id/myTeamLeaveTitleBreakTextView"
+        app:layout_constraintStart_toEndOf="@id/myTeamLeaveTitleInTextView"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <ImageView
+        android:id="@+id/myTeamLeaveVectorRightImageView"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="5dp"
+        android:background="@drawable/vector_arrow_right_green"
+        app:layout_constraintEnd_toStartOf="@id/myTeamLeaveTitleOutTextView"
+        app:layout_constraintStart_toEndOf="@id/myTeamLeaveTitleInTextView"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/myTeamLeaveTitleBreakTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="15dp"
+        android:gravity="center"
+         android:textColor="@color/purple"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/myTeamLeaveTitleOutTextView"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/myTeamLeaveTopDive"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="20dp"
+        android:background="@color/grayDark"
+        app:layout_constraintEnd_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/myTeamLeaveTitleDateTextView" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

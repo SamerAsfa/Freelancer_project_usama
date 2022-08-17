@@ -7,11 +7,11 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.myapplication.R
 import com.example.myapplication.myapplication.data.DateUtils
-import com.example.myapplication.myapplication.models.HistoryModel
+import com.example.myapplication.myapplication.models.MyTeamLeaveHistoryModel
 import java.util.ArrayList
 
-class LeavesAdapter(private val arrayList: ArrayList<HistoryModel>?) :
-    RecyclerView.Adapter<LeavesAdapter.ViewHolder>() {
+class MyTeamLeavesHistoryAdapter(private val arrayList: ArrayList<MyTeamLeaveHistoryModel>?) :
+    RecyclerView.Adapter<MyTeamLeavesHistoryAdapter.ViewHolder>() {
 
 
     override fun onCreateViewHolder(
@@ -19,7 +19,7 @@ class LeavesAdapter(private val arrayList: ArrayList<HistoryModel>?) :
         viewType: Int
     ): ViewHolder {
         val v: View =
-            LayoutInflater.from(parent.context).inflate(R.layout.adapter_history, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.my_team_leave_history_row, parent, false)
         return ViewHolder(v)
     }
 
@@ -46,10 +46,10 @@ class LeavesAdapter(private val arrayList: ArrayList<HistoryModel>?) :
         var titleBreakTextView: TextView
 
         init {
-            titleDateTextView = view.findViewById<View>(R.id.titleDateTextView) as TextView
-            titleInTextView = view.findViewById<View>(R.id.titleInTextView) as TextView
-            titleOutTextView = view.findViewById<View>(R.id.titleOutTextView) as TextView
-            titleBreakTextView = view.findViewById<View>(R.id.titleBreakTextView) as TextView
+            titleDateTextView = view.findViewById<View>(R.id.myTeamLeaveTitleDateTextView) as TextView
+            titleInTextView = view.findViewById<View>(R.id.myTeamLeaveTitleInTextView) as TextView
+            titleOutTextView = view.findViewById<View>(R.id.myTeamLeaveTitleOutTextView) as TextView
+            titleBreakTextView = view.findViewById<View>(R.id.myTeamLeaveTitleBreakTextView) as TextView
         }
     }
 
