@@ -100,7 +100,7 @@ class MyLeavesActivity : BaseActivity() {
                     response: retrofit2.Response<ArrayList<MyTeamLeaveHistoryModel>?>
                 ) {
                     val arrayHistory = response.body()
-                    val myTeamLeaveHistoryAdapter = MyTeamLeavesHistoryAdapter(arrayHistory)
+                    val myTeamLeaveHistoryAdapter = MyTeamLeavesHistoryAdapter(arrayHistory, this@MyLeavesActivity)
                     myTeamLeaveHistoryRecyclerView?.setHasFixedSize(true)
                     myTeamLeaveHistoryRecyclerView?.layoutManager = LinearLayoutManager(this@MyLeavesActivity)
                     myTeamLeaveHistoryRecyclerView?.adapter = myTeamLeaveHistoryAdapter
@@ -131,6 +131,7 @@ class MyLeavesActivity : BaseActivity() {
 
           myLeaveHistoryConstraintLayout.visibility = View.VISIBLE
           myTeamLeaveHistoryConstraintLayout.visibility = View.GONE
+          leaveRequestButton.visibility = View.VISIBLE
         }
 
 
@@ -144,6 +145,7 @@ class MyLeavesActivity : BaseActivity() {
 
             myLeaveHistoryConstraintLayout.visibility = View.GONE
             myTeamLeaveHistoryConstraintLayout.visibility = View.VISIBLE
+            leaveRequestButton.visibility = View.GONE
         }
 
     }
