@@ -34,17 +34,6 @@ class MyLeavesActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_my_leaves)
 
-        leaveRequestButton.setOnClickListener {
-            val intent = Intent(this, RequstLeaveActivity::class.java)
-            startActivity(intent)
-        }
-
-        vectorRightImageView.setOnClickListener {
-            increaseMonth()
-        }
-        vectorLeftImageView.setOnClickListener {
-            decreaseMonth()
-        }
         apiInterface = APIClient.client?.create(APIInterface::class.java)
 
         initUIListener()
@@ -131,6 +120,21 @@ class MyLeavesActivity : BaseActivity() {
 
     private fun initUIListener() {
 
+        leaveRequestButton.setOnClickListener {
+         /*   val intent = Intent(this, RequstLeaveActivity::class.java)
+            startActivity(intent)*/
+            val intent =Intent(this@MyLeavesActivity ,EditRequstLeaveActivity::class.java)
+            intent.putExtra("Leave_Request_model", MyLeaveHistoryModel())
+            startActivity(intent)
+        }
+
+        vectorRightImageView.setOnClickListener {
+            increaseMonth()
+        }
+        vectorLeftImageView.setOnClickListener {
+            decreaseMonth()
+        }
+
         myLeavesTextView.setOnClickListener {
 
             myLeavesTextView.setTextColor(Color.parseColor("#000000"))
@@ -167,7 +171,9 @@ class MyLeavesActivity : BaseActivity() {
         }
 
         myLeaveHistoryAdapter.editLeaveRequestOnItemClick = { model ->
-            // model?.leave_type?.id?.let { approveLeave(it) }
+            val intent =Intent(this ,EditRequstLeaveActivity::class.java)
+            intent.putExtra("Leave_Request_model", model);
+           startActivity(intent)
         }
 
         myLeaveHistoryAdapter.deleteLeaveRequestOnItemClick = { model ->

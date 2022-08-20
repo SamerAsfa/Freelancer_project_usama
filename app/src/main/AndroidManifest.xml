@@ -54,6 +54,7 @@
         <activity android:name=".ui.RequstLeaveActivity" />
         <activity android:name=".ui.face2.FaceDetectionActivity" />
         <activity android:name=".ui.WelcomeScreen" />
+        <activity android:name=".ui.EditRequstLeaveActivity" />
 
         <service
             android:name=".services.VocoFirebaseMessagingService"
