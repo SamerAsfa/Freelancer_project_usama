@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.myapplication.R
 import com.example.myapplication.myapplication.data.DateUtils
@@ -26,7 +27,8 @@ class MyLeavesHistoryAdapter() :
         viewType: Int
     ): ViewHolder {
         val v: View =
-            LayoutInflater.from(parent.context).inflate(R.layout.my_leave_history_row, parent, false)
+            LayoutInflater.from(parent.context)
+                .inflate(R.layout.my_leave_history_row, parent, false)
         return ViewHolder(v)
     }
 
@@ -36,17 +38,18 @@ class MyLeavesHistoryAdapter() :
         position: Int
     ) {
 
-        val model =arrayList?.get(holder.adapterPosition)
+        val model = arrayList?.get(holder.adapterPosition)
         holder.titleDateTextView.text =
             DateUtils().getDateForaAdapterFromTimeStamp(model?.start_date)
-        holder.titleInTextView.text =  DateUtils().getLeaveForaAdapterFromTimeStamp(model?.start_date)
-        holder.titleOutTextView.text =  DateUtils().getLeaveForaAdapterFromTimeStamp(model?.end_date)
+        holder.titleInTextView.text =
+            DateUtils().getLeaveForaAdapterFromTimeStamp(model?.start_date)
+        holder.titleOutTextView.text = DateUtils().getLeaveForaAdapterFromTimeStamp(model?.end_date)
         holder.titleBreakTextView.text = model?.status
 
         if (model?.status?.contains("pending") == true) {
-            holder.setting.visibility =View.VISIBLE
+            holder.setting.visibility = View.VISIBLE
         } else {
-            holder.setting.visibility =View.GONE
+            holder.setting.visibility = View.GONE
         }
     }
 
@@ -59,7 +62,7 @@ class MyLeavesHistoryAdapter() :
         arrayList.addAll(list)
     }
 
-    inner  class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var titleDateTextView: TextView
         var titleInTextView: TextView
         var titleOutTextView: TextView
@@ -75,14 +78,23 @@ class MyLeavesHistoryAdapter() :
             titleInTextView = view.findViewById<View>(R.id.titleInTextView) as TextView
             titleOutTextView = view.findViewById<View>(R.id.titleOutTextView) as TextView
             titleBreakTextView = view.findViewById<View>(R.id.titleBreakTextView) as TextView
-            setting = view.findViewById<View>(R.id.settingImageButtonMyLeaveHistoryRow) as ImageButton
+            setting =
+                view.findViewById<View>(R.id.settingImageButtonMyLeaveHistoryRow) as ImageButton
 
             editLeaveRequestPopup = view.findViewById<View>(R.id.editLeaveRequestPopup) as Button
-            deleteLeaveRequestPopup = view.findViewById<View>(R.id.deleteLeaveRequestPopup) as Button
+            deleteLeaveRequestPopup =
+                view.findViewById<View>(R.id.deleteLeaveRequestPopup) as Button
 
-            leaveRequestPopup = view.findViewById<View>(R.id.settingsPopupMaterialCardView) as MaterialCardView
+            leaveRequestPopup =
+                view.findViewById<View>(R.id.settingsPopupMaterialCardView) as MaterialCardView
 
-
+            setting.setOnClickListener {
+                if(leaveRequestPopup.isVisible){
+                    leaveRequestPopup.visibility =View.GONE
+                }else{
+                    leaveRequestPopup.visibility =View.VISIBLE
+                }
+            }
             editLeaveRequestPopup.setOnClickListener {
                 editLeaveRequestOnItemClick?.invoke(arrayList?.get(adapterPosition))
                 leaveRequestPopup.visibility = View.GONE

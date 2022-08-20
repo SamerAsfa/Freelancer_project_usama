@@ -28,6 +28,7 @@ class BaseRequest {
         const val LOGIN_BY_EMAIL: String = "tokenByEmail"
         const val APPROVE_lEAVE: String = "http://frapi.hr-jo.com/api/leave/approve/"
         const val REJECT_lEAVE: String =  "http://frapi.hr-jo.com/api/leave/reject/"
+        const val DELETE_lEAVE: String =  "http://frapi.hr-jo.com/api/leave/cancel/"
 
 
     }

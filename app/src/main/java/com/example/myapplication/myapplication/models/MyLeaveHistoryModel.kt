@@ -11,6 +11,8 @@ import org.json.JSONException
 
 @Parcelize
 data class MyLeaveHistoryModel(
+    val id: Int? = null,
+    val user_id: Int? = null,
     val date: String? = null,
     val pin: String? = null,
     val pout: String? = null,
@@ -19,6 +21,9 @@ data class MyLeaveHistoryModel(
     val end_date: String? = null,
     val type_id: Int? = null,
     val status: String? = null,
+    val attachment: String? = null,
+    val created_at: String? = null,
+    val updated_at: String? = null,
     @SerializedName("break")
     @Expose
     val breaks: Int? = 0,

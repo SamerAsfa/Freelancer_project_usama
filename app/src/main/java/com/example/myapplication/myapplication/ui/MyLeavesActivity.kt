@@ -1,9 +1,13 @@
 package com.example.myapplication.myapplication.ui
 
+import android.app.Dialog
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.View
+import android.view.Window
+import android.widget.Button
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myapplication.myapplication.R
@@ -21,8 +25,9 @@ class MyLeavesActivity : BaseActivity() {
     var currentIndex: Int = 0
     var apiInterface: APIInterface? = null
 
-    var myTeamLeaveHistoryAdapter:MyTeamLeavesHistoryAdapter =MyTeamLeavesHistoryAdapter(this@MyLeavesActivity)
-    var myLeaveHistoryAdapter:MyLeavesHistoryAdapter =MyLeavesHistoryAdapter()
+    var myTeamLeaveHistoryAdapter: MyTeamLeavesHistoryAdapter =
+        MyTeamLeavesHistoryAdapter(this@MyLeavesActivity)
+    var myLeaveHistoryAdapter: MyLeavesHistoryAdapter = MyLeavesHistoryAdapter()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,8 +69,8 @@ class MyLeavesActivity : BaseActivity() {
         dateTextView?.text = DateUtils().getDateFromTimeStamp(timeStamp)
         val monthYear = DateUtils().getDateForApiFromTimeStamp(timeStamp)
 
-            getMyLeaveHistoryByMonth(monthYear)
-            getMyTeamLeaveHistoryByMonth(monthYear)
+        getMyLeaveHistoryByMonth(monthYear)
+        getMyTeamLeaveHistoryByMonth(monthYear)
     }
 
     private fun getMyLeaveHistoryByMonth(monthYear: String) {
@@ -79,7 +84,8 @@ class MyLeavesActivity : BaseActivity() {
                     val arrayHistory = response.body()
                     arrayHistory?.let { myLeaveHistoryAdapter.submitData(it) }
                     myLeaveHistoryRecyclerView?.setHasFixedSize(true)
-                    myLeaveHistoryRecyclerView?.layoutManager = LinearLayoutManager(this@MyLeavesActivity)
+                    myLeaveHistoryRecyclerView?.layoutManager =
+                        LinearLayoutManager(this@MyLeavesActivity)
                     myLeaveHistoryRecyclerView?.adapter = myLeaveHistoryAdapter
                 }
 
@@ -106,7 +112,8 @@ class MyLeavesActivity : BaseActivity() {
                     val arrayHistory = response.body()
                     arrayHistory?.let { myTeamLeaveHistoryAdapter.submitData(it) }
                     myTeamLeaveHistoryRecyclerView?.setHasFixedSize(true)
-                    myTeamLeaveHistoryRecyclerView?.layoutManager = LinearLayoutManager(this@MyLeavesActivity)
+                    myTeamLeaveHistoryRecyclerView?.layoutManager =
+                        LinearLayoutManager(this@MyLeavesActivity)
                     myTeamLeaveHistoryRecyclerView?.adapter = myTeamLeaveHistoryAdapter
                 }
 
@@ -122,20 +129,19 @@ class MyLeavesActivity : BaseActivity() {
         }
     }
 
+    private fun initUIListener() {
 
-    private fun initUIListener(){
+        myLeavesTextView.setOnClickListener {
 
-      myLeavesTextView.setOnClickListener {
+            myLeavesTextView.setTextColor(Color.parseColor("#000000"))
+            myLeavesUnderlineView.setBackgroundColor(Color.parseColor("#000000"))
 
-          myLeavesTextView.setTextColor(Color.parseColor("#000000"))
-          myLeavesUnderlineView.setBackgroundColor(Color.parseColor("#000000"))
+            myTeamLeavesTextView.setTextColor(Color.parseColor("#708792"))
+            myTeamLeavesUnderlineView.setBackgroundColor(Color.parseColor("#708792"))
 
-          myTeamLeavesTextView.setTextColor(Color.parseColor("#708792"))
-          myTeamLeavesUnderlineView.setBackgroundColor(Color.parseColor("#708792"))
-
-          myLeaveHistoryConstraintLayout.visibility = View.VISIBLE
-          myTeamLeaveHistoryConstraintLayout.visibility = View.GONE
-          leaveRequestButton.visibility = View.VISIBLE
+            myLeaveHistoryConstraintLayout.visibility = View.VISIBLE
+            myTeamLeaveHistoryConstraintLayout.visibility = View.GONE
+            leaveRequestButton.visibility = View.VISIBLE
         }
 
 
@@ -152,20 +158,20 @@ class MyLeavesActivity : BaseActivity() {
             leaveRequestButton.visibility = View.GONE
         }
 
-        myTeamLeaveHistoryAdapter.approvedOnItemClick ={model ->
+        myTeamLeaveHistoryAdapter.approvedOnItemClick = { model ->
             model?.leave_type?.id?.let { approveLeave(it) }
         }
 
-        myTeamLeaveHistoryAdapter.rejectedOnItemClick ={model->
+        myTeamLeaveHistoryAdapter.rejectedOnItemClick = { model ->
             model?.leave_type?.id?.let { rejectLeave(it) }
         }
 
-        myLeaveHistoryAdapter.editLeaveRequestOnItemClick ={model ->
-           // model?.leave_type?.id?.let { approveLeave(it) }
+        myLeaveHistoryAdapter.editLeaveRequestOnItemClick = { model ->
+            // model?.leave_type?.id?.let { approveLeave(it) }
         }
 
-        myLeaveHistoryAdapter.deleteLeaveRequestOnItemClick ={model->
-           // model?.leave_type?.id?.let { rejectLeave(it) }
+        myLeaveHistoryAdapter.deleteLeaveRequestOnItemClick = { model ->
+            model?.let { showDeleteLeaveRequestDialog(it) }
         }
     }
 
@@ -177,11 +183,23 @@ class MyLeavesActivity : BaseActivity() {
                     call: retrofit2.Call<Any?>,
                     response: retrofit2.Response<Any?>
                 ) {
-                   if(response.isSuccessful){
-                       Toast.makeText(this@MyLeavesActivity ,"Successfully Approved" ,Toast.LENGTH_LONG).show()
-                   }else{
-                       Toast.makeText(this@MyLeavesActivity ,"Something happens wrong please try again" ,Toast.LENGTH_LONG).show()
-                   }
+                    if (response.isSuccessful) {
+                        Toast.makeText(
+                            this@MyLeavesActivity,
+                            "Successfully Approved",
+                            Toast.LENGTH_LONG
+                        ).show()
+
+                        // refresh data
+                        initCurrentDate(DateUtils().addOneMonth(currentIndex).time)
+
+                    } else {
+                        Toast.makeText(
+                            this@MyLeavesActivity,
+                            "Something happens wrong please try again",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
                 }
 
                 override fun onFailure(
@@ -189,12 +207,20 @@ class MyLeavesActivity : BaseActivity() {
                     t: Throwable
                 ) {
                     call.cancel()
-                    Toast.makeText(this@MyLeavesActivity ,"Something happens wrong please try again" ,Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        this@MyLeavesActivity,
+                        "Something happens wrong please try again",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             })
         } catch (ex: Exception) {
             ex.message
-            Toast.makeText(this@MyLeavesActivity ,"Something happens wrong please try again" ,Toast.LENGTH_LONG).show()
+            Toast.makeText(
+                this@MyLeavesActivity,
+                "Something happens wrong please try again",
+                Toast.LENGTH_LONG
+            ).show()
         }
     }
 
@@ -206,10 +232,20 @@ class MyLeavesActivity : BaseActivity() {
                     call: retrofit2.Call<Any?>,
                     response: retrofit2.Response<Any?>
                 ) {
-                    if(response.isSuccessful){
-                        Toast.makeText(this@MyLeavesActivity ,"Successfully Rejected" ,Toast.LENGTH_LONG).show()
-                    }else{
-                        Toast.makeText(this@MyLeavesActivity ,"Something happens wrong please try again" ,Toast.LENGTH_LONG).show()
+                    if (response.isSuccessful) {
+                        Toast.makeText(
+                            this@MyLeavesActivity,
+                            "Successfully Rejected",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        // refresh data
+                        initCurrentDate(DateUtils().addOneMonth(currentIndex).time)
+                    } else {
+                        Toast.makeText(
+                            this@MyLeavesActivity,
+                            "Something happens wrong please try again",
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
                 }
 
@@ -218,13 +254,86 @@ class MyLeavesActivity : BaseActivity() {
                     t: Throwable
                 ) {
                     call.cancel()
-                    Toast.makeText(this@MyLeavesActivity ,"Something happens wrong please try again" ,Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        this@MyLeavesActivity,
+                        "Something happens wrong please try again",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             })
         } catch (ex: Exception) {
             ex.message
-            Toast.makeText(this@MyLeavesActivity ,"Something happens wrong please try again" ,Toast.LENGTH_LONG).show()
+            Toast.makeText(
+                this@MyLeavesActivity,
+                "Something happens wrong please try again",
+                Toast.LENGTH_LONG
+            ).show()
         }
     }
 
+    private fun deleteLeaveRequest(leaveId: Int) {
+        try {
+            val call = apiInterface?.deleteLeave(leaveId)
+            call?.enqueue(object : retrofit2.Callback<Any?> {
+                override fun onResponse(
+                    call: retrofit2.Call<Any?>,
+                    response: retrofit2.Response<Any?>
+                ) {
+                    if (response.isSuccessful) {
+                        Toast.makeText(
+                            this@MyLeavesActivity,
+                            "Successfully Deleted",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        // refresh data
+                        initCurrentDate(DateUtils().addOneMonth(currentIndex).time)
+
+                    } else {
+                        Toast.makeText(
+                            this@MyLeavesActivity,
+                            "Something happens wrong please try again",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
+
+                override fun onFailure(
+                    call: retrofit2.Call<Any?>,
+                    t: Throwable
+                ) {
+                    call.cancel()
+                    Toast.makeText(
+                        this@MyLeavesActivity,
+                        "Something happens wrong please try again",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            })
+        } catch (ex: Exception) {
+            ex.message
+            Toast.makeText(
+                this@MyLeavesActivity,
+                "Something happens wrong please try again",
+                Toast.LENGTH_LONG
+            ).show()
+        }
+    }
+
+    private fun showDeleteLeaveRequestDialog(model: MyLeaveHistoryModel) {
+        val dialog = Dialog(this, android.R.style.Theme_Black_NoTitleBar_Fullscreen)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.delete_leave_request_dilaog)
+        //val body = dialog.findViewById(R.id.body) as TextView
+        //body.text = title
+        val yesBtn = dialog.findViewById(R.id.yesButtonDeleteLeaveRequestDialog) as Button
+        val cencelBtn = dialog.findViewById(R.id.cancelButtonDeleteLeaveRequestDialog) as Button
+        yesBtn.setOnClickListener {
+            model.id?.let { it1 -> deleteLeaveRequest(it1) }
+            dialog.dismiss()
+        }
+        cencelBtn.setOnClickListener { dialog.dismiss() }
+        dialog.show()
+
+    }
 }

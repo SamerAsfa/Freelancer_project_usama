@@ -8,7 +8,9 @@
         <entry key="..\:/Users/HP/StudioProjects/Freelancer_project_usama/app/src/main/res/drawable/approved_state.xml" value="0.172" />
         <entry key="..\:/Users/HP/StudioProjects/Freelancer_project_usama/app/src/main/res/drawable/bg_blue.xml" value="0.172" />
         <entry key="..\:/Users/HP/StudioProjects/Freelancer_project_usama/app/src/main/res/drawable/bg_red.xml" value="0.184" />
+        <entry key="..\:/Users/HP/StudioProjects/Freelancer_project_usama/app/src/main/res/drawable/button_cancel_background_red.xml" value="0.1425" />
         <entry key="..\:/Users/HP/StudioProjects/Freelancer_project_usama/app/src/main/res/drawable/button_shape.xml" value="0.161" />
+        <entry key="..\:/Users/HP/StudioProjects/Freelancer_project_usama/app/src/main/res/drawable/button_yes_background_green.xml" value="0.1425" />
         <entry key="..\:/Users/HP/StudioProjects/Freelancer_project_usama/app/src/main/res/drawable/face_detect_shape.xml" value="0.184" />
         <entry key="..\:/Users/HP/StudioProjects/Freelancer_project_usama/app/src/main/res/drawable/ic_green_right.xml" value="0.184" />
         <entry key="..\:/Users/HP/StudioProjects/Freelancer_project_usama/app/src/main/res/drawable/ic_new_red_close.xml" value="0.184" />
@@ -24,11 +26,12 @@
         <entry key="..\:/Users/HP/StudioProjects/Freelancer_project_usama/app/src/main/res/layout/activity_requst_leave.xml" value="0.17552083333333332" />
         <entry key="..\:/Users/HP/StudioProjects/Freelancer_project_usama/app/src/main/res/layout/activity_user_auth.xml" value="0.17552083333333332" />
         <entry key="..\:/Users/HP/StudioProjects/Freelancer_project_usama/app/src/main/res/layout/adapter_history.xml" value="0.17552083333333332" />
+        <entry key="..\:/Users/HP/StudioProjects/Freelancer_project_usama/app/src/main/res/layout/delete_leave_request_dilaog.xml" value="0.1" />
         <entry key="..\:/Users/HP/StudioProjects/Freelancer_project_usama/app/src/main/res/layout/fragment_create_account.xml" value="0.22" />
         <entry key="..\:/Users/HP/StudioProjects/Freelancer_project_usama/app/src/main/res/layout/fragment_more.xml" value="0.14130434782608695" />
         <entry key="..\:/Users/HP/StudioProjects/Freelancer_project_usama/app/src/main/res/layout/fragment_notifications.xml" value="0.22" />
         <entry key="..\:/Users/HP/StudioProjects/Freelancer_project_usama/app/src/main/res/layout/login_with_face_activity.xml" value="0.11096014492753623" />
-        <entry key="..\:/Users/HP/StudioProjects/Freelancer_project_usama/app/src/main/res/layout/my_leave_history_row.xml" value="0.22" />
+        <entry key="..\:/Users/HP/StudioProjects/Freelancer_project_usama/app/src/main/res/layout/my_leave_history_row.xml" value="0.14666666666666667" />
         <entry key="..\:/Users/HP/StudioProjects/Freelancer_project_usama/app/src/main/res/layout/my_team_leave_history_row.xml" value="0.5" />
         <entry key="..\:/Users/HP/StudioProjects/Freelancer_project_usama/app/src/main/res/layout/my_team_notification_row.xml" value="0.5" />
         <entry key="..\:/Users/HP/StudioProjects/Freelancer_project_usama/app/src/main/res/layout/notification_item.xml" value="0.17552083333333332" />

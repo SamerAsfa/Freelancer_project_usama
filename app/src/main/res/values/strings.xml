@@ -23,6 +23,7 @@
     <string name="picture">Picture</string>
     <string name="nos">No</string>
     <string name="yes">Yes</string>
+    <string name="cancel">Cancel</string>
     <string name="description_info">Info</string>
     <string name="request_permission">This sample needs camera permission.</string>
     <string name="camera_error">This device doesn\'t support Camera2 API.</string>
@@ -77,4 +78,5 @@
     <string name="employee_name">Employee Name :</string>
     <string name="edit_leave_request">Edit Leave Request</string>
     <string name="delete_leave_request">Delete Leave Request</string>
+    <string name="delete_leave_request_dialog">Delete Leave Request ?</string>
 </resources>
