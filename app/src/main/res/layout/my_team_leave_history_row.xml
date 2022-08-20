@@ -1,9 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/employeeSettingsPopupMaterialCardView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="6dp"
+        android:visibility="gone"
+        app:cardCornerRadius="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/myTeamLeaveVectorRightImageView"
+        app:layout_constraintStart_toEndOf="@+id/settingImageButtonMyTeamLeaveHistoryRow"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/employee_name"
+                android:textColor="@color/black"
+                android:textSize="10sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/employeeNameTextViewPopupMyTeamLeaveHistoryRow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#444444"
+                android:textSize="10sp" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
 
     <ImageButton
         android:id="@+id/settingImageButtonMyTeamLeaveHistoryRow"
@@ -88,7 +127,7 @@
         android:textSize="12sp"
         app:layout_constraintStart_toEndOf="@id/myTeamLeaveVectorLeftImageView"
         app:layout_constraintTop_toBottomOf="@+id/myTeamLeaveTitleInTextView" />
-   <!-- android:text="        "-->
+    <!-- android:text="        "-->
 
     <ImageView
         android:id="@+id/myTeamLeaveVectorRightImageView"
@@ -101,16 +140,16 @@
 
     <TextView
         android:id="@+id/myTeamLeaveTitleBreakTextView"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginStart="18dp"
         android:layout_marginTop="25dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="4dp"
         android:gravity="center"
         android:textColor="@color/purple"
         android:textSize="12sp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/setting1ImageButtonMyTeamLeaveHistoryRow"
         app:layout_constraintStart_toEndOf="@id/myTeamLeaveTitleOutTextView"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -119,10 +158,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:visibility="gone"
         android:layout_marginEnd="12dp"
         android:background="@android:color/transparent"
         android:src="@drawable/vector_three_vertical_dots"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -138,5 +177,48 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/myTeamLeaveTitleDateTextView" />
 
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/settings2PopupMaterialCardViewMyTeamLeaveHistoryRow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="6dp"
+        android:visibility="gone"
+        app:cardCornerRadius="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/setting1ImageButtonMyTeamLeaveHistoryRow"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/approvalButtonMyTeamLeaveHistoryRow"
+                android:layout_width="wrap_content"
+                android:layout_height="22dp"
+                android:background="@android:color/transparent"
+                android:text="@string/approved"
+                android:textColor="#00D865"
+                android:textSize="16sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/gray" />
+
+            <Button
+                android:id="@+id/rejectedButtonMyTeamLeaveHistoryRow"
+                android:layout_width="wrap_content"
+                android:layout_height="22dp"
+                android:background="@android:color/transparent"
+                android:text="@string/rejected"
+                android:textColor="#FF0000"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

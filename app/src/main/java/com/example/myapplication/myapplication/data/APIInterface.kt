@@ -1,9 +1,11 @@
 package com.example.myapplication.myapplication.data
 
+import com.example.myapplication.myapplication.data.BaseRequest.Companion.APPROVE_lEAVE
 import com.example.myapplication.myapplication.data.BaseRequest.Companion.CHECK_USER_BY_COMPANY_ID
 import com.example.myapplication.myapplication.data.BaseRequest.Companion.DELETE_ALL_NOTIFICATION
 import com.example.myapplication.myapplication.data.BaseRequest.Companion.GET_MY_TEAM_NOTIFICATIONS
 import com.example.myapplication.myapplication.data.BaseRequest.Companion.LOGIN_BY_EMAIL
+import com.example.myapplication.myapplication.data.BaseRequest.Companion.REJECT_lEAVE
 import com.example.myapplication.myapplication.data.BaseRequest.Companion.dashboardApi
 import com.example.myapplication.myapplication.data.BaseRequest.Companion.leaveHistoryApi
 import com.example.myapplication.myapplication.data.BaseRequest.Companion.myTeamLeaveHistoryApi
@@ -49,6 +51,11 @@ interface APIInterface {
     @GET(GET_MY_TEAM_NOTIFICATIONS)
     fun getMyTeamNotifications(): Call<GetAllNotificationsResponse?>?
 
+    @PUT("${APPROVE_lEAVE}{id}")
+    fun approveLeave(@Path("id") id:Int?): Call<Any?>?
+
+    @PUT("${REJECT_lEAVE}{id}")
+    fun rejectLeave(@Path("id") id:Int?): Call<Any?>?
 
 /*    @POST(LOGIN_BY_EMAIL)
     @FormUrlEncoded

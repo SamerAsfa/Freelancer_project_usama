@@ -26,6 +26,8 @@ class BaseRequest {
         const val DELETE_ALL_NOTIFICATION: String = "http://frapi.hr-jo.com/api/notification/"
         const val GET_MY_TEAM_NOTIFICATIONS: String = "http://frapi.hr-jo.com/api/myTeam/notifications"
         const val LOGIN_BY_EMAIL: String = "tokenByEmail"
+        const val APPROVE_lEAVE: String = "http://frapi.hr-jo.com/api/leave/approve/"
+        const val REJECT_lEAVE: String =  "http://frapi.hr-jo.com/api/leave/reject/"
 
 
     }

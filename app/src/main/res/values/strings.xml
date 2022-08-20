@@ -73,4 +73,8 @@
 
     <string name="my_leaves">My Leaves</string>
     <string name="my_team_leaves">My Team Leaves</string>
+
+    <string name="employee_name">Employee Name :</string>
+    <string name="edit_leave_request">Edit Leave Request</string>
+    <string name="delete_leave_request">Delete Leave Request</string>
 </resources>
