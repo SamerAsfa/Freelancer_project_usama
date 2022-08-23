@@ -27,6 +27,8 @@ import com.example.myapplication.myapplication.R
 import com.example.myapplication.myapplication.base.BaseActivity
 import com.example.myapplication.myapplication.base.LongTermManager
 import com.example.myapplication.myapplication.base.ResponseApi
+import com.example.myapplication.myapplication.common.toDate
+import com.example.myapplication.myapplication.common.toTime
 import com.example.myapplication.myapplication.data.BaseRequest
 import com.example.myapplication.myapplication.data.DateUtils
 import com.example.myapplication.myapplication.data.POSTMediasTask
@@ -51,13 +53,13 @@ class EditRequstLeaveActivity : BaseActivity() {
 
     lateinit var myLeaveRequest: MyLeaveHistoryModel
 
-    @RequiresApi(Build.VERSION_CODES.M)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_requst_leave)
         userModel = LongTermManager.getInstance().userModel
-      //  myLeaveRequest= intent.getParcelableExtra<MyLeaveHistoryModel>("Leave_Request_model")!!
-        myLeaveRequest= intent.extras?.getParcelable<MyLeaveHistoryModel>("Leave_Request_model")!!
+        //  myLeaveRequest= intent.getParcelableExtra<MyLeaveHistoryModel>("Leave_Request_model")!!
+        myLeaveRequest = intent.extras?.getParcelable<MyLeaveHistoryModel>("Leave_Request_model")!!
 
         fillUiData()
         uiListener()
@@ -77,14 +79,15 @@ class EditRequstLeaveActivity : BaseActivity() {
         )
     }
 
-    fun requstLeave(startDate: String, endDate: String) {
+    fun editRequestLeave(startDate: String, endDate: String, leaveId: Int?, typeId:String) {
         toggleProgressDialog(show = true, this, this.resources.getString(R.string.loading))
+
         var maps: MutableMap<String, String> = HashMap()
         maps.put("Authorization", "Bearer ${userModel?.token}")
         maps.put("Accept", "application/json")
         POSTMediasTask().uploadMediaWithHeaderBody(
             this@EditRequstLeaveActivity,
-            BaseRequest.leaveApi,
+            "${BaseRequest.leaveApi}/${leaveId}/edit",
             filePath,
             responseApi = object : ResponseApi {
                 override fun onSuccessCall(response: String?) {
@@ -97,6 +100,8 @@ class EditRequstLeaveActivity : BaseActivity() {
                         dialog.dismiss()
                         NavigationActivity().clearAndStart(this@EditRequstLeaveActivity)
                     }
+
+                    onBackPressed()
                 }
 
                 override fun onErrorCall(error: VolleyError?) {
@@ -110,7 +115,7 @@ class EditRequstLeaveActivity : BaseActivity() {
                     }
                 }
             }, maps,
-            startDate, endDate, typeModel?.id.toString()
+            startDate, endDate, typeId
         )
     }
 
@@ -241,7 +246,7 @@ class EditRequstLeaveActivity : BaseActivity() {
                 override fun click(typesModel: TypesModel, position: Int) {
                     dialogAndroidAppCus.dismiss()
                     typeModel = typesModel
-                    leaveTypeSelectTextView.text = typesModel.name
+                    editLeaveRequestLeaveTypeSelectTextView.text = typesModel.name
                 }
             })
             recyclerView.adapter = realtyStringAdapter
@@ -252,14 +257,14 @@ class EditRequstLeaveActivity : BaseActivity() {
 
     @RequiresApi(Build.VERSION_CODES.M)
     private fun uiListener() {
-        editLeaveRequestDateTextView.setOnClickListener {
+        editLeaveRequestStartingDateTextView.setOnClickListener {
             try {
                 val calendar = Calendar.getInstance()
                 val dpd = DatePickerDialog(
                     this@EditRequstLeaveActivity,
                     { datePicker, i, i1, i2 ->
                         this@EditRequstLeaveActivity.leaveDate = datePicker
-                        editLeaveRequestDateTextView.text = String.format(
+                        editLeaveRequestStartingDateTextView.text = String.format(
                             Locale.CANADA,
                             "%s,%s%s",
                             DateUtils().dayDate(datePicker.dayOfMonth),
@@ -278,14 +283,14 @@ class EditRequstLeaveActivity : BaseActivity() {
 //            dialog.dismiss()
 //            NavigationActivity().clearAndStart(this@RequstLeaveActivity)
 //        }
-        editLeaveRequestFromSelectTextView.setOnClickListener {
+        editLeaveRequestStartTextView.setOnClickListener {
             try {
                 val calendar = Calendar.getInstance()
                 val dpd = TimePickerDialog(
                     this@EditRequstLeaveActivity,
                     { datePicker, HOUR, MINUTE ->
                         this@EditRequstLeaveActivity.fromDate = datePicker
-                        editLeaveRequestFromSelectTextView.text = String.format(
+                        editLeaveRequestStartTextView.text = String.format(
                             Locale.CANADA,
                             "%s:%s",
                             HOUR,
@@ -301,14 +306,14 @@ class EditRequstLeaveActivity : BaseActivity() {
 
         }
 
-        editLeaveRequestToSelectTextView.setOnClickListener {
+        editLeaveRequestEndTimeSelectTextView.setOnClickListener {
             try {
                 val calendar = Calendar.getInstance()
                 val dpd = TimePickerDialog(
                     this@EditRequstLeaveActivity,
                     { datePicker, HOUR, MINUTE ->
                         this@EditRequstLeaveActivity.toDate = datePicker
-                        editLeaveRequestToSelectTextView.text = String.format(
+                        editLeaveRequestEndTimeSelectTextView.text = String.format(
                             Locale.CANADA,
                             "%s:%s",
                             HOUR,
@@ -357,45 +362,113 @@ class EditRequstLeaveActivity : BaseActivity() {
         }
 
         editLeaveRequestSendButton.setOnClickListener {
-            var v = leaveDate?.month
-            if (leaveDate != null) {
-                if (fromDate != null) {
-                    if (toDate != null) {
-                        if (typeModel != null) {
-                            val fromTime = getDate(fromDate!!)
-                            val toTime = getDate(toDate!!)
-                            requstLeave(fromTime, toTime)
-                        } else {
-                            Toast.makeText(
-                                this@EditRequstLeaveActivity,
-                                "Select leave Type",
-                                Toast.LENGTH_LONG
-                            ).show()
-                        }
-                    } else {
-                        Toast.makeText(
-                            this@EditRequstLeaveActivity,
-                            "Add to Time",
-                            Toast.LENGTH_LONG
-                        )
-                            .show()
-                    }
+            /* var v = leaveDate?.month
+             if (leaveDate != null) {
+                 if (fromDate != null) {
+                     if (toDate != null) {
+                         if (typeModel != null) {*/
 
-                } else {
-                    Toast.makeText(this@EditRequstLeaveActivity, "Add From Time", Toast.LENGTH_LONG)
-                        .show()
-                }
-
+            var fromTime = if (fromDate != null) {
+                getDate(fromDate!!)
             } else {
-                Toast.makeText(this@EditRequstLeaveActivity, "Add Leave Date", Toast.LENGTH_LONG)
-                    .show()
+                myLeaveRequest.start_date
             }
+
+            if(fromTime?.contains("null") == true){
+                fromTime= fromTime.replace("null-null-null" , myLeaveRequest.created_at?.toDate().toString())
+                fromTime+= ":00"
+            }
+
+            var toTime = if (toDate != null) {
+                getDate(toDate!!)
+            } else {
+                myLeaveRequest.end_date
+            }
+
+            if(toTime?.contains("null") == true){
+                toTime= toTime.replace("null-null-null" , myLeaveRequest.created_at?.toDate().toString())
+                toTime+= ":00"
+            }
+
+            // val fromTime = getDate(fromDate)
+           // val toTime = getDate(toDate!!)
+
+
+            myLeaveRequest.id?.let { _leaveId ->
+                fromTime?.let { _startTime ->
+                    toTime?.let { _endTime ->
+                        editRequestLeave(
+                            _startTime,
+                            _endTime,
+                            myLeaveRequest.id,
+                            (typeModel?.id ?: myLeaveRequest.type_id).toString()
+                        )
+                    }
+                }
+            }
+            /*} else {
+                 Toast.makeText(
+                     this@EditRequstLeaveActivity,
+                     "Select leave Type",
+                     Toast.LENGTH_LONG
+                 ).show()
+             }
+         } else {
+             Toast.makeText(
+                 this@EditRequstLeaveActivity,
+                 "Add to Time",
+                 Toast.LENGTH_LONG
+             )
+                 .show()
+         }
+
+     } else {
+         Toast.makeText(this@EditRequstLeaveActivity, "Add From Time", Toast.LENGTH_LONG)
+             .show()
+     }
+
+ } else {
+     Toast.makeText(this@EditRequstLeaveActivity, "Add Leave Date", Toast.LENGTH_LONG)
+         .show()
+ }*/
 
         }
     }
 
-    private fun fillUiData(){
 
+    private fun fillUiData() {
+
+        filePath = myLeaveRequest.attachment
+
+        editLeaveRequestStartingDateTextView.text = myLeaveRequest.created_at?.toDate()
+        editLeaveRequestStartTextView.text = myLeaveRequest.start_date?.toTime()
+        editLeaveRequestEndTimeSelectTextView.text = myLeaveRequest.end_date?.toTime()
+        editLeaveRequestLeaveTypeSelectTextView.text = myLeaveRequest.type_id?.let {
+            getLeaveTypeByLeaveId(
+                it
+            )
+        }
     }
 
+    private fun getLeaveTypeByLeaveId(id: Int): String {
+        return when (id) {
+            LeaveType.PERSONAL.id -> {
+                LeaveType.PERSONAL.name.lowercase()
+            }
+            LeaveType.SICK.id -> {
+                LeaveType.SICK.name.lowercase()
+            }
+
+            else -> {
+                ""
+            }
+        }
+    }
 }
+
+enum class LeaveType(val id: Int) {
+    PERSONAL(1),
+    SICK(2)
+}
+
+

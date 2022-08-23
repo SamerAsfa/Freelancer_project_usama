@@ -45,12 +45,12 @@
                 android:textColor="@color/black"
                 android:textSize="15sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@id/editLeaveRequestDateTextView"
+                app:layout_constraintBottom_toTopOf="@id/editLeaveRequestStartingDateTextView"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/editLeaveRequestLeaveTextView" />
 
             <TextView
-                android:id="@+id/editLeaveRequestDateTextView"
+                android:id="@+id/editLeaveRequestStartingDateTextView"
                 android:layout_width="0dp"
                 android:layout_height="55dp"
                 android:layout_gravity="center"
@@ -80,12 +80,12 @@
                 android:textColor="@color/black"
                 android:textSize="15sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@id/editLeaveRequestFromSelectTextView"
+                app:layout_constraintBottom_toTopOf="@id/editLeaveRequestStartTextView"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/editLeaveRequestDateTextView" />
+                app:layout_constraintTop_toBottomOf="@id/editLeaveRequestStartingDateTextView" />
 
             <TextView
-                android:id="@+id/editLeaveRequestFromSelectTextView"
+                android:id="@+id/editLeaveRequestStartTextView"
                 android:layout_width="0dp"
                 android:layout_height="55dp"
                 android:layout_gravity="center"
@@ -103,7 +103,7 @@
 
 
             <TextView
-                android:id="@+id/editLeaveRequestToTextView"
+                android:id="@+id/editLeaveRequestStartTimeTextView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
@@ -115,12 +115,12 @@
                 android:textColor="@color/black"
                 android:textSize="15sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@id/editLeaveRequestToSelectTextView"
+                app:layout_constraintBottom_toTopOf="@id/editLeaveRequestEndTimeSelectTextView"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/editLeaveRequestFromSelectTextView" />
+                app:layout_constraintTop_toBottomOf="@id/editLeaveRequestStartTextView" />
 
             <TextView
-                android:id="@+id/editLeaveRequestToSelectTextView"
+                android:id="@+id/editLeaveRequestEndTimeSelectTextView"
                 android:layout_width="0dp"
                 android:layout_height="55dp"
                 android:layout_gravity="center"
@@ -134,7 +134,7 @@
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/editLeaveRequestToTextView" />
+                app:layout_constraintTop_toBottomOf="@id/editLeaveRequestStartTimeTextView" />
 
 
             <TextView
@@ -152,7 +152,7 @@
                 android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@id/editLeaveRequestLeaveTypeSelectTextView"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/editLeaveRequestToSelectTextView" />
+                app:layout_constraintTop_toBottomOf="@id/editLeaveRequestEndTimeSelectTextView" />
 
             <TextView
                 android:id="@+id/editLeaveRequestLeaveTypeSelectTextView"
@@ -233,7 +233,7 @@
                 android:layout_marginEnd="20dp"
                 android:layout_marginBottom="25dp"
                 android:background="@drawable/confirm_button_shape"
-                android:text="Send"
+                android:text="Update"
                 android:textColor="@color/white"
                 app:layout_constraintBaseline_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

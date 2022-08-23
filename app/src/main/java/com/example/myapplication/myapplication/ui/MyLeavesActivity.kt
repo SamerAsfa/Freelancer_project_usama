@@ -121,11 +121,11 @@ class MyLeavesActivity : BaseActivity() {
     private fun initUIListener() {
 
         leaveRequestButton.setOnClickListener {
-         /*   val intent = Intent(this, RequstLeaveActivity::class.java)
-            startActivity(intent)*/
-            val intent =Intent(this@MyLeavesActivity ,EditRequstLeaveActivity::class.java)
-            intent.putExtra("Leave_Request_model", MyLeaveHistoryModel())
+           val intent = Intent(this, RequstLeaveActivity::class.java)
             startActivity(intent)
+            /*val intent =Intent(this@MyLeavesActivity ,EditRequstLeaveActivity::class.java)
+            intent.putExtra("Leave_Request_model", MyLeaveHistoryModel())
+            startActivity(intent)*/
         }
 
         vectorRightImageView.setOnClickListener {
