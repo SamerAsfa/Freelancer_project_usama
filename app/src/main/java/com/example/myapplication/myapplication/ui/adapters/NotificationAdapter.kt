@@ -10,10 +10,14 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.myapplication.myapplication.R
 import com.example.myapplication.myapplication.base.LongTermManager
 import com.example.myapplication.myapplication.common.UserNoteType
+import com.example.myapplication.myapplication.common.getAbbreviatedFromDateTime
+import com.example.myapplication.myapplication.data.DateUtils
 import com.example.myapplication.myapplication.models.NotificationModel
+import java.util.*
 
 class NotificationAdapter(
     private val arrayList: java.util.ArrayList<NotificationModel>?,
@@ -37,23 +41,34 @@ class NotificationAdapter(
         position: Int
     ) {
         val position = holder.adapterPosition
+        val model: NotificationModel? =arrayList?.get(position)
+
+       // val date:String = "".getAbbreviatedFromDateTime(arrayList?.get(position)?.created_at!!,"dd/MM/yyyy HH:mm","MMMM")
+        holder.dateTextView.text =model?.created_at
+
+        model?.user?.profile_photo_url?.let {
+            Glide.with(context)
+                .load(it)
+                .placeholder(R.drawable.vector_personal)
+                .into(holder.userImage)
+        }
 
 
-        holder.dateTextView.text =
+ /*       holder.dateTextView.text =
             arrayList?.get(position)?.updated_at?.indexOf('T')
                 ?.let { lastPositionToSubString ->
                     arrayList[position].updated_at?.substring(0 , lastPositionToSubString)
-                }
+                }*/
 
 
-        /* holder.dateTextView.text = String.format(
+ /*        holder.dateTextView.text = String.format(
              Locale.CANADA,
              "%sth %s",
-             DateUtils().TMonthformatUtc(arrayList?.get(holder.adapterPosition)?.created_at),
-             DateUtils().TTimeformatUtc(arrayList?.get(holder.adapterPosition)?.created_at)
+             DateUtils().TMonthformatUtc(arrayList?.get(position)?.created_at),
+             DateUtils().TTimeformatUtc(arrayList?.get(position)?.created_at)
          )*/
 
-        when(arrayList?.get(holder.adapterPosition)?.not_type){
+        when(model?.not_type){
 
             UserNoteType.PUNCH ->{}
 
@@ -76,7 +91,7 @@ class NotificationAdapter(
                 holder.stateTextView.apply {
                     text =context.getString(R.string.approved)
                     setTextColor( Color.parseColor("#00D865"))
-                    textSize =14f
+                    textSize =12f
                     background =null
                 }
             }
@@ -88,7 +103,7 @@ class NotificationAdapter(
                 holder.stateTextView.apply {
                     text =context.getString(R.string.rejected)
                     setTextColor( Color.parseColor("#FF0000"))
-                    textSize =14f
+                    textSize =12f
                     background =null
                 }
             }
@@ -98,7 +113,7 @@ class NotificationAdapter(
                 holder.msgTextView.text = "Your Registration Request needs Re-Verify."
 
                 holder.stateTextView.apply {
-                    text =context.getString(R.string.approved)
+                    text =context.getString(R.string.re_verify)
                     setTextColor( Color.parseColor("#FFFFFF"))
                     textSize =8f
                     background =context.getDrawable(R.drawable.re_verify)
@@ -111,18 +126,11 @@ class NotificationAdapter(
 
                 val disabled = getColoredSpanned("Disabled", "#EC1119")
 
-                holder.msgTextView.setText(Html.fromHtml("Your Account has been Disabled "+" "+disabled +" by HR manager."))
+                holder.msgTextView.setText(Html.fromHtml("Your Account has been"+" "+disabled +" by HR manager."))
                // holder.msgTextView.text = context.getString(R.string.account_disabled)//"Your Account has been Disabled by HR manager."
                 holder.stateTextView.visibility =View.INVISIBLE
             }
 
-        }
-
-
-        val userModel = LongTermManager.getInstance().userModel
-        if (!userModel?.profile_photo_path?.trim()?.isBlank()!!) {
-//            Glide.with()
-//                .load(userModel?.profile_photo_path).into(view.userImage)
         }
     }
 
@@ -137,7 +145,7 @@ class NotificationAdapter(
         var stateTextView: TextView
 
         init {
-            userImage = view.findViewById<View>(R.id.userImage) as ImageView
+            userImage = view.findViewById<View>(R.id.userImageViewNotificationItemRow) as ImageView
             msgTextView = view.findViewById<View>(R.id.msgTextView) as TextView
             dateTextView = view.findViewById<View>(R.id.dateTextView) as TextView
             stateTextView = view.findViewById<View>(R.id.stateTextView) as TextView

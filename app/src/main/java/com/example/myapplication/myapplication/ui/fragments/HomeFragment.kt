@@ -175,10 +175,15 @@ class HomeFragment : BaseFragment() {
         val view: View = inflater.inflate(R.layout.fragment_home, container, false)
         mainView = view
         getDashBoard()
-        if (!userModel?.profile_photo_path?.trim()?.isBlank()!!) {
+       /* if (!userModel?.profile_photo_url?.trim()?.isBlank()!!) {
             Glide.with(view.context)
-                .load(userModel?.profile_photo_path).into(view.userImage)
+                .load(userModel?.profile_photo_url).into(view.userImage)
+        }*/
+        userModel?.profile_photo_url.let {
+            Glide.with(view.context)
+                .load(it).into(view.userImage)
         }
+
         listeners()
         view.userNameTextView?.text = userModel?.name
         return view

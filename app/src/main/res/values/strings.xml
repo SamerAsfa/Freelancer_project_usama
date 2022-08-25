@@ -79,4 +79,5 @@
     <string name="edit_leave_request">Edit Leave Request</string>
     <string name="delete_leave_request">Delete Leave Request</string>
     <string name="delete_leave_request_dialog">Delete Leave Request ?</string>
+    <string name="re_verify">Re Verify</string>
 </resources>

@@ -10,6 +10,10 @@ data class GetAllNotificationsResponse(
     @Expose
     val unread: Int? = 0,
 
+    @SerializedName("myTeamUnread")
+    @Expose
+    val myTeamUnread: Int? = 0,
+    
     @SerializedName("notifications")
     @Expose
     val notifications: List<NotificationModel>? = emptyList()

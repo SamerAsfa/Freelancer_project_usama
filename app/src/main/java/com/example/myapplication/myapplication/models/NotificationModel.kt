@@ -12,24 +12,16 @@ import org.json.JSONObject
 data class NotificationModel(
     var id: String? = null,
     var user_id: Int? = null,
-    var not_type: String? = null,
+    var not_type: String? = null,//leaveRequest
     var item_id: String? = null,
-    val title: String? = null,
-    val body: String? = null,
+    val title: String? = null,//leaveRequest
+    val body: String? = null,//leaveRequest
     val is_read: Int? = 1,
-    val created_at: String? = null,
-    val updated_at: String? = null,
-
-   // val message: String? = null,
-/*    val click_action: String? = null,
-    val date: String? = null,*/
-    /*
-
-            "created_at": null,
-            "updated_at": "2022-08-09T19:00:24.000000Z"
-     */
-
-
+    val status: String? = null,//pending
+    val created_at: String? = null, //24/08/2022 19:34
+    val updated_at: String? = null,//2022-08-24T19:34:40.000000Z
+    val item: ItemModel? = null,
+    val user: UserModel? = null,
 ) : Parcelable {
     @Throws(JSONException::class)
     fun parse(data: JSONObject): NotificationModel? {

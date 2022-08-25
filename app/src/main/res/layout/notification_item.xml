@@ -7,16 +7,16 @@
 
 
     <ImageView
-        android:id="@+id/userImage"
+        android:id="@+id/userImageViewNotificationItemRow"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="45dp"
         android:layout_marginEnd="20dp"
-        android:background="@drawable/wh"
-        android:scaleType="centerCrop"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+    <!--android:background="@drawable/wh"
+    android:scaleType="centerCrop"-->
 
 
     <TextView
@@ -32,8 +32,8 @@
         android:textSize="15sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/notificationSettingsImageButton"
-        app:layout_constraintStart_toEndOf="@id/userImage"
-        app:layout_constraintTop_toTopOf="@id/userImage" />
+        app:layout_constraintStart_toEndOf="@id/userImageViewNotificationItemRow"
+        app:layout_constraintTop_toTopOf="@id/userImageViewNotificationItemRow" />
 
 
     <TextView
@@ -48,16 +48,16 @@
         android:textSize="12sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/stateTextView"
-        app:layout_constraintStart_toEndOf="@id/userImage"
+        app:layout_constraintStart_toEndOf="@id/userImageViewNotificationItemRow"
         app:layout_constraintTop_toBottomOf="@id/msgTextView" />
 
 
     <TextView
         android:id="@+id/stateTextView"
         android:layout_width="100dp"
-        android:layout_height="45dp"
+        android:layout_height="24dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="13dp"
+        android:layout_marginEnd="8dp"
         android:background="@drawable/approved_shape"
         android:gravity="center"
         android:padding="5dp"
@@ -76,9 +76,9 @@
         android:layout_marginEnd="22dp"
         android:background="@android:color/transparent"
         android:src="@drawable/vector_three_vertical_dots"
-        app:layout_constraintBottom_toBottomOf="@+id/userImage"
+        app:layout_constraintBottom_toBottomOf="@+id/userImageViewNotificationItemRow"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/userImage" />
+        app:layout_constraintTop_toTopOf="@+id/userImageViewNotificationItemRow" />
 
     <View
         android:id="@+id/bottomDive"

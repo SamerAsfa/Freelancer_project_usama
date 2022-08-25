@@ -45,9 +45,9 @@ class MoreFragment : BaseFragment() {
     ): View {
         val view: View = inflater.inflate(R.layout.fragment_more, container, false)
         mainView = view
-        if (!userModel?.profile_photo_path?.trim()?.isBlank()!!) {
+        if (!userModel?.profile_photo_url?.trim()?.isBlank()!!) {
             Glide.with(view.context)
-                .load(userModel?.profile_photo_path).into(view.userImage)
+                .load(userModel?.profile_photo_url).into(view.userImage)
 
         }
 
