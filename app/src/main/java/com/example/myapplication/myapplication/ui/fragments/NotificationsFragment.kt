@@ -1,10 +1,14 @@
 package com.example.myapplication.myapplication.ui.fragments
 
+import android.app.Dialog
+import android.content.Intent
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myapplication.myapplication.R
@@ -12,9 +16,13 @@ import com.example.myapplication.myapplication.base.BaseFragment
 import com.example.myapplication.myapplication.base.LongTermManager
 import com.example.myapplication.myapplication.data.APIClient
 import com.example.myapplication.myapplication.data.APIInterface
+import com.example.myapplication.myapplication.data.DateUtils
 import com.example.myapplication.myapplication.domain.model.GetAllNotificationsResponse
+import com.example.myapplication.myapplication.models.MyLeaveHistoryModel
 import com.example.myapplication.myapplication.models.NotificationModel
+import com.example.myapplication.myapplication.models.NotificationModel.Companion.toLeaveModel
 import com.example.myapplication.myapplication.models.UserModel
+import com.example.myapplication.myapplication.ui.EditRequstLeaveActivity
 import com.example.myapplication.myapplication.ui.adapters.MyTeamNotificationAdapter
 import com.example.myapplication.myapplication.ui.adapters.NotificationAdapter
 import kotlinx.android.synthetic.main.fragment_notifications.*
@@ -26,8 +34,9 @@ class NotificationsFragment : BaseFragment() {
     var userModel: UserModel? = null
     var apiInterface: APIInterface? = null
 
-    lateinit var myNotificationAdapter :NotificationAdapter
-    lateinit var myTeamNotificationAdapter :MyTeamNotificationAdapter
+    var myNotificationAdapter: NotificationAdapter = NotificationAdapter()
+    var myTeamNotificationAdapter: MyTeamNotificationAdapter =
+        MyTeamNotificationAdapter()
 
     companion object {
         val fragmentName: String = "NotificationsFragment"
@@ -58,9 +67,9 @@ class NotificationsFragment : BaseFragment() {
         getMyNotificationApi()
         getMyTeamNotificationApi()
         initUIListener(view)
+        adapterListener()
         return view
     }
-
 
     fun getMyNotificationApi() {
         try {
@@ -73,7 +82,7 @@ class NotificationsFragment : BaseFragment() {
                     val arrayHistory = response?.body()
                     unreadMyNotificationTextView.text = response?.body()?.unread.toString()
                     if (arrayHistory?.notifications?.size!! > 0) {
-                         myNotificationAdapter = NotificationAdapter(arrayHistory.notifications as ArrayList<NotificationModel>, requireContext())
+                        myNotificationAdapter.submitData(arrayHistory.notifications as ArrayList<NotificationModel>)
                         mainView?.notificationRecyclerView?.setHasFixedSize(true)
                         mainView?.notificationRecyclerView?.layoutManager =
                             LinearLayoutManager(requireContext())
@@ -104,11 +113,13 @@ class NotificationsFragment : BaseFragment() {
                     val arrayHistory = response?.body()
                     unreadMyTeamNotificationTextView.text = response?.body()?.unread.toString()
                     if (arrayHistory?.notifications?.size!! > 0) {
-                         myTeamNotificationAdapter = MyTeamNotificationAdapter(arrayHistory.notifications as ArrayList<NotificationModel>, requireContext())
+
+                        myTeamNotificationAdapter.submitData(arrayHistory.notifications as ArrayList<NotificationModel>)
                         mainView?.myTeamNotificationRecyclerView?.setHasFixedSize(true)
                         mainView?.myTeamNotificationRecyclerView?.layoutManager =
                             LinearLayoutManager(requireContext())
-                        mainView?.myTeamNotificationRecyclerView?.adapter = myTeamNotificationAdapter
+                        mainView?.myTeamNotificationRecyclerView?.adapter =
+                            myTeamNotificationAdapter
                     }
                 }
 
@@ -124,10 +135,14 @@ class NotificationsFragment : BaseFragment() {
         }
     }
 
-    private fun initUIListener(view: View){
+    private fun initUIListener(view: View) {
+
+        view.backArrowImageButton.setOnClickListener {
+
+        }
 
         view.clearAllTextView.setOnClickListener {
-            val userId:String = userModel?.id.toString()
+            val userId: String = userModel?.id.toString()
             deleteAllNotification(userId)
         }
 
@@ -138,8 +153,8 @@ class NotificationsFragment : BaseFragment() {
             view.myTeamNotificationTextView.setTextColor(Color.parseColor("#708792"))
             view.teamNotificationUnderlineView.setBackgroundColor(Color.parseColor("#708792"))
 
-            view.notificationRecyclerView.visibility =View.VISIBLE
-            view.myTeamNotificationRecyclerView.visibility =View.GONE
+            view.notificationRecyclerView.visibility = View.VISIBLE
+            view.myTeamNotificationRecyclerView.visibility = View.GONE
         }
 
 
@@ -150,13 +165,13 @@ class NotificationsFragment : BaseFragment() {
             view.myNotificationTextView.setTextColor(Color.parseColor("#708792"))
             view.notificationUnderlineView.setBackgroundColor(Color.parseColor("#708792"))
 
-            view.notificationRecyclerView.visibility =View.GONE
-            view.myTeamNotificationRecyclerView.visibility =View.VISIBLE
+            view.notificationRecyclerView.visibility = View.GONE
+            view.myTeamNotificationRecyclerView.visibility = View.VISIBLE
         }
 
     }
 
-    private fun deleteAllNotification(id:String){
+    private fun deleteAllNotification(id: String) {
         try {
             val call = apiInterface?.deleteAllNotification(id)
             call?.enqueue(object : retrofit2.Callback<Any?> {
@@ -165,11 +180,19 @@ class NotificationsFragment : BaseFragment() {
                     response: retrofit2.Response<Any?>?
                 ) {
                     val responseBody = response?.body()
-                    if(response?.isSuccessful == true){
-                        Toast.makeText(requireContext() ,"Successfully Deleted notifications" ,Toast.LENGTH_LONG).show()
+                    if (response?.isSuccessful == true) {
+                        Toast.makeText(
+                            requireContext(),
+                            "Successfully Deleted notifications",
+                            Toast.LENGTH_LONG
+                        ).show()
                         myNotificationAdapter.clearData()
-                    }else{
-                        Toast.makeText(requireContext() ,"Not Deleted Pleas try again" ,Toast.LENGTH_LONG).show()
+                    } else {
+                        Toast.makeText(
+                            requireContext(),
+                            "Not Deleted Pleas try again",
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
                 }
 
@@ -185,15 +208,93 @@ class NotificationsFragment : BaseFragment() {
         }
     }
 
-    private fun handelUIVisibility(view: View){
+    private fun handelUIVisibility(view: View) {
 
-        if(!userModel?.role.toString().contains("teamLead" , ignoreCase = true)) {
+        if (!userModel?.role.toString().contains("teamLead", ignoreCase = true)) {
             view.roleConstraintLayout.visibility = View.GONE
         }
 
     }
 
-    private fun fillUIData(){
-     //   unreadMyNotificationTextView.text = unReadNotification.toString()
+    private fun fillUIData() {
+        //   unreadMyNotificationTextView.text = unReadNotification.toString()
     }
+
+    private fun adapterListener() {
+        myNotificationAdapter.clearNotificationOnItemClick = {}
+        myNotificationAdapter.editLeaveRequestOnItemClick = {model ->
+            val intent = Intent(requireActivity() , EditRequstLeaveActivity::class.java)
+            intent.putExtra("Leave_Request_model", model?.toLeaveModel())
+            startActivity(intent)
+        }
+        myNotificationAdapter.deleteLeaveRequestOnItemClick = { model ->
+            model?.let { showDeleteNotificationDialog(it) }
+        }
+    }
+
+    private fun showDeleteNotificationDialog(model: NotificationModel) {
+        val dialog = Dialog(requireContext(), android.R.style.Theme_Black_NoTitleBar_Fullscreen)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.delete_leave_request_dilaog)
+
+        val yesBtn = dialog.findViewById(R.id.yesButtonDeleteLeaveRequestDialog) as Button
+        val cencelBtn = dialog.findViewById(R.id.cancelButtonDeleteLeaveRequestDialog) as Button
+        yesBtn.setOnClickListener {
+            model.id?.let { it1 -> deleteNotification(it1) }
+            dialog.dismiss()
+        }
+        cencelBtn.setOnClickListener { dialog.dismiss() }
+        dialog.show()
+
+    }
+
+    private fun deleteNotification(notificationId: String) {
+        try {
+            val call = apiInterface?.deleteNotification(notificationId)
+            call?.enqueue(object : retrofit2.Callback<Any?> {
+                override fun onResponse(
+                    call: retrofit2.Call<Any?>,
+                    response: retrofit2.Response<Any?>
+                ) {
+                    if (response.isSuccessful) {
+                        Toast.makeText(
+                            requireContext(),
+                            "Successfully Deleted",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        // refresh data
+                        getMyNotificationApi()
+
+                    } else {
+                        Toast.makeText(
+                            requireContext(),
+                            "Something happens wrong please try again",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
+
+                override fun onFailure(
+                    call: retrofit2.Call<Any?>,
+                    t: Throwable
+                ) {
+                    call.cancel()
+                    Toast.makeText(
+                        requireContext(),
+                        "Something happens wrong please try again",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            })
+        } catch (ex: Exception) {
+            ex.message
+            Toast.makeText(
+                requireContext(),
+                "Something happens wrong please try again",
+                Toast.LENGTH_LONG
+            ).show()
+        }
+    }
+
 }

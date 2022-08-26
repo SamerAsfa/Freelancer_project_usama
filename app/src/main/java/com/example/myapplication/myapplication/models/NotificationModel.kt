@@ -43,4 +43,24 @@ data class NotificationModel(
         return gson.fromJson(data.toString(), listType)
     }
 
+
+    companion object {
+        fun NotificationModel.toLeaveModel(): MyLeaveHistoryModel {
+            return MyLeaveHistoryModel(
+                id = this.item?.id,
+                user_id = this.item?.user_id,
+                date = null,
+                pin = null,
+                pout = null,
+                amount_in_min = this.item?.amount_in_min,
+                start_date = this.item?.start_date,
+                end_date = this.item?.end_date,
+                type_id = this.item?.type_id,
+                status = this.item?.status,
+                attachment = this.item?.attachment,
+                created_at = this.item?.created_at,
+                updated_at = this.item?.updated_at,
+            )
+        }
+    }
 }

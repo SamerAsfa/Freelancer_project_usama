@@ -7,8 +7,11 @@ import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.myapplication.myapplication.R
@@ -16,15 +19,18 @@ import com.example.myapplication.myapplication.base.LongTermManager
 import com.example.myapplication.myapplication.common.UserNoteType
 import com.example.myapplication.myapplication.common.getAbbreviatedFromDateTime
 import com.example.myapplication.myapplication.data.DateUtils
+import com.example.myapplication.myapplication.models.MyLeaveHistoryModel
+import com.example.myapplication.myapplication.models.MyTeamLeaveHistoryModel
 import com.example.myapplication.myapplication.models.NotificationModel
 import java.util.*
 
-class NotificationAdapter(
-    private val arrayList: java.util.ArrayList<NotificationModel>?,
-    private val context:Context
-) :
-    RecyclerView.Adapter<NotificationAdapter.ViewHolder>() {
+class NotificationAdapter() :  RecyclerView.Adapter<NotificationAdapter.ViewHolder>() {
 
+    private val arrayList: ArrayList<NotificationModel> = ArrayList()
+    var notificationSettingsOnItemClick: ((NotificationModel?) -> Unit)? = null
+    var clearNotificationOnItemClick: ((NotificationModel?) -> Unit)? = null
+    var editLeaveRequestOnItemClick: ((NotificationModel?) -> Unit)? = null
+    var deleteLeaveRequestOnItemClick: ((NotificationModel?) -> Unit)? = null
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -47,7 +53,7 @@ class NotificationAdapter(
         holder.dateTextView.text =model?.created_at
 
         model?.user?.profile_photo_url?.let {
-            Glide.with(context)
+            Glide.with(holder.userImage.context)
                 .load(it)
                 .placeholder(R.drawable.vector_personal)
                 .into(holder.userImage)
@@ -70,17 +76,19 @@ class NotificationAdapter(
 
         when(model?.not_type){
 
-            UserNoteType.PUNCH ->{}
+            UserNoteType.PUNCH ->{
+                holder.stateTextView.visibility =View.INVISIBLE
+            }
 
             UserNoteType.LEAVE_REQUEST ->{
 
                 holder.msgTextView.text = "Applied for Leave Request."
 
                 holder.stateTextView.apply {
-                    text =context.getString(R.string.approval_pending)
+                    text =holder.stateTextView.context.getString(R.string.approval_pending)
                     setTextColor( Color.parseColor("#FFFFFF"))
                     textSize =8f
-                    background =context.getDrawable(R.drawable.approved_pending)
+                    background =holder.stateTextView.context.getDrawable(R.drawable.approved_pending)
                 }
             }
 
@@ -89,7 +97,7 @@ class NotificationAdapter(
                 holder.msgTextView.text = " HR Approved Your Registration Request."
 
                 holder.stateTextView.apply {
-                    text =context.getString(R.string.approved)
+                    text =holder.stateTextView.context.getString(R.string.approved)
                     setTextColor( Color.parseColor("#00D865"))
                     textSize =12f
                     background =null
@@ -101,7 +109,7 @@ class NotificationAdapter(
                 holder.msgTextView.text = "Applied for Leave Request"
 
                 holder.stateTextView.apply {
-                    text =context.getString(R.string.rejected)
+                    text =holder.stateTextView.context.getString(R.string.rejected)
                     setTextColor( Color.parseColor("#FF0000"))
                     textSize =12f
                     background =null
@@ -113,14 +121,16 @@ class NotificationAdapter(
                 holder.msgTextView.text = "Your Registration Request needs Re-Verify."
 
                 holder.stateTextView.apply {
-                    text =context.getString(R.string.re_verify)
+                    text =holder.stateTextView.context.getString(R.string.re_verify)
                     setTextColor( Color.parseColor("#FFFFFF"))
                     textSize =8f
-                    background =context.getDrawable(R.drawable.re_verify)
+                    background =holder.stateTextView.context.getDrawable(R.drawable.re_verify)
                 }
             }
 
-            UserNoteType.APPROVED_ACCOUNT ->{}
+            UserNoteType.APPROVED_ACCOUNT ->{
+                holder.stateTextView.visibility =View.INVISIBLE
+            }
 
             UserNoteType.DISABLED_ACCOUNT ->{
 
@@ -132,28 +142,124 @@ class NotificationAdapter(
             }
 
         }
+
+
+        /*** popup setting permission
+        * if notification status approved juist access to clear notification
+        * else if notification status not approved like pending  you cal access
+         1- clear notification
+         2- edit leave request
+         3- delete leave request
+        ***/
+        when(model?.not_type){
+
+            UserNoteType.PUNCH ->{}
+
+            UserNoteType.LEAVE_REQUEST ->{
+
+                holder.cleareNotificationSettingPopup.visibility =View.VISIBLE
+                holder.editLeaveRequestSettingPopup.visibility =View.VISIBLE
+                holder.deleteLeaveRequestSettingPopup.visibility =View.VISIBLE
+            }
+
+            UserNoteType.LEAVE_APPROVED ->{
+
+                holder.cleareNotificationSettingPopup.visibility =View.VISIBLE
+                holder.editLeaveRequestSettingPopup.visibility =View.GONE
+                holder.deleteLeaveRequestSettingPopup.visibility =View.GONE
+            }
+
+            UserNoteType.LEAVE_REJECT ->{
+
+                holder.cleareNotificationSettingPopup.visibility =View.VISIBLE
+                holder.editLeaveRequestSettingPopup.visibility =View.GONE
+                holder.deleteLeaveRequestSettingPopup.visibility =View.GONE
+            }
+
+            UserNoteType.REVERIFY_ACCOUNT ->{
+
+                holder.cleareNotificationSettingPopup.visibility =View.VISIBLE
+                holder.editLeaveRequestSettingPopup.visibility =View.GONE
+                holder.deleteLeaveRequestSettingPopup.visibility =View.GONE
+            }
+
+            UserNoteType.APPROVED_ACCOUNT ->{
+                holder.cleareNotificationSettingPopup.visibility =View.VISIBLE
+                holder.editLeaveRequestSettingPopup.visibility =View.GONE
+                holder.deleteLeaveRequestSettingPopup.visibility =View.GONE
+            }
+
+            UserNoteType.DISABLED_ACCOUNT ->{
+
+                holder.cleareNotificationSettingPopup.visibility =View.VISIBLE
+                holder.editLeaveRequestSettingPopup.visibility =View.GONE
+                holder.deleteLeaveRequestSettingPopup.visibility =View.GONE
+            }
+
+        }
+
+    }
+
+    fun submitData(list: ArrayList<NotificationModel>) {
+        arrayList.clear()
+        arrayList.addAll(list)
     }
 
     override fun getItemCount(): Int {
         return arrayList?.size!!
     }
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var userImage: ImageView
         var msgTextView: TextView
         var dateTextView: TextView
         var stateTextView: TextView
+        var notificationRowSettingImageButton: ImageButton
+        var notificationSettingPopup: LinearLayout
+        var cleareNotificationSettingPopup: TextView
+        var editLeaveRequestSettingPopup: TextView
+        var deleteLeaveRequestSettingPopup: TextView
 
         init {
             userImage = view.findViewById<View>(R.id.userImageViewNotificationItemRow) as ImageView
             msgTextView = view.findViewById<View>(R.id.msgTextView) as TextView
             dateTextView = view.findViewById<View>(R.id.dateTextView) as TextView
             stateTextView = view.findViewById<View>(R.id.stateTextView) as TextView
+            notificationRowSettingImageButton = view.findViewById<View>(R.id.notificationSettingsImageButton) as ImageButton
+            notificationSettingPopup = view.findViewById<View>(R.id.notificationItemRowSettingsLinearLayout) as LinearLayout
+            cleareNotificationSettingPopup = view.findViewById<View>(R.id.clearNotificationSettingPopupTextViewNotificationItemRow) as TextView
+            editLeaveRequestSettingPopup = view.findViewById<View>(R.id.editLeaveRequestSettingPopupTextViewNotificationItemRow) as TextView
+            deleteLeaveRequestSettingPopup = view.findViewById<View>(R.id.deleteLeaveRequestSettingPopupTextViewNotificationItemRow) as TextView
+
+            notificationRowSettingImageButton.setOnClickListener {
+                if(notificationSettingPopup.isVisible){
+                    notificationSettingPopup.visibility = View.GONE
+                }else {
+                    notificationSettingsOnItemClick?.invoke(arrayList?.get(adapterPosition))
+                    notificationSettingPopup.visibility = View.VISIBLE
+                }
+            }
+
+            cleareNotificationSettingPopup.setOnClickListener {
+                clearNotificationOnItemClick?.invoke(arrayList[adapterPosition])
+                notificationSettingPopup.visibility = View.GONE
+            }
+
+            editLeaveRequestSettingPopup.setOnClickListener {
+                editLeaveRequestOnItemClick?.invoke(arrayList[adapterPosition])
+                notificationSettingPopup.visibility = View.GONE
+            }
+
+            deleteLeaveRequestSettingPopup.setOnClickListener {
+                deleteLeaveRequestOnItemClick?.invoke(arrayList[adapterPosition])
+                notificationSettingPopup.visibility = View.GONE
+            }
+
         }
     }
 
     fun clearData(){
-        arrayList?.clear()
+        arrayList.clear()
         notifyDataSetChanged()
     }
     private fun getColoredSpanned(text: String, color: String): String? {

@@ -45,10 +45,10 @@ class MoreFragment : BaseFragment() {
     ): View {
         val view: View = inflater.inflate(R.layout.fragment_more, container, false)
         mainView = view
-        if (!userModel?.profile_photo_url?.trim()?.isBlank()!!) {
+
+        userModel?.profile_photo_url.let {
             Glide.with(view.context)
                 .load(userModel?.profile_photo_url).into(view.userImage)
-
         }
 
         view.profileTextView.setOnClickListener {

@@ -33,6 +33,9 @@
         android:theme="@style/Theme.MyApplication"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".NotificationInfoActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.LoginByEmailActivity"
             android:exported="false" />
 

@@ -80,4 +80,6 @@
     <string name="delete_leave_request">Delete Leave Request</string>
     <string name="delete_leave_request_dialog">Delete Leave Request ?</string>
     <string name="re_verify">Re Verify</string>
+    <string name="clear_notification">Clear Notification</string>
+
 </resources>

@@ -3,6 +3,7 @@ package com.example.myapplication.myapplication.data
 import com.example.myapplication.myapplication.data.BaseRequest.Companion.APPROVE_lEAVE
 import com.example.myapplication.myapplication.data.BaseRequest.Companion.CHECK_USER_BY_COMPANY_ID
 import com.example.myapplication.myapplication.data.BaseRequest.Companion.DELETE_ALL_NOTIFICATION
+import com.example.myapplication.myapplication.data.BaseRequest.Companion.DELETE_NOTIFICATION
 import com.example.myapplication.myapplication.data.BaseRequest.Companion.DELETE_lEAVE
 import com.example.myapplication.myapplication.data.BaseRequest.Companion.GET_MY_TEAM_NOTIFICATIONS
 import com.example.myapplication.myapplication.data.BaseRequest.Companion.LOGIN_BY_EMAIL
@@ -60,6 +61,9 @@ interface APIInterface {
 
     @PUT("${DELETE_lEAVE}{id}")
     fun deleteLeave(@Path("id") id:Int?): Call<Any?>?
+
+    @DELETE("${DELETE_NOTIFICATION}{id}")
+    fun deleteNotification(@Path("id") id:String?): Call<Any?>?
 
 /*    @POST(LOGIN_BY_EMAIL)
     @FormUrlEncoded

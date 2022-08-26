@@ -16,13 +16,16 @@ import com.example.myapplication.myapplication.R
 import com.example.myapplication.myapplication.base.LongTermManager
 import com.example.myapplication.myapplication.common.UserNoteType
 import com.example.myapplication.myapplication.models.NotificationModel
+import java.util.ArrayList
 
 class MyTeamNotificationAdapter(
-    private val arrayList: java.util.ArrayList<NotificationModel>?,
-    private val context: Context
-) :
-    RecyclerView.Adapter<MyTeamNotificationAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<MyTeamNotificationAdapter.ViewHolder>() {
 
+    private val arrayList: ArrayList<NotificationModel> = ArrayList()
+//    var notificationSettingsOnItemClick: ((NotificationModel?) -> Unit)? = null
+//    var clearNotificationOnItemClick: ((NotificationModel?) -> Unit)? = null
+//    var editLeaveRequestOnItemClick: ((NotificationModel?) -> Unit)? = null
+//    var deleteLeaveRequestOnItemClick: ((NotificationModel?) -> Unit)? = null
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -137,6 +140,10 @@ class MyTeamNotificationAdapter(
         }*/
     }
 
+    fun submitData(list: ArrayList<NotificationModel>) {
+        arrayList.clear()
+        arrayList.addAll(list)
+    }
     override fun getItemCount(): Int {
         return arrayList?.size!!
     }
