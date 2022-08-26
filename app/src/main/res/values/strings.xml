@@ -81,5 +81,11 @@
     <string name="delete_leave_request_dialog">Delete Leave Request ?</string>
     <string name="re_verify">Re Verify</string>
     <string name="clear_notification">Clear Notification</string>
+    <string name="date">Date</string>
+    <string name="status">Status</string>
+    <string name="pending">PENDING</string>
+    <string name="approved_account">APPROVED ACCOUNT</string>
+    <string name="disabled_account">DISABLED ACCOUNT</string>
+
 
 </resources>

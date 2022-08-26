@@ -31,6 +31,7 @@ class NotificationAdapter() :  RecyclerView.Adapter<NotificationAdapter.ViewHold
     var clearNotificationOnItemClick: ((NotificationModel?) -> Unit)? = null
     var editLeaveRequestOnItemClick: ((NotificationModel?) -> Unit)? = null
     var deleteLeaveRequestOnItemClick: ((NotificationModel?) -> Unit)? = null
+    var onItemClick: ((NotificationModel?) -> Unit)? = null
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -253,6 +254,10 @@ class NotificationAdapter() :  RecyclerView.Adapter<NotificationAdapter.ViewHold
             deleteLeaveRequestSettingPopup.setOnClickListener {
                 deleteLeaveRequestOnItemClick?.invoke(arrayList[adapterPosition])
                 notificationSettingPopup.visibility = View.GONE
+            }
+
+            itemView.setOnClickListener {
+                onItemClick?.invoke(arrayList[adapterPosition])
             }
 
         }

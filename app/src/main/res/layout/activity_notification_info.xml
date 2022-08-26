@@ -6,4 +6,222 @@
     android:layout_height="match_parent"
     tools:context=".ui.NotificationInfoActivity">
 
+    <ImageButton
+        android:id="@+id/backArrowImageButtonNotificationInfoActivity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="22dp"
+        android:background="@android:color/transparent"
+        android:src="@drawable/vector_black_arrow_back"
+        app:layout_constraintBottom_toBottomOf="@+id/notificationTitleTextViewNotificationInfoActivity"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/notificationTitleTextViewNotificationInfoActivity" />
+
+    <TextView
+        android:id="@+id/notificationTitleTextViewNotificationInfoActivity"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="60dp"
+        android:text="Notificaions"
+        android:textColor="@color/black"
+        android:textSize="27sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/backArrowImageButtonNotificationInfoActivity"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/userImageViewNotificationInfoActivity"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="94dp"
+        app:layout_constraintStart_toStartOf="@+id/backArrowImageButtonNotificationInfoActivity"
+        app:layout_constraintTop_toBottomOf="@+id/notificationTitleTextViewNotificationInfoActivity" />
+
+    <TextView
+        android:id="@+id/msgTextViewNotificationInfoActivity"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="22dp"
+        android:text="Date"
+        android:textColor="@color/black"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/userImageViewNotificationInfoActivity"
+        app:layout_constraintTop_toTopOf="@+id/userImageViewNotificationInfoActivity" />
+
+
+    <TextView
+        android:id="@+id/dateFromToTextViewNotificationInfoActivity"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="22dp"
+        android:layout_marginTop="8dp"
+        android:text="Date"
+        android:textColor="#343434"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/userImageViewNotificationInfoActivity"
+        app:layout_constraintTop_toBottomOf="@+id/msgTextViewNotificationInfoActivity" />
+
+    <TextView
+        android:id="@+id/createdDateTextViewNotificationInfoActivity"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="22dp"
+        android:layout_marginTop="8dp"
+        android:text="Date"
+        android:textColor="#757575"
+        android:textSize="10sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/userImageViewNotificationInfoActivity"
+        app:layout_constraintTop_toBottomOf="@+id/dateFromToTextViewNotificationInfoActivity" />
+
+
+    <TextView
+        android:id="@+id/dateLabelTextViewNotificationInfoActivity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="80dp"
+        android:text="@string/date"
+        android:textColor="#757575"
+        android:textSize="14sp"
+        app:layout_constraintStart_toEndOf="@+id/userImageViewNotificationInfoActivity"
+        app:layout_constraintTop_toBottomOf="@+id/userImageViewNotificationInfoActivity" />
+
+    <TextView
+        android:id="@+id/dateTextViewNotificationInfoActivity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="80dp"
+        android:text="5th Mar - 11:31 AM"
+        android:textColor="#241332"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/dateLabelTextViewNotificationInfoActivity"
+        app:layout_constraintTop_toBottomOf="@+id/userImageViewNotificationInfoActivity" />
+
+    <View
+        android:id="@+id/view1NotificationInfoActivity"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="22dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="22dp"
+        android:background="#757575"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dateLabelTextViewNotificationInfoActivity" />
+
+
+    <TextView
+        android:id="@+id/leaveInLabelTextViewNotificationInfoActivity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/leave_in"
+        android:textColor="#757575"
+        android:textSize="14sp"
+        app:layout_constraintStart_toEndOf="@+id/userImageViewNotificationInfoActivity"
+        app:layout_constraintTop_toBottomOf="@+id/view1NotificationInfoActivity" />
+
+    <TextView
+        android:id="@+id/leaveInTextViewNotificationInfoActivity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="09:02 AM"
+        android:drawablePadding="8dp"
+        android:drawableLeft="@drawable/vector_arrow_left"
+        android:textColor="#1F4393"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="@+id/notificationTitleTextViewNotificationInfoActivity"
+        app:layout_constraintStart_toEndOf="@+id/leaveInLabelTextViewNotificationInfoActivity"
+        app:layout_constraintTop_toBottomOf="@+id/view1NotificationInfoActivity" />
+
+    <View
+        android:id="@+id/view2NotificationInfoActivity"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="22dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="22dp"
+        android:background="#757575"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/leaveInTextViewNotificationInfoActivity" />
+
+
+
+    <TextView
+        android:id="@+id/leaveOutLabelTextViewNotificationInfoActivity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/leave_out"
+        android:textColor="#757575"
+        android:textSize="14sp"
+        app:layout_constraintStart_toEndOf="@+id/userImageViewNotificationInfoActivity"
+        app:layout_constraintTop_toBottomOf="@+id/view2NotificationInfoActivity" />
+
+    <TextView
+        android:id="@+id/leaveOutTextViewNotificationInfoActivity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="09:02 AM"
+        android:drawablePadding="8dp"
+        android:drawableLeft="@drawable/vector_arrow_right_green"
+        android:textColor="#19D21F"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="@+id/notificationTitleTextViewNotificationInfoActivity"
+        app:layout_constraintStart_toEndOf="@+id/leaveOutLabelTextViewNotificationInfoActivity"
+        app:layout_constraintTop_toBottomOf="@+id/view2NotificationInfoActivity" />
+
+    <View
+        android:id="@+id/view3NotificationInfoActivity"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="22dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="22dp"
+        android:background="#757575"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/leaveOutTextViewNotificationInfoActivity" />
+
+    <TextView
+        android:id="@+id/statusLabelTextViewNotificationInfoActivity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/status"
+        android:textColor="#757575"
+        android:textSize="14sp"
+        app:layout_constraintStart_toEndOf="@+id/userImageViewNotificationInfoActivity"
+        app:layout_constraintTop_toBottomOf="@+id/view3NotificationInfoActivity" />
+
+    <TextView
+        android:id="@+id/statusTextViewNotificationInfoActivity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:drawablePadding="8dp"
+        android:text="PENDING"
+        android:textColor="#19D21F"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="@+id/notificationTitleTextViewNotificationInfoActivity"
+        app:layout_constraintStart_toEndOf="@+id/statusLabelTextViewNotificationInfoActivity"
+        app:layout_constraintTop_toBottomOf="@+id/view3NotificationInfoActivity" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

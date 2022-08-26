@@ -23,6 +23,7 @@ import com.example.myapplication.myapplication.models.NotificationModel
 import com.example.myapplication.myapplication.models.NotificationModel.Companion.toLeaveModel
 import com.example.myapplication.myapplication.models.UserModel
 import com.example.myapplication.myapplication.ui.EditRequstLeaveActivity
+import com.example.myapplication.myapplication.ui.NotificationInfoActivity
 import com.example.myapplication.myapplication.ui.adapters.MyTeamNotificationAdapter
 import com.example.myapplication.myapplication.ui.adapters.NotificationAdapter
 import kotlinx.android.synthetic.main.fragment_notifications.*
@@ -229,6 +230,12 @@ class NotificationsFragment : BaseFragment() {
         }
         myNotificationAdapter.deleteLeaveRequestOnItemClick = { model ->
             model?.let { showDeleteNotificationDialog(it) }
+        }
+
+        myNotificationAdapter.onItemClick ={model->
+            val intent =Intent(requireContext() ,NotificationInfoActivity::class.java)
+            intent.putExtra("notification_model", model);
+            startActivity(intent)
         }
     }
 
