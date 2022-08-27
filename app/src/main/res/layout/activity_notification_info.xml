@@ -28,9 +28,55 @@
         android:textColor="@color/black"
         android:textSize="27sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/backArrowImageButtonNotificationInfoActivity"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/settingImageButtonNotificationInfoActivity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:background="@android:color/transparent"
+        android:src="@drawable/vector_three_vertical_dots"
+        app:layout_constraintBottom_toBottomOf="@+id/notificationTitleTextViewNotificationInfoActivity"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/notificationTitleTextViewNotificationInfoActivity" />
+
+    <LinearLayout
+        android:id="@+id/settingPopupMyLinearLayoutNotificationInfoActivity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="4dp"
+        android:background="@color/white"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintEnd_toStartOf="@+id/settingImageButtonNotificationInfoActivity"
+        app:layout_constraintTop_toTopOf="@+id/notificationTitleTextViewNotificationInfoActivity">
+
+        <TextView
+            android:id="@+id/clearNotificationSettingPopupTextViewNotificationInfoActivity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/vector_notification_icon"
+            android:text="@string/clear_notification" />
+
+        <TextView
+            android:id="@+id/editLeaveRequestSettingPopupTextViewNotificationInfoActivity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/vector_notification_icon"
+            android:text="@string/edit_leave_request" />
+
+        <TextView
+            android:id="@+id/deleteLeaveRequestSettingPopupTextViewNotificationInfoActivity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/vector_delete_notification_setting"
+            android:text="@string/delete_leave_request" />
+
+
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/userImageViewNotificationInfoActivity"
@@ -52,7 +98,6 @@
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/userImageViewNotificationInfoActivity"
         app:layout_constraintTop_toTopOf="@+id/userImageViewNotificationInfoActivity" />
-
 
     <TextView
         android:id="@+id/dateFromToTextViewNotificationInfoActivity"
@@ -81,7 +126,6 @@
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/userImageViewNotificationInfoActivity"
         app:layout_constraintTop_toBottomOf="@+id/dateFromToTextViewNotificationInfoActivity" />
-
 
     <TextView
         android:id="@+id/dateLabelTextViewNotificationInfoActivity"
@@ -119,7 +163,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dateLabelTextViewNotificationInfoActivity" />
 
-
     <TextView
         android:id="@+id/leaveInLabelTextViewNotificationInfoActivity"
         android:layout_width="wrap_content"
@@ -137,13 +180,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="09:02 AM"
-        android:drawablePadding="8dp"
         android:drawableLeft="@drawable/vector_arrow_left"
+        android:drawablePadding="8dp"
+        android:text="09:02 AM"
         android:textColor="#1F4393"
         android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="@+id/notificationTitleTextViewNotificationInfoActivity"
-        app:layout_constraintStart_toEndOf="@+id/leaveInLabelTextViewNotificationInfoActivity"
+        app:layout_constraintEnd_toEndOf="@+id/dateTextViewNotificationInfoActivity"
+        app:layout_constraintStart_toStartOf="@+id/dateTextViewNotificationInfoActivity"
         app:layout_constraintTop_toBottomOf="@+id/view1NotificationInfoActivity" />
 
     <View
@@ -177,13 +220,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="09:02 AM"
-        android:drawablePadding="8dp"
         android:drawableLeft="@drawable/vector_arrow_right_green"
+        android:drawablePadding="8dp"
+        android:text="09:02 AM"
         android:textColor="#19D21F"
         android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="@+id/notificationTitleTextViewNotificationInfoActivity"
-        app:layout_constraintStart_toEndOf="@+id/leaveOutLabelTextViewNotificationInfoActivity"
+        app:layout_constraintEnd_toEndOf="@+id/dateTextViewNotificationInfoActivity"
+        app:layout_constraintStart_toStartOf="@+id/dateTextViewNotificationInfoActivity"
         app:layout_constraintTop_toBottomOf="@+id/view2NotificationInfoActivity" />
 
     <View
@@ -219,8 +262,8 @@
         android:text="PENDING"
         android:textColor="#19D21F"
         android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="@+id/notificationTitleTextViewNotificationInfoActivity"
-        app:layout_constraintStart_toEndOf="@+id/statusLabelTextViewNotificationInfoActivity"
+        app:layout_constraintEnd_toEndOf="@+id/dateTextViewNotificationInfoActivity"
+        app:layout_constraintStart_toStartOf="@+id/dateTextViewNotificationInfoActivity"
         app:layout_constraintTop_toBottomOf="@+id/view3NotificationInfoActivity" />
 
 

@@ -204,6 +204,7 @@ class NotificationAdapter() :  RecyclerView.Adapter<NotificationAdapter.ViewHold
     fun submitData(list: ArrayList<NotificationModel>) {
         arrayList.clear()
         arrayList.addAll(list)
+        notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int {

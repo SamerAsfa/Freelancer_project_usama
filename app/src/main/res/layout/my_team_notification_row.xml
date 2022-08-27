@@ -20,10 +20,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="150dp"
         android:textColor="#193566"
         android:textSize="8sp"
-        app:layout_constraintEnd_toStartOf="@+id/notificationStatusLinearLayout"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/imageViewMyTeamNotificationRow"
         app:layout_constraintTop_toTopOf="@+id/imageViewMyTeamNotificationRow" />
 
@@ -35,36 +35,47 @@
         android:layout_marginTop="8dp"
         android:textColor="#202124"
         android:textSize="10sp"
-        app:layout_constraintBottom_toBottomOf="@+id/imageViewMyTeamNotificationRow"
         app:layout_constraintStart_toEndOf="@+id/imageViewMyTeamNotificationRow"
         app:layout_constraintTop_toBottomOf="@+id/employeeNameTextViewMyTeamNotificationRow" />
+
+    <TextView
+        android:id="@+id/dateFromToTextViewMyTeamNotificationRow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="4dp"
+        android:textColor="#343434"
+        android:textSize="8sp"
+        app:layout_constraintStart_toEndOf="@+id/imageViewMyTeamNotificationRow"
+        app:layout_constraintTop_toBottomOf="@+id/statusDescriptionTextViewMyTeamNotificationRow" />
 
     <TextView
         android:id="@+id/dateTextViewMyTeamNotificationRow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:textColor="#241332"
         android:textSize="8sp"
         app:layout_constraintStart_toEndOf="@+id/imageViewMyTeamNotificationRow"
-        app:layout_constraintTop_toBottomOf="@+id/statusDescriptionTextViewMyTeamNotificationRow" />
+        app:layout_constraintTop_toBottomOf="@+id/dateFromToTextViewMyTeamNotificationRow" />
+
 
     <LinearLayout
         android:id="@+id/notificationStatusLinearLayout"
         android:layout_width="110dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
         android:background="@android:color/transparent"
         android:gravity="center_horizontal"
+        android:visibility="visible"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="@+id/imageViewMyTeamNotificationRow">
 
         <Button
             android:id="@+id/approvalButtonMyTeamNotificationRow"
             android:layout_width="wrap_content"
-            android:layout_height="34dp"
+            android:layout_height="24dp"
             android:background="@drawable/approved_shape"
             android:text="APROVE"
             android:textColor="@color/white"
@@ -83,7 +94,7 @@
         <Button
             android:id="@+id/rejectButtonMyTeamNotificationRow"
             android:layout_width="wrap_content"
-            android:layout_height="34dp"
+            android:layout_height="24dp"
             android:background="@drawable/bg_red"
             android:text="REJECT"
             android:textColor="@color/white"
@@ -92,19 +103,18 @@
 
     </LinearLayout>
 
-
     <LinearLayout
         android:id="@+id/notificationWatchedStatusLinearLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
         android:layout_marginEnd="8dp"
-        android:visibility="gone"
         android:background="@android:color/transparent"
         android:gravity="end"
         android:orientation="horizontal"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/imageViewMyTeamNotificationRow"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="@+id/imageViewMyTeamNotificationRow">
 
         <TextView
             android:id="@+id/statusTextViewMyTeamNotificationRow"
@@ -126,6 +136,27 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/settingPopupMyTeamNotificationItemRowLinearLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:background="@color/white"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/imageViewMyTeamNotificationRow"
+        app:layout_constraintEnd_toStartOf="@+id/notificationWatchedStatusLinearLayout"
+        app:layout_constraintTop_toTopOf="@+id/imageViewMyTeamNotificationRow">
+
+        <TextView
+            android:id="@+id/clearNotificationSettingPopupTextViewMyTeamNotificationItemRow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/vector_notification_icon"
+            android:text="@string/clear_notification" />
+
+    </LinearLayout>
 
     <View
         android:id="@+id/view"

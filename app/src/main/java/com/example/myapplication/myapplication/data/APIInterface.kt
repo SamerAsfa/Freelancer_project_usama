@@ -4,7 +4,7 @@ import com.example.myapplication.myapplication.data.BaseRequest.Companion.APPROV
 import com.example.myapplication.myapplication.data.BaseRequest.Companion.CHECK_USER_BY_COMPANY_ID
 import com.example.myapplication.myapplication.data.BaseRequest.Companion.DELETE_ALL_NOTIFICATION
 import com.example.myapplication.myapplication.data.BaseRequest.Companion.DELETE_NOTIFICATION
-import com.example.myapplication.myapplication.data.BaseRequest.Companion.DELETE_lEAVE
+import com.example.myapplication.myapplication.data.BaseRequest.Companion.CANCEL_lEAVE
 import com.example.myapplication.myapplication.data.BaseRequest.Companion.GET_MY_TEAM_NOTIFICATIONS
 import com.example.myapplication.myapplication.data.BaseRequest.Companion.LOGIN_BY_EMAIL
 import com.example.myapplication.myapplication.data.BaseRequest.Companion.REJECT_lEAVE
@@ -59,8 +59,8 @@ interface APIInterface {
     @PUT("${REJECT_lEAVE}{id}")
     fun rejectLeave(@Path("id") id:Int?): Call<Any?>?
 
-    @PUT("${DELETE_lEAVE}{id}")
-    fun deleteLeave(@Path("id") id:Int?): Call<Any?>?
+    @PUT("${CANCEL_lEAVE}{id}")
+    fun cancelLeaveRequest(@Path("id") id:Int?): Call<Any?>?
 
     @DELETE("${DELETE_NOTIFICATION}{id}")
     fun deleteNotification(@Path("id") id:String?): Call<Any?>?

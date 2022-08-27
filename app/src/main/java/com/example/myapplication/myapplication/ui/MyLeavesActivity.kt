@@ -6,7 +6,6 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.View
-import android.view.Window
 import android.widget.Button
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -279,7 +278,7 @@ class MyLeavesActivity : BaseActivity() {
 
     private fun deleteLeaveRequest(leaveId: Int) {
         try {
-            val call = apiInterface?.deleteLeave(leaveId)
+            val call = apiInterface?.cancelLeaveRequest(leaveId)
             call?.enqueue(object : retrofit2.Callback<Any?> {
                 override fun onResponse(
                     call: retrofit2.Call<Any?>,

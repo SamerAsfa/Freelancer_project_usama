@@ -14,11 +14,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myapplication.myapplication.R
 import com.example.myapplication.myapplication.base.BaseFragment
 import com.example.myapplication.myapplication.base.LongTermManager
+import com.example.myapplication.myapplication.common.NotificationType
 import com.example.myapplication.myapplication.data.APIClient
 import com.example.myapplication.myapplication.data.APIInterface
-import com.example.myapplication.myapplication.data.DateUtils
 import com.example.myapplication.myapplication.domain.model.GetAllNotificationsResponse
-import com.example.myapplication.myapplication.models.MyLeaveHistoryModel
 import com.example.myapplication.myapplication.models.NotificationModel
 import com.example.myapplication.myapplication.models.NotificationModel.Companion.toLeaveModel
 import com.example.myapplication.myapplication.models.UserModel
@@ -47,6 +46,9 @@ class NotificationsFragment : BaseFragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -156,6 +158,7 @@ class NotificationsFragment : BaseFragment() {
 
             view.notificationRecyclerView.visibility = View.VISIBLE
             view.myTeamNotificationRecyclerView.visibility = View.GONE
+            view.clearAllTextView.visibility = View.VISIBLE
         }
 
 
@@ -168,6 +171,7 @@ class NotificationsFragment : BaseFragment() {
 
             view.notificationRecyclerView.visibility = View.GONE
             view.myTeamNotificationRecyclerView.visibility = View.VISIBLE
+            view.clearAllTextView.visibility = View.GONE
         }
 
     }
@@ -222,24 +226,42 @@ class NotificationsFragment : BaseFragment() {
     }
 
     private fun adapterListener() {
-        myNotificationAdapter.clearNotificationOnItemClick = {}
+
+        myNotificationAdapter.clearNotificationOnItemClick = {model ->
+            model?.id?.let { deleteNotification(it) }
+        }
+
         myNotificationAdapter.editLeaveRequestOnItemClick = {model ->
             val intent = Intent(requireActivity() , EditRequstLeaveActivity::class.java)
             intent.putExtra("Leave_Request_model", model?.toLeaveModel())
             startActivity(intent)
         }
         myNotificationAdapter.deleteLeaveRequestOnItemClick = { model ->
-            model?.let { showDeleteNotificationDialog(it) }
+            model?.let { showCancelLeaveRequestDialog(it) }
         }
 
         myNotificationAdapter.onItemClick ={model->
             val intent =Intent(requireContext() ,NotificationInfoActivity::class.java)
-            intent.putExtra("notification_model", model);
+            intent.putExtra("notification_model", model)
+            intent.putExtra("notification_type", NotificationType.MyNotification)
             startActivity(intent)
+        }
+
+
+        myTeamNotificationAdapter.approvedOnItemClick = { model ->
+            model?.item_id?.let { approveLeave(it.toInt()) }
+        }
+
+        myTeamNotificationAdapter.rejectOnItemClick = { model ->
+            model?.item_id?.let { rejectLeave(it.toInt()) }
+        }
+
+        myTeamNotificationAdapter.deleteNotificationSettingsOnItemClick = { model ->
+            model?.id?.let { deleteNotification(it) }
         }
     }
 
-    private fun showDeleteNotificationDialog(model: NotificationModel) {
+    private fun showCancelLeaveRequestDialog(model: NotificationModel) {
         val dialog = Dialog(requireContext(), android.R.style.Theme_Black_NoTitleBar_Fullscreen)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.setCancelable(false)
@@ -248,7 +270,7 @@ class NotificationsFragment : BaseFragment() {
         val yesBtn = dialog.findViewById(R.id.yesButtonDeleteLeaveRequestDialog) as Button
         val cencelBtn = dialog.findViewById(R.id.cancelButtonDeleteLeaveRequestDialog) as Button
         yesBtn.setOnClickListener {
-            model.id?.let { it1 -> deleteNotification(it1) }
+            model.item_id?.let { it1 -> cancelLeaveRequest(it1.toInt()) }
             dialog.dismiss()
         }
         cencelBtn.setOnClickListener { dialog.dismiss() }
@@ -256,9 +278,9 @@ class NotificationsFragment : BaseFragment() {
 
     }
 
-    private fun deleteNotification(notificationId: String) {
+    private fun cancelLeaveRequest(leaveRequestId: Int) {
         try {
-            val call = apiInterface?.deleteNotification(notificationId)
+            val call = apiInterface?.cancelLeaveRequest(leaveRequestId)
             call?.enqueue(object : retrofit2.Callback<Any?> {
                 override fun onResponse(
                     call: retrofit2.Call<Any?>,
@@ -267,11 +289,12 @@ class NotificationsFragment : BaseFragment() {
                     if (response.isSuccessful) {
                         Toast.makeText(
                             requireContext(),
-                            "Successfully Deleted",
+                            "Successfully Canceled ",
                             Toast.LENGTH_LONG
                         ).show()
                         // refresh data
                         getMyNotificationApi()
+                        getMyTeamNotificationApi()
 
                     } else {
                         Toast.makeText(
@@ -303,5 +326,149 @@ class NotificationsFragment : BaseFragment() {
             ).show()
         }
     }
+    private fun deleteNotification(notificationId: String) {
+        try {
+            val call = apiInterface?.deleteNotification(notificationId)
+            call?.enqueue(object : retrofit2.Callback<Any?> {
+                override fun onResponse(
+                    call: retrofit2.Call<Any?>,
+                    response: retrofit2.Response<Any?>
+                ) {
+                    if (response.isSuccessful) {
+                        Toast.makeText(
+                            requireContext(),
+                            "Successfully Deleted",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        // refresh data
+                        getMyNotificationApi()
+                        getMyTeamNotificationApi()
+
+                    } else {
+                        Toast.makeText(
+                            requireContext(),
+                            "Something happens wrong please try again",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
+
+                override fun onFailure(
+                    call: retrofit2.Call<Any?>,
+                    t: Throwable
+                ) {
+                    call.cancel()
+                    Toast.makeText(
+                        requireContext(),
+                        "Something happens wrong please try again",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            })
+        } catch (ex: Exception) {
+            ex.message
+            Toast.makeText(
+                requireContext(),
+                "Something happens wrong please try again",
+                Toast.LENGTH_LONG
+            ).show()
+        }
+    }
+
+    private fun approveLeave(leaveId: Int) {
+        try {
+            val call = apiInterface?.approveLeave(leaveId)
+            call?.enqueue(object : retrofit2.Callback<Any?> {
+                override fun onResponse(
+                    call: retrofit2.Call<Any?>,
+                    response: retrofit2.Response<Any?>
+                ) {
+                    if (response.isSuccessful) {
+                        Toast.makeText(
+                            requireContext(),
+                            "Successfully Approved",
+                            Toast.LENGTH_LONG
+                        ).show()
+
+                        getMyTeamNotificationApi()
+
+                    } else {
+                        Toast.makeText(
+                            requireContext(),
+                            "Something happens wrong please try again",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
+
+                override fun onFailure(
+                    call: retrofit2.Call<Any?>,
+                    t: Throwable
+                ) {
+                    call.cancel()
+                    Toast.makeText(
+                        requireContext(),
+                        "Something happens wrong please try again",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            })
+        } catch (ex: Exception) {
+            ex.message
+            Toast.makeText(
+                requireContext(),
+                "Something happens wrong please try again",
+                Toast.LENGTH_LONG
+            ).show()
+        }
+    }
+
+    private fun rejectLeave(leaveId: Int) {
+        try {
+            val call = apiInterface?.rejectLeave(leaveId)
+            call?.enqueue(object : retrofit2.Callback<Any?> {
+                override fun onResponse(
+                    call: retrofit2.Call<Any?>,
+                    response: retrofit2.Response<Any?>
+                ) {
+                    if (response.isSuccessful) {
+                        Toast.makeText(
+                            requireContext(),
+                            "Successfully Rejected",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        // refresh data
+                       getMyTeamNotificationApi()
+                    } else {
+                        Toast.makeText(
+                            requireContext(),
+                            "Something happens wrong please try again",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
+
+                override fun onFailure(
+                    call: retrofit2.Call<Any?>,
+                    t: Throwable
+                ) {
+                    call.cancel()
+                    Toast.makeText(
+                        requireContext(),
+                        "Something happens wrong please try again",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            })
+        } catch (ex: Exception) {
+            ex.message
+            Toast.makeText(
+                requireContext(),
+                "Something happens wrong please try again",
+                Toast.LENGTH_LONG
+            ).show()
+        }
+    }
+
 
 }

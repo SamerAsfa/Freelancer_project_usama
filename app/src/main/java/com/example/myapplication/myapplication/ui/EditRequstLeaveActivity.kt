@@ -362,12 +362,6 @@ class EditRequstLeaveActivity : BaseActivity() {
         }
 
         editLeaveRequestSendButton.setOnClickListener {
-            /* var v = leaveDate?.month
-             if (leaveDate != null) {
-                 if (fromDate != null) {
-                     if (toDate != null) {
-                         if (typeModel != null) {*/
-
             var fromTime = if (fromDate != null) {
                 getDate(fromDate!!)
             } else {
@@ -393,7 +387,6 @@ class EditRequstLeaveActivity : BaseActivity() {
             // val fromTime = getDate(fromDate)
            // val toTime = getDate(toDate!!)
 
-
             myLeaveRequest.id?.let { _leaveId ->
                 fromTime?.let { _startTime ->
                     toTime?.let { _endTime ->
@@ -406,32 +399,6 @@ class EditRequstLeaveActivity : BaseActivity() {
                     }
                 }
             }
-            /*} else {
-                 Toast.makeText(
-                     this@EditRequstLeaveActivity,
-                     "Select leave Type",
-                     Toast.LENGTH_LONG
-                 ).show()
-             }
-         } else {
-             Toast.makeText(
-                 this@EditRequstLeaveActivity,
-                 "Add to Time",
-                 Toast.LENGTH_LONG
-             )
-                 .show()
-         }
-
-     } else {
-         Toast.makeText(this@EditRequstLeaveActivity, "Add From Time", Toast.LENGTH_LONG)
-             .show()
-     }
-
- } else {
-     Toast.makeText(this@EditRequstLeaveActivity, "Add Leave Date", Toast.LENGTH_LONG)
-         .show()
- }*/
-
         }
     }
 
