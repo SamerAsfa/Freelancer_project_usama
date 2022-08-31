@@ -202,7 +202,6 @@
         app:layout_constraintTop_toBottomOf="@+id/leaveInTextViewNotificationInfoActivity" />
 
 
-
     <TextView
         android:id="@+id/leaveOutLabelTextViewNotificationInfoActivity"
         android:layout_width="wrap_content"
@@ -266,5 +265,38 @@
         app:layout_constraintStart_toStartOf="@+id/dateTextViewNotificationInfoActivity"
         app:layout_constraintTop_toBottomOf="@+id/view3NotificationInfoActivity" />
 
+    <LinearLayout
+        android:id="@+id/notificationStatusActionLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/view3NotificationInfoActivity">
+
+        <Button
+            android:id="@+id/approvalButtonNotificationInfoActivity"
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:layout_margin="16dp"
+            android:background="@drawable/approved_shape"
+            android:text="APROVE"
+            android:textColor="@color/white"
+            android:textSize="8sp" />
+
+        <Button
+            android:id="@+id/rejectButtonNotificationInfoActivity"
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:layout_margin="16dp"
+            android:background="@drawable/bg_red"
+            android:text="REJECT"
+            android:textColor="@color/white"
+            android:textSize="8sp" />
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

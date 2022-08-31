@@ -12,6 +12,7 @@ import com.example.myapplication.myapplication.common.NotificationType
 import com.example.myapplication.myapplication.common.UserNoteType
 import com.example.myapplication.myapplication.data.APIClient
 import com.example.myapplication.myapplication.data.APIInterface
+import com.example.myapplication.myapplication.data.DateUtils
 import com.example.myapplication.myapplication.models.NotificationModel
 import com.example.myapplication.myapplication.models.NotificationModel.Companion.toLeaveModel
 import kotlinx.android.synthetic.main.activity_notification_info.*
@@ -21,7 +22,7 @@ import java.text.SimpleDateFormat
 class NotificationInfoActivity : AppCompatActivity() {
 
     lateinit var notificationModel: NotificationModel
-    lateinit  var notificationtype: NotificationType
+    lateinit  var notificationType: NotificationType
     var apiInterface: APIInterface? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,11 +30,12 @@ class NotificationInfoActivity : AppCompatActivity() {
         setContentView(R.layout.activity_notification_info)
         apiInterface = APIClient.client?.create(APIInterface::class.java)
         notificationModel = intent.extras?.getParcelable<NotificationModel>("notification_model")!!
-        notificationtype = intent?.getSerializableExtra("notification_type") as NotificationType
+        notificationType = intent?.getSerializableExtra("notification_type") as NotificationType
 
 
         fillUiData()
         initUiListener()
+        uiVisibillityByNotificationType()
     }
 
 
@@ -132,8 +134,31 @@ class NotificationInfoActivity : AppCompatActivity() {
             notificationModel.id?.let { it1 -> deleteNotification(it1) }
             settingPopupMyLinearLayoutNotificationInfoActivity.visibility =View.GONE
         }
+
+        approvalButtonNotificationInfoActivity.setOnClickListener {
+            notificationModel.item?.id?.let { it1 -> approveLeave(it1) }
+        }
+
+        rejectButtonNotificationInfoActivity.setOnClickListener {
+            notificationModel.item?.id?.let { it1 -> rejectLeave(it1) }
+        }
+
     }
 
+    private fun uiVisibillityByNotificationType(){
+       when(notificationType){
+           NotificationType.MyNotification ->{
+               statusLabelTextViewNotificationInfoActivity.visibility =View.VISIBLE
+               statusTextViewNotificationInfoActivity.visibility =View.VISIBLE
+               notificationStatusActionLinearLayout.visibility =View.GONE
+           }
+           NotificationType.MyTeamNotification ->{
+               statusLabelTextViewNotificationInfoActivity.visibility =View.GONE
+               statusTextViewNotificationInfoActivity.visibility =View.GONE
+               notificationStatusActionLinearLayout.visibility =View.VISIBLE
+           }
+       }
+    }
 
     private fun dateTimeToTime(dateTime: String?): String {
         /*
@@ -291,6 +316,7 @@ class NotificationInfoActivity : AppCompatActivity() {
             ).show()
         }
     }
+
     private fun deleteNotification(notificationId: String) {
         try {
             val call = apiInterface?.deleteNotification(notificationId)
@@ -338,5 +364,101 @@ class NotificationInfoActivity : AppCompatActivity() {
             ).show()
         }
     }
+
+    private fun approveLeave(leaveId: Int) {
+        try {
+            val call = apiInterface?.approveLeave(leaveId)
+            call?.enqueue(object : retrofit2.Callback<Any?> {
+                override fun onResponse(
+                    call: retrofit2.Call<Any?>,
+                    response: retrofit2.Response<Any?>
+                ) {
+                    if (response.isSuccessful) {
+                        Toast.makeText(
+                            this@NotificationInfoActivity,
+                            "Successfully Approved",
+                            Toast.LENGTH_LONG
+                        ).show()
+
+                        onBackPressed()
+
+                    } else {
+                        Toast.makeText(
+                            this@NotificationInfoActivity,
+                            "Something happens wrong please try again",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
+
+                override fun onFailure(
+                    call: retrofit2.Call<Any?>,
+                    t: Throwable
+                ) {
+                    call.cancel()
+                    Toast.makeText(
+                        this@NotificationInfoActivity,
+                        "Something happens wrong please try again",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            })
+        } catch (ex: Exception) {
+            ex.message
+            Toast.makeText(
+                this@NotificationInfoActivity,
+                "Something happens wrong please try again",
+                Toast.LENGTH_LONG
+            ).show()
+        }
+    }
+
+    private fun rejectLeave(leaveId: Int) {
+        try {
+            val call = apiInterface?.rejectLeave(leaveId)
+            call?.enqueue(object : retrofit2.Callback<Any?> {
+                override fun onResponse(
+                    call: retrofit2.Call<Any?>,
+                    response: retrofit2.Response<Any?>
+                ) {
+                    if (response.isSuccessful) {
+                        Toast.makeText(
+                            this@NotificationInfoActivity,
+                            "Successfully Rejected",
+                            Toast.LENGTH_LONG
+                        ).show()
+
+                        onBackPressed()
+                    } else {
+                        Toast.makeText(
+                            this@NotificationInfoActivity,
+                            "Something happens wrong please try again",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
+
+                override fun onFailure(
+                    call: retrofit2.Call<Any?>,
+                    t: Throwable
+                ) {
+                    call.cancel()
+                    Toast.makeText(
+                        this@NotificationInfoActivity,
+                        "Something happens wrong please try again",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            })
+        } catch (ex: Exception) {
+            ex.message
+            Toast.makeText(
+                this@NotificationInfoActivity,
+                "Something happens wrong please try again",
+                Toast.LENGTH_LONG
+            ).show()
+        }
+    }
+
 
 }

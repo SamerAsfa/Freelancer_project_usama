@@ -23,6 +23,7 @@ class MyTeamNotificationAdapter(
     var approvedOnItemClick: ((NotificationModel?) -> Unit)? = null
    var rejectOnItemClick: ((NotificationModel?) -> Unit)? = null
     var deleteNotificationSettingsOnItemClick: ((NotificationModel?) -> Unit)? = null
+    var onItemClick: ((NotificationModel?) -> Unit)? = null
 
 
     override fun onCreateViewHolder(
@@ -207,6 +208,10 @@ class MyTeamNotificationAdapter(
             clearNotificationSettingsInPopup.setOnClickListener {
                 deleteNotificationSettingsOnItemClick?.invoke(arrayList[adapterPosition])
                 settingPopup.visibility =View.GONE
+            }
+
+            itemView.setOnClickListener {
+                onItemClick?.invoke(arrayList[adapterPosition])
             }
         }
     }

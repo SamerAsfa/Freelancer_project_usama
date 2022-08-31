@@ -184,7 +184,7 @@ class NotificationsFragment : BaseFragment() {
                     call: retrofit2.Call<Any?>?,
                     response: retrofit2.Response<Any?>?
                 ) {
-                    val responseBody = response?.body()
+                  //  val responseBody = response?.body()
                     if (response?.isSuccessful == true) {
                         Toast.makeText(
                             requireContext(),
@@ -258,6 +258,13 @@ class NotificationsFragment : BaseFragment() {
 
         myTeamNotificationAdapter.deleteNotificationSettingsOnItemClick = { model ->
             model?.id?.let { deleteNotification(it) }
+        }
+
+        myTeamNotificationAdapter.onItemClick ={model->
+            val intent =Intent(requireContext() ,NotificationInfoActivity::class.java)
+            intent.putExtra("notification_model", model)
+            intent.putExtra("notification_type", NotificationType.MyTeamNotification)
+            startActivity(intent)
         }
     }
 

@@ -47,7 +47,7 @@ interface APIInterface {
        @Body loginByEmailBody:LoginByEmailBody): Call<UserModel?>?//@FormUrlEncoded
 
     @DELETE("${DELETE_ALL_NOTIFICATION}{id}")
-    fun deleteAllNotification(id:String):Call<Any?>?
+    fun deleteAllNotification(@Path("id") id:String):Call<Any?>?
 
 
     @GET(GET_MY_TEAM_NOTIFICATIONS)
