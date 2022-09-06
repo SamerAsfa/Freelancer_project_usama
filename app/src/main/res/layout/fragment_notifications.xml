@@ -24,7 +24,7 @@
         android:layout_marginStart="16dp"
 
         android:layout_marginTop="60dp"
-        android:text="Notificaions"
+        android:text="@string/notifications"
         android:textColor="@color/black"
         android:textSize="27sp"
         android:textStyle="bold"

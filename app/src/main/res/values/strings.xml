@@ -62,6 +62,7 @@
     <string name="create_new_now">Create new now!</string>
     <string name="field_required">Field Required</string>
 
+    <string name="notifications">Notifications</string>
     <string name="my_notifications">My Notifications</string>
     <string name="my_team_notifications">My Team Notifications</string>
     <string name="clear_all">Clear all</string>

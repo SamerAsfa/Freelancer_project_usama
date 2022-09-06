@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">My Application</string>
+    <string name="filter_result">تصفية البحث</string>
+    <string name="with_image">مع صورة</string>
+    <string name="without_image">بدون صورة</string>
+    <string name="confirm">تأكيد</string>
+    <string name="add_new_name">اضافة اسم جديد</string>
+    <string name="type_the_name">ادخل الاسم</string>
+    <string name="upload_image">تحميل صورة</string>
+    <string name="done">Done</string>
+    <string name="punch_in">دخول</string>
+    <string name="Punch_Out">خروج</string>
+    <string name="break_in">البدء في الاستراحة</string>
+    <string name="break_out">الاتنهاء من الاستراحة</string>
+    <string name="leave_in">البدء في المغادرة</string>
+    <string name="leave_out">الاتنهاء من المغادرة</string>
+    <string name="time_is">الوقت</string>
+    <string name="do_you_want">هل تريد أن</string>
+    <string name="now">الان?</string>
+    <string name="loading">تحميل ...</string>
+    <string name="breaks">استراحة</string>
+    <string name="leave">مغادرة</string>
+    <string name="picture">صورة</string>
+    <string name="nos">لا</string>
+    <string name="yes">نعم</string>
+    <string name="cancel">الغاء</string>
+    <string name="description_info">معلومات</string>
+    <string name="request_permission">هذا النموذج يحتاج إلى إذن الكاميرا.</string>
+    <string name="camera_error">هذا الجهاز لا يدعم الكاميرا.</string>
+    <string name="intro_message">
+        <![CDATA[
+            يوضح هذا النموذج الاستخدام الأساسي لـ Camera2 API. تحقق من شفرة المصدر لمعرفة كيف
+             يمكنك عرض معاينة الكاميرا والتقاط الصور.
+        ]]>
+    </string>
+    <string name="success">تمت العملية بنجاج</string>
+    <string name="leaves_request_sent">تم إرسال طلب الإجازات</string>
+    <string name="welcome">مرحبا</string>
+    <string name="let_s_get_started">هيا بنا نبدأ</string>
+    <string name="next">التالي</string>
+    <string name="select_language">اختيار اللغة</string>
+    <string name="english">English</string>
+    <string name="arabic">العربية</string>
+
+    <string name="org_not_found">Org. not Found!</string>
+    <string name="vapeplus">Vapeplus</string>
+    <string name="password_must_meet">يجب أن تفي كلمة المرور بالمتطلبات التالية:</string>
+    <string name="at_least_one_letter">حرف واحد على الأقل</string>
+    <string name="at_least_one_capital_letter">ما لا يقل عن حرف واحد كبير</string>
+    <string name="at_least_one_number">رقم واحد على الأقل</string>
+    <string name="be_at_least_characters">ثمانية احرف على الاقل</string>
+    <string name="password_matched">كلمات المرور متطابقة</string>
+    <string name="password_not_matched">كلمات المرور غير متطابقة</string>
+    <string name="password">كلمة المرور</string>
+    <string name="retype_password">اعادة ادخال كلمة المرور</string>
+    <string name="sign_up">انشاء حساب</string>
+    <string name="login">تسجيل الدخول</string>
+    <string name="keep_me_logged_in">Keep me logged in</string>
+    <string name="forgot_password">نسيت كلمة المرور?</string>
+    <string name="click_here">انقر هنا</string>
+    <string name="donot_have_an_account">لا تملك حساب?</string>
+    <string name="create_new_now">انشيء حساب الان!</string>
+    <string name="field_required">حقل مطلوب</string>
+
+    <string name="notifications">الاشعارات</string>
+    <string name="my_notifications">الاشعارات</string>
+    <string name="my_team_notifications">اشعارات فريقي</string>
+    <string name="clear_all">حذف الكل</string>
+
+
+    <string name="approved">موافقة</string>
+    <string name="approval_pending">في انتظار الموافقة</string>
+    <string name="rejected">الرفض</string>
+    <string name="account_disabled">تم تعطيل حسابك من قبل الموارد البشرية.</string>
+
+    <string name="my_leaves">المغادرات</string>
+    <string name="my_team_leaves">مغادرات فريقي</string>
+
+    <string name="employee_name">اسم الموظف :</string>
+    <string name="edit_leave_request">تعديل طلب الإجازة</string>
+    <string name="delete_leave_request">حذف طلب الإجازة</string>
+    <string name="delete_leave_request_dialog">حذف طلب الإجازة؟</string>
+    <string name="re_verify">اعادة تأكيد</string>
+    <string name="clear_notification">حذف الاشعارات</string>
+    <string name="date">التاريخ</string>
+    <string name="status">الحالة</string>
+    <string name="pending">في الانتظار</string>
+    <string name="approved_account">حساب موثق</string>
+    <string name="disabled_account">حساب معطل</string>
+
+</resources>
